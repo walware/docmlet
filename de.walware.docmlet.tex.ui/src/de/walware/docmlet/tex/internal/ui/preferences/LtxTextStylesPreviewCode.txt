@@ -1,0 +1,13 @@
+\documentclass{article}
+\title{Example}
+
+\begin{document}
+\maketitle
+
+\section{Formula}
+Hello World!  Direct \verb+{verbatim text}+, a formula
+$\overline{x} = \frac{1}{n} \sum{x_i}$
+
+% Please send me a better example ;-)
+
+\end{document}

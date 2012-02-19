@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Vendor: WalWare.de
+Bundle-Name: DocMLET TeX Core
+Bundle-SymbolicName: de.walware.docmlet.tex.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.walware.docmlet.tex.internal.core.TexCorePlugin
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
+ de.walware.ecommons.ltk.core;bundle-version="[2.0.0,2.1.0)",
+ org.eclipse.ltk.core.refactoring
+Import-Package: de.walware.ecommons,
+ de.walware.ecommons.collections,
+ de.walware.ecommons.preferences
+Export-Package: de.walware.docmlet.tex.core,
+ de.walware.docmlet.tex.core.ast,
+ de.walware.docmlet.tex.core.commands,
+ de.walware.docmlet.tex.core.model,
+ de.walware.docmlet.tex.core.parser,
+ de.walware.docmlet.tex.core.sourcecode,
+ de.walware.docmlet.tex.core.text

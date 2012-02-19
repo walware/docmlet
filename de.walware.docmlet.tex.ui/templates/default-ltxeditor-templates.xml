@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+<!-- Default -->
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_begin"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="begin"
+		description="%template_TexDefault_begin_description"
+		autoinsert="true"
+>\begin{${environment}}${cursor}
+\end{${environment}}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_enumerate"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="enumerate"
+		description="%template_TexDefault_enumerate_description"
+		autoinsert="true"
+>\begin{enumerate}
+  \item ${cursor}
+\end{enumerate}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_itemize"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="itemize"
+		description="%template_TexDefault_itemize_description"
+		autoinsert="true"
+>\begin{itemize}
+  \item ${cursor}
+\end{itemize}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_description"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="description"
+		description="%template_TexDefault_description_description"
+		autoinsert="true"
+>\begin{description}
+  \item[${item}] ${cursor}
+\end{description}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_table"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="table"
+		description="%template_TexDefault_table_description"
+		autoinsert="true"
+>\begin{table}
+\begin{tabular}{${columns}}
+${cursor}
+\end{tabular}
+\caption{${tablecaption}}
+\label{${tablelabel}}
+\end{table}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_figure"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="figure"
+		description="%template_TexDefault_figure_description"
+		autoinsert="true"
+>%comment_char \usepackage{graphics} is needed for \includegraphics
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=${figureWidth}]{${filename}}
+  \caption[${labelInTOC}]{${figureCaption}}
+  \label{${figureLabel}}
+\end{center}
+\end{figure}
+</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textrm"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="rm"
+		description="%template_LtxDefault_textrm_description"
+		autoinsert="true"
+>\textrm{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textsf"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="sf"
+		description="%template_LtxDefault_textsf_description"
+		autoinsert="true"
+>\textsf{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_texttt"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="tt"
+		description="%template_LtxDefault_texttt_description"
+		autoinsert="true"
+>\texttt{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textbf"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="bf"
+		description="%template_LtxDefault_textbf_description"
+		autoinsert="true"
+>\textbf{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textup"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="up"
+		description="%template_LtxDefault_textup_description"
+		autoinsert="true"
+		enabled="false"
+>\textup{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textit"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="it"
+		description="%template_LtxDefault_textit_description"
+		autoinsert="true"
+>\textit{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textsl"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="sl"
+		description="%template_LtxDefault_textsl_description"
+		autoinsert="true"
+		enabled="false"
+>\textsl{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_textsc"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="sc"
+		description="%template_LtxDefault_textsc_description"
+		autoinsert="true"
+		enabled="false"
+>\textsc{${word_selection}${}}${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_emph"
+		context="de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"
+		name="emph"
+		description="%template_LtxDefault_emph_description"
+		autoinsert="true"
+>\emph{${word_selection}${}}${cursor}</template>
+
+
+<!-- Math -->
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxMath_sqbr"
+		context="de.walware.docmlet.tex.templates.LtxEditorMathContextType"
+		name="sqbr"
+		description="%template_MathDefault_sqbr_description"
+		autoinsert="true"
+>\left[ ${formula} \right] ${cursor}</template>
+
+<template
+		id="de.walware.docmlet.tex.templates.LtxDefault_braces"
+		context="de.walware.docmlet.tex.templates.LtxEditorMathContextType"
+		name="braces"
+		description="%template_MathDefault_braces_description"
+		autoinsert="true"
+>\left\{ ${formula} \right\} ${cursor}</template>
+
+</templates>

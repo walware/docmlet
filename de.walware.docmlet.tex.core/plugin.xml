@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ ###############################################################################
+ # Copyright (c) 2007-2012 WalWare/StatET-Project (www.walware.de/goto/statet)
+ # and others. All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ # 
+ # Contributors:
+ #     Stephan Wahlbrink - initial API and implementation
+ ###############################################################################
+-->
+
+<plugin>
+   
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.walware.docmlet.tex.internal.core.TexCorePreferenceInitializer">
+      </initializer>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            default-charset="ISO-8859-1"
+            file-extensions="tex,ltx,sty,cls"
+            id="net.sourceforge.texlipse.contentTypes.Latex"
+            name="%contentTypes_Latex_name"
+            priority="normal">
+      </content-type>
+   </extension>
+   
+   <extension
+         point="de.walware.ecommons.ltk.workingContexts">
+      <unitType modelTypeId="ltx"
+            contextKey="persistence.default"
+            unitFactory="de.walware.docmlet.tex.internal.core.model.LtxSourceUnitFactory">
+      </unitType>
+   </extension>
+   <extension
+         point="de.walware.ecommons.ltk.modelAdapters">
+      <adapterFactory
+            modelTypeId="ltx"
+            class="de.walware.docmlet.tex.internal.core.ModelAdapterFactory">
+         <adapter
+               type="de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner">
+         </adapter>
+      </adapterFactory>
+   </extension>
+   
+   <extension
+         point="org.eclipse.team.core.fileTypes">
+      <fileTypes
+            extension="tex"
+            type="text">
+      </fileTypes>
+      <fileTypes
+            extension="ltx"
+            type="text">
+      </fileTypes>
+      <fileTypes
+            extension="sty"
+            type="text">
+      </fileTypes>
+      <fileTypes
+            extension="cls"
+            type="text">
+      </fileTypes>
+      <fileTypes
+            extension="bib"
+            type="text">
+      </fileTypes>
+   </extension>
+   
+</plugin>
