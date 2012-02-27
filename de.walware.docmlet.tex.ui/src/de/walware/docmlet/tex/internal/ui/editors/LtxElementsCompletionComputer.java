@@ -23,6 +23,7 @@ import org.eclipse.jface.text.IRegion;
 import de.walware.ecommons.collections.ConstList;
 import de.walware.ecommons.ltk.IModelElement;
 import de.walware.ecommons.ltk.ISourceStructElement;
+import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.LTKUtil;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
@@ -31,6 +32,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistInformationProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IContentAssistComputer;
 
+import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.ITexProblemConstants;
 import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.ast.ControlNode;
@@ -46,6 +48,7 @@ import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
 import de.walware.docmlet.tex.core.model.ILtxSourceElement;
+import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 
@@ -86,21 +89,29 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 	);
 	
 	
+	private ITexCoreAccess fTexCoreAccess;
+	
+	
 	protected LtxElementsCompletionComputer() {
 	}
 	
 	
 	@Override
-	public void sessionEnded() {
+	public void sessionStarted(final ISourceEditor editor) {
+		final ISourceUnit su = editor.getSourceUnit();
+		if (su instanceof ILtxSourceUnit) {
+			fTexCoreAccess = ((ILtxSourceUnit) su).getTexCoreAccess();
+		}
 	}
 	
 	@Override
-	public void sessionStarted(final ISourceEditor editor) {
+	public void sessionEnded() {
+		fTexCoreAccess = null;
 	}
 	
 	
-	protected final TexCommandSet getCommandSet() {
-		return TexCore.getWorkbenchAccess().getTexCommandSet();
+	protected final ITexCoreAccess getTexCoreAccess() {
+		return (fTexCoreAccess != null) ? fTexCoreAccess : TexCore.getWorkbenchAccess();
 	}
 	
 	protected abstract boolean isMath();
@@ -111,7 +122,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 			final AssistProposalCollector<IAssistCompletionProposal> proposals, final IProgressMonitor monitor) {
 		final String prefix = context.getIdentifierPrefix();
 		final ILtxModelInfo modelInfo = (ILtxModelInfo) context.getModelInfo();
-		final TexCommandSet commandSet = getCommandSet();
+		final TexCommandSet commandSet = getTexCoreAccess().getTexCommandSet();
 		
 		if (prefix.length() > 0 && prefix.charAt(0) == '\\') {
 			final int offset = context.getInvocationOffset() - prefix.length() + 1;
@@ -127,7 +138,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 					if (element != null
 							&& (element.getElementType() & IModelElement.MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {
 						addCommands(context, prefix,
-								getCommandSet().getLtxPreambleCommandsASorted(), null,
+								commandSet.getLtxPreambleCommandsASorted(), null,
 								proposals );
 					}
 					else if (prefix.startsWith("\\docu") //$NON-NLS-1$

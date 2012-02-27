@@ -120,7 +120,7 @@ public class Reconciler {
 					f1Lexer.setNowebType(data.embedded.getNowebType());
 					f1Parser.setCollectEmebeddedNodes(true);
 					
-					sourceNode = f1Parser.parse(input);
+					sourceNode = f1Parser.parse(input, su.getTexCoreAccess().getTexCommandSet());
 					data.customCommands = f1Parser.getCustomCommandMap();
 					data.customEnvs = f1Parser.getCustomEnvMap();
 					
@@ -129,7 +129,7 @@ public class Reconciler {
 					data.embedded.reconcileEmbeddedAst(data.content, embeddedNodes, level, monitor);
 				}
 				else {
-					sourceNode = f1Parser.parse(input);
+					sourceNode = f1Parser.parse(input, su.getTexCoreAccess().getTexCommandSet());
 				}
 				data.ast = new AstInfo(1, data.content.stamp, sourceNode);
 				

@@ -29,7 +29,6 @@ import de.walware.ecommons.text.InternStringCache;
 import de.walware.ecommons.text.NoStringCache;
 import de.walware.ecommons.text.SourceParseInput;
 
-import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.LtxCommandDefinitions;
@@ -56,11 +55,7 @@ public class LtxParser {
 	
 	private final LtxLexer fLexer;
 	
-	private Map<String, TexCommand> fDefaultCommands;
-	private Map<String, TexCommand> fDefaultEnvs;
-	private Map<String, TexCommand> fPreambleCommands;
-	private Map<String, TexCommand> fMathCommands;
-	private Map<String, TexCommand> fMathEnvs;
+	private TexCommandSet fCommandSet;
 	
 	private Map<String, TexCommand> fCustomCommands;
 	private Map<String, TexCommand> fCustomEnvs;
@@ -93,33 +88,47 @@ public class LtxParser {
 		fOtherFactory = (labelFactory != null) ? labelFactory : NoStringCache.INSTANCE;
 	}
 	
-	protected void initCommands(final TexCommandSet config) {
-		fDefaultCommands = config.getLtxTextCommandMap();
-		fDefaultEnvs = config.getLtxTextEnvMap();
-		fPreambleCommands = config.getLtxPreambleCommandMap();
-		fMathCommands = config.getLtxMathCommandMap();
-		fMathEnvs = config.getLtxMathEnvMap();
-	}
-	
 	private TexCommand getCommand(final String controlWord) {
 		if (controlWord == "end") { //$NON-NLS-1$
 			return LtxCommandDefinitions.GENERICENV_end_COMMAND;
 		}
+		TexCommand command;
 		if (fInMath) {
-			return fMathCommands.get(controlWord);
+			command = fCommandSet.getLtxMathCommandMap().get(controlWord);
 		}
-		final TexCommand command = fPreambleCommands.get(controlWord);
+		else {
+			command = fCommandSet.getLtxPreambleCommandMap().get(controlWord);
+			if (command == null) {
+				command = fCommandSet.getLtxTextCommandMap().get(controlWord);
+			}
+		}
 		if (command != null) {
 			return command;
 		}
-		return fDefaultCommands.get(controlWord);
+		if (fCustomCommands != null) {
+			return fCustomCommands.get(controlWord);
+		}
+		return null;
 	}
 	
 	private TexCommand getEnv(final String name) {
-		if (fInMath) {
-			return fMathEnvs.get(name);
+		TexCommand command = fCommandSet.getLtxInternEnvMap().get(name);
+		if (command != null) {
+			return command;
 		}
-		return fDefaultEnvs.get(name);
+		if (fInMath) {
+			command = fCommandSet.getLtxMathEnvMap().get(name);
+		}
+		else {
+			command = fCommandSet.getLtxTextEnvMap().get(name);
+		}
+		if (command != null) {
+			return command;
+		}
+		if (fCustomEnvs != null) {
+			return fCustomEnvs.get(name);
+		}
+		return null;
 	}
 	
 	
@@ -140,13 +149,13 @@ public class LtxParser {
 	}
 	
 	
-	public SourceComponent parse(final SourceParseInput input) {
+	public SourceComponent parse(final SourceParseInput input, final TexCommandSet commandSet) {
 		if (fEmbeddedList != null) {
 			fEmbeddedList.clear();
 		}
 		fCustomCommands = null;
 		fCustomEnvs = null;
-		initCommands(TexCore.getWorkbenchAccess().getTexCommandSet());
+		fCommandSet = commandSet;
 		fLexer.setInput(input);
 		fLexer.setFull();
 		fFoundEndStackPos = -1;
