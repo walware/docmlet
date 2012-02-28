@@ -22,6 +22,22 @@ import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 public class Embedded extends TexAstNode {
 	
 	
+	static class Inline extends Embedded {
+		
+		
+		Inline(final TexAstNode parent, final int startOffset, final String type) {
+			super(parent, startOffset, startOffset, type);
+		}
+		
+		
+		@Override
+		public boolean isInline() {
+			return true;
+		}
+		
+	}
+	
+	
 	final String fType;
 	
 	protected IAstNode fForeignNode;
@@ -37,6 +53,10 @@ public class Embedded extends TexAstNode {
 	@Override
 	public NodeType getNodeType() {
 		return NodeType.EMBEDDED;
+	}
+	
+	public boolean isInline() {
+		return false;
 	}
 	
 	@Override

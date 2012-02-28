@@ -34,6 +34,7 @@ import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.LtxCommandDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
+import de.walware.docmlet.tex.core.commands.TexEmbedCommand;
 import de.walware.docmlet.tex.core.parser.LtxLexer;
 
 
@@ -517,7 +518,7 @@ public class LtxParser {
 			group.fChildren = children.toArray(new TexAstNode[children.size()]);
 		}
 		
-		if (fFoundEndStackPos >= 0) {
+//		if (fFoundEndStackPos >= 0) {
 			if (fFoundEndStackPos == fStackPos) {
 				group.setEndNode(fFoundEndOffset, fFoundEndNode);
 				fFoundEndStackPos = -1;
@@ -525,7 +526,7 @@ public class LtxParser {
 			else {
 				group.setMissingEnd();
 			}
-		}
+//		}
 		fStackPos--;
 	}
 	
@@ -590,7 +591,12 @@ public class LtxParser {
 					fLexer.consume();
 					argNode = new Group.Square(controlNode, fLexer.getOffset(), fLexer.getStopOffset());
 					putToStack(ST_SQUARED, argument.getContent());
-					parseGroup(argNode);
+					if (argument.getContent() == Argument.EMBEDDED) {
+						parseEmbedGroup(argNode, ((TexEmbedCommand) command).getEmbeddedType());
+					}
+					else {
+						parseGroup(argNode);
+					}
 					controlNode.fStopOffset = argNode.fStopOffset;
 					children.add(argNode);
 					
@@ -612,7 +618,12 @@ public class LtxParser {
 					fLexer.consume();
 					argNode = new Group.Bracket(controlNode, fLexer.getOffset(), fLexer.getStopOffset());
 					putToStack(ST_CURLY, argument.getContent());
-					parseGroup(argNode);
+					if (argument.getContent() == Argument.EMBEDDED) {
+						parseEmbedGroup(argNode, ((TexEmbedCommand) command).getEmbeddedType());
+					}
+					else {
+						parseGroup(argNode);
+					}
 					controlNode.fStopOffset = argNode.fStopOffset;
 					children.add(argNode);
 					
@@ -854,6 +865,57 @@ public class LtxParser {
 	private void handleComment() {
 		fWasLinebreak = false;
 		fLexer.consume();
+	}
+	
+	private void parseEmbedGroup(final ContainerNode group, final String type) {
+		final Embedded embedded = new Embedded.Inline(group, fLexer.getStopOffset(), type);
+		GROUP: while (fFoundEndStackPos < 0) {
+			switch (fLexer.pop()) {
+			case LtxLexer.EOF:
+				fFoundEndStackPos = 0;
+				fFoundEndNode = null;
+				break GROUP;
+			case LtxLexer.LINEBREAK:
+				break GROUP;
+			case LtxLexer.CURLY_BRACKET_CLOSE:
+				fWasLinebreak = false;
+				fLexer.consume();
+				if (fStackTypes[fStackPos] == ST_CURLY) {
+					fFoundEndStackPos = fStackPos;
+					fFoundEndOffset = fLexer.getStopOffset();
+					break GROUP;
+				}
+				continue GROUP;
+			case LtxLexer.SQUARED_BRACKET_CLOSE:
+				fWasLinebreak = false;
+				fLexer.consume();
+				if (fStackTypes[fStackPos] == ST_SQUARED) {
+					fFoundEndStackPos = fStackPos;
+					fFoundEndOffset = fLexer.getStopOffset();
+					break GROUP;
+				}
+				continue GROUP;
+			default:
+				fWasLinebreak = false;
+				fLexer.consume();
+				continue GROUP;
+			}
+		}
+		
+		embedded.fStopOffset = fLexer.getOffset();
+		group.fChildren = new TexAstNode[] { embedded };
+		if (fEmbeddedList != null) {
+			fEmbeddedList.add(embedded);
+		}
+		
+		if (fFoundEndStackPos == fStackPos) {
+			group.setEndNode(fFoundEndOffset, fFoundEndNode);
+			fFoundEndStackPos = -1;
+		}
+		else {
+			group.setMissingEnd();
+		}
+		fStackPos--;
 	}
 	
 }

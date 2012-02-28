@@ -403,23 +403,24 @@ public class SourceAnalyzer extends TexAstVisitor {
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
-		if (fTitleDoBuild) {
-			fTitleBuilder.append(fInput, node.getOffset(), node.getStopOffset());
-			if (fTitleBuilder.length() >= 100) {
-				finishTitleText();
+		if (!node.isInline()) {
+			if (fTitleDoBuild) {
+				fTitleBuilder.append(fInput, node.getOffset(), node.getStopOffset());
+				if (fTitleBuilder.length() >= 100) {
+					finishTitleText();
+				}
 			}
+			if (fElement.fChildren.isEmpty()) {
+				fElement.fChildren = new ArrayList<LtxSourceElement>();
+			}
+			final EmbeddedRef element = new LtxSourceElement.EmbeddedRef(node.getText(), fElement,
+					node );
+			element.fOffset = node.getOffset();
+			element.fLength = node.getLength();
+			element.fName = TexElementName.create(0, ""); //$NON-NLS-1$
+			fElement.fChildren.add(element);
+			fEmbeddedItems.add(new EmbeddedReconcileItem(node, element));
 		}
-		if (fElement.fChildren.isEmpty()) {
-			fElement.fChildren = new ArrayList<LtxSourceElement>();
-		}
-		final EmbeddedRef element = new LtxSourceElement.EmbeddedRef(node.getText(), fElement,
-				node );
-		element.fOffset = node.getOffset();
-		element.fLength = node.getLength();
-		element.fName = TexElementName.create(0, "");
-		fElement.fChildren.add(element);
-		fEmbeddedItems.add(new EmbeddedReconcileItem(node, element));
-		
 		fElement.fLength = node.getStopOffset() - fElement.getOffset();
 	}
 	
