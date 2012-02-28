@@ -445,16 +445,17 @@ public class SourceAnalyzer extends TexAstVisitor {
 		{	boolean wasWhitespace = false;
 			int idx = 0;
 			while (idx < fTitleBuilder.length()) {
-				if (wasWhitespace) {
-					if (fTitleBuilder.charAt(idx) == ' ') {
+				if (fTitleBuilder.charAt(idx) == ' ') {
+					if (wasWhitespace) {
 						fTitleBuilder.deleteCharAt(idx);
 					}
 					else {
+						wasWhitespace = true;
 						idx++;
 					}
 				}
 				else {
-					wasWhitespace = (fTitleBuilder.charAt(idx) == ' ');
+					wasWhitespace = false;
 					idx++;
 				}
 			}
