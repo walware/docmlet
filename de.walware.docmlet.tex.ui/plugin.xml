@@ -438,4 +438,22 @@
       </type>
    </extension>
    
+   <extension
+         point="org.eclipse.ui.themes">
+      <colorDefinition
+            id="de.walware.docmlet.themes.SectionColor"
+            isEditable="false"
+            label=""
+            value="159,151,47">
+      </colorDefinition>
+      
+      <theme
+            id="org.eclipse.ui.ide.systemDefault">
+         <colorOverride
+               id="de.walware.docmlet.themes.SectionColor"
+               value="COLOR_LIST_FOREGROUND">
+         </colorOverride>
+      </theme>
+   </extension>
+   
 </plugin>
