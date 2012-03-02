@@ -167,7 +167,7 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	protected void createBlockArea(final Composite pageComposite) {
-		final Map<Preference, String> prefs = new HashMap<Preference, String>();
+		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
 		
 		prefs.put(TexCodeStyleSettings.TAB_SIZE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);
 		prefs.put(TexCodeStyleSettings.INDENT_DEFAULT_TYPE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);

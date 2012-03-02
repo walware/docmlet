@@ -49,8 +49,8 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = TexUIPlugin.getDefault().getPreferenceStore();
-		final DefaultScope defaultScope = new DefaultScope();
-		final IEclipsePreferences pref = defaultScope.getNode(TexUIPlugin.PLUGIN_ID);
+		final DefaultScope scope = new DefaultScope();
+		final IEclipsePreferences pref = scope.getNode(TexUIPlugin.PLUGIN_ID);
 		final ThemeUtil theme = new ThemeUtil();
 		
 		EditorsUI.useAnnotationsPreferencePage(store);
@@ -132,7 +132,7 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		pref.putBoolean(ITexTextStyles.TS_TASK_TAG + TEXTSTYLE_UNDERLINE_SUFFIX, false);
 		pref.putBoolean(ITexTextStyles.TS_TASK_TAG + TEXTSTYLE_STRIKETHROUGH_SUFFIX, false);
 		
-		final IEclipsePreferences editorNode = defaultScope.getNode(TexUIPlugin.TEX_EDITOR_QUALIFIER);
+		final IEclipsePreferences editorNode = scope.getNode(TexUIPlugin.TEX_EDITOR_QUALIFIER);
 		editorNode.put(ContentAssistComputerRegistry.CIRCLING_ORDERED, "tex-elements:false,templates:true,paths:true"); //$NON-NLS-1$
 		editorNode.put(ContentAssistComputerRegistry.DEFAULT_DISABLED, ""); //$NON-NLS-1$
 		
@@ -141,22 +141,22 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		pref.put(DecorationPreferences.MATCHING_BRACKET_COLOR_KEY, theme.getColorPrefValue(IWaThemeConstants.MATCHING_BRACKET_COLOR));
 		
 		{	final AssistPreferences assistPrefs = TexUIPreferences.EDITING_ASSIST_PREFERENCES;
-			PreferencesUtil.setPrefValue(defaultScope, assistPrefs.getAutoActivationEnabledPref(), Boolean.TRUE);
-			PreferencesUtil.setPrefValue(defaultScope, assistPrefs.getAutoActivationDelayPref(), 200);
-			PreferencesUtil.setPrefValue(defaultScope, assistPrefs.getAutoInsertSinglePref(), Boolean.FALSE);
-			PreferencesUtil.setPrefValue(defaultScope, assistPrefs.getAutoInsertPrefixPref(), Boolean.FALSE);
+			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoActivationEnabledPref(), Boolean.TRUE);
+			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoActivationDelayPref(), 200);
+			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertSinglePref(), Boolean.FALSE);
+			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertPrefixPref(), Boolean.FALSE);
 		}
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.FOLDING_ENABLED_PREF, Boolean.TRUE); 
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_ENABLED_PREF, Boolean.TRUE); 
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
 		
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF, TabAction.INSERT_INDENT_LEVEL);
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(defaultScope, TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF, TabAction.INSERT_INDENT_LEVEL);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
 		
-		PreferencesUtil.setPrefValue(defaultScope, LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
 	}
 	
 }

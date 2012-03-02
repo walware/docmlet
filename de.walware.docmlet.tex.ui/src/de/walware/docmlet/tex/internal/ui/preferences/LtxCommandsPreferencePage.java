@@ -136,8 +136,7 @@ class TexCommandsConfigurationBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	public void createBlockArea(final Composite pageComposite) {
-		// Preferences
-		final Map<Preference, String> prefs = new HashMap<Preference, String>();
+		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
 		
 		prefs.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);
 		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_TEXT] = TexCommandSet.TEXT_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);

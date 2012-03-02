@@ -13,7 +13,6 @@ package de.walware.docmlet.tex.internal.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -35,10 +34,10 @@ public class TexCorePreferenceInitializer extends AbstractPreferenceInitializer 
 	
 	@Override
 	public void initializeDefaultPreferences() {
-		final DefaultScope defaultScope = new DefaultScope();
-		final Map<Preference, Object> defaults = new HashMap<Preference, Object>();
+		final DefaultScope scope = new DefaultScope();
+		final Map<Preference<?>, Object> map = new HashMap<Preference<?>, Object>();
 		
-		{	final IEclipsePreferences node = defaultScope.getNode(TexCommandSet.QUALIFIER);
+		{	final IEclipsePreferences node = scope.getNode(TexCommandSet.QUALIFIER);
 			node.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF.getKey(),
 					"{,},#,%," +
 					"AAA:1,acute,addcontentsline,addtocounter,adots,aleph,Alph,alph,alpha,amalg,angle,approx,approxeq,arabic,arccos,arcsin,arctan,arg,ast,asymp,author," +
@@ -142,11 +141,9 @@ public class TexCorePreferenceInitializer extends AbstractPreferenceInitializer 
 					"Vmatrix,vmatrix" );
 		}
 		
-		new TexCodeStyleSettings(0).deliverToPreferencesMap(defaults);
+		new TexCodeStyleSettings(0).deliverToPreferencesMap(map);
 		
-		for (final Entry<Preference, Object> entry : defaults.entrySet()) {
-			PreferencesUtil.setPrefValue(defaultScope, entry.getKey(), entry.getValue());
-		}
+		PreferencesUtil.setPrefValues(scope, map);
 	}
 	
 }
