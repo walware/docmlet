@@ -60,8 +60,8 @@ public class LtxDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			String type = partition.getType();
 			
 			// Bracket-Pair-Matching in Code-Partitions
-			if (ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE.equals(type)
-					|| ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE.equals(type)) {
+			if (type == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
+					|| type == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE) {
 				final IRegion region = fPairMatcher.match(document, offset);
 				if (region != null && region.getLength() >= 2) {
 					textViewer.setSelectedRange(region.getOffset() + 1, region.getLength() - 2);
@@ -107,20 +107,23 @@ public class LtxDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 						textViewer.setSelectedRange(start, getEndOffset(document, partitionEnd, endPattern) - start);
 					}
 				}
+			}
+			if (type == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
+					|| type == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE
+					|| type == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE ) {
+				IRegion region = fPairMatcher.match(document, offset);
+				if (region != null && region.getLength() >= 2) {
+					textViewer.setSelectedRange(region.getOffset() + 1, region.getLength() - 2);
+					return;
+				}
+				
+				fScanner.configure(document);
+				region = fScanner.findCommonWord(offset);
+				if (region != null) {
+					textViewer.setSelectedRange(region.getOffset(), region.getLength());
+				}
 				else {
-					IRegion region = fPairMatcher.match(document, offset);
-					if (region != null && region.getLength() >= 2) {
-						textViewer.setSelectedRange(region.getOffset() + 1, region.getLength() - 2);
-						return;
-					}
-					fScanner.configure(document);
-					region = fScanner.findCommonWord(offset);
-					if (region != null) {
-						textViewer.setSelectedRange(region.getOffset(), region.getLength());
-					}
-					else {
-						textViewer.setSelectedRange(offset, 0);
-					}
+					textViewer.setSelectedRange(offset, 0);
 				}
 				return;
 			}
