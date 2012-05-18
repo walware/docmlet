@@ -103,14 +103,15 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 				final Point selection = fViewer.getSelectedRange();
 				if (!fInserted
 						&& selection.x == fOffset && selection.y == 0
-						&& (event.character != 0 || (event.text != null && event.text.length() == 1)) ) {
+						&& (event.character != 0) ) {
 					try {
 						final int currentChar = (fOffset < fDocument.getLength()) ? fDocument.getChar(fOffset) : '\n';
-						final char c = (event.text != null) ? event.text.charAt(0) : event.character;
+						final char c = event.character;
 						if (currentChar <= 0x20 && currentChar != c
 								&& c >= 0x20 && !Character.isLetterOrDigit(c) ) {
 							fIntern = true;
 							fDocument.replace(fOffset, 0, "" + c + c);
+							// install linked mode?
 							fInserted = true;
 							event.doit = false;
 							fViewer.setSelection(new TextSelection(fOffset+1, 0), true);
@@ -139,7 +140,6 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 					}
 				}
 			}
-			dispose();
 		}
 		
 		@Override

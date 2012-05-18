@@ -11,6 +11,8 @@
 
 package de.walware.docmlet.tex.core.commands;
 
+import static de.walware.docmlet.tex.core.commands.LtxCommandDefinitions.add;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -47,42 +49,44 @@ public class TexCommandSet {
 	
 	public static final String GROUP_ID = "ltx/ltx.commands"; //$NON-NLS-1$
 	
+	private static final Map<String, TexCommand> LTX_INTERN_ENVS = new IdentityHashMap<String, TexCommand>();
 	
-	private List<TexCommand> fAllCommands;
+	static {
+		add(LTX_INTERN_ENVS, IEnvDefinitions.ENV_Sinput_BEGIN);
+		add(LTX_INTERN_ENVS, IEnvDefinitions.ENV_Souput_BEGIN);
+	}
 	
-	private List<TexCommand> fAllEnvs;
 	
-	private Map<String, TexCommand> fTextEnvMap;
-	private List<TexCommand> fTextEnvListASorted;
+	private final List<TexCommand> fAllCommands;
 	
-	private Map<String, TexCommand> fTextCommandMap;
-	private List<TexCommand> fTextCommandListASorted;
+	private final List<TexCommand> fAllEnvs;
 	
-	private Map<String, TexCommand> fPreambleCommandMap;
-	private List<TexCommand> fPreambleCommandListASorted;
+	private final Map<String, TexCommand> fTextEnvMap;
+	private final List<TexCommand> fTextEnvListASorted;
 	
-	private Map<String, TexCommand> fMathEnvMap;
-	private List<TexCommand> fMathEnvListASorted;
+	private final Map<String, TexCommand> fTextCommandMap;
+	private final List<TexCommand> fTextCommandListASorted;
 	
-	private Map<String, TexCommand> fMathCommandMap;
-	private List<TexCommand> fMathCommandListASorted;
+	private final Map<String, TexCommand> fPreambleCommandMap;
+	private final List<TexCommand> fPreambleCommandListASorted;
+	
+	private final Map<String, TexCommand> fMathEnvMap;
+	private final List<TexCommand> fMathEnvListASorted;
+	
+	private final Map<String, TexCommand> fMathCommandMap;
+	private final List<TexCommand> fMathCommandListASorted;
+	
+	private final Map<String, TexCommand> fInternEnvMap;
 	
 	
 	public TexCommandSet(final IPreferenceAccess prefs) {
 		final Set<String> master = prefs.getPreferenceValue(MASTER_COMMANDS_INCLUDE_PREF);
 		final Set<String> preamble = prefs.getPreferenceValue(PREAMBLE_INCLUDE_PREF);
-		final Set<String> text = prefs.getPreferenceValue(TEXT_COMMANDS_INCLUDE_PREF);
+		final Set<String> textCommands = prefs.getPreferenceValue(TEXT_COMMANDS_INCLUDE_PREF);
 		final Set<String> textEnvs = prefs.getPreferenceValue(TEXT_ENVS_INCLUDE_PREF);
-		final Set<String> math = prefs.getPreferenceValue(MATH_COMMANDS_INCLUDE_PREF);
+		final Set<String> mathCommands = prefs.getPreferenceValue(MATH_COMMANDS_INCLUDE_PREF);
 		final Set<String> mathEnvs = prefs.getPreferenceValue(MATH_ENVS_INCLUDE_PREF);
 		
-		init(master, preamble, text, textEnvs, math, mathEnvs);
-	}
-	
-	
-	private void init(final Set<String> master, final Set<String> preamble,
-			final Set<String> textCommands, final Set<String> textEnvs,
-			final Set<String> mathCommands, final Set<String> mathEnvs) {
 		final TexCommand[] sortedCommands;
 		final TexCommand[] sortedEnvs;
 		{	final TexCommand[] filteredCommands = new TexCommand[master.size()];
@@ -175,6 +179,30 @@ public class TexCommandSet {
 			fMathEnvListASorted = new ConstList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
+		
+		fInternEnvMap = LTX_INTERN_ENVS;
+	}
+	
+	public TexCommandSet(final List<TexCommand> allCommands, final List<TexCommand> allEnvs,
+			final Map<String, TexCommand> textEnvMap, final List<TexCommand> textEnvList,
+			final Map<String, TexCommand> textCommandMap, final List<TexCommand> textCommandList,
+			final Map<String, TexCommand> preambleCommandMap, final List<TexCommand> preambleCommandList,
+			final Map<String, TexCommand> mathEnvMap, final List<TexCommand> mathEnvList,
+			final Map<String, TexCommand> mathCommandMap, final List<TexCommand> mathCommandList,
+			final Map<String, TexCommand> internEnvMap) {
+		fAllCommands = allCommands;
+		fAllEnvs = allEnvs;
+		fTextEnvMap = textEnvMap;
+		fTextEnvListASorted = textEnvList;
+		fTextCommandMap = textCommandMap;
+		fTextCommandListASorted = textCommandList;
+		fPreambleCommandMap = preambleCommandMap;
+		fPreambleCommandListASorted = preambleCommandList;
+		fMathEnvMap = mathEnvMap;
+		fMathEnvListASorted = mathEnvList;
+		fMathCommandMap = mathCommandMap;
+		fMathCommandListASorted = mathCommandList;
+		fInternEnvMap = internEnvMap;
 	}
 	
 	
@@ -224,6 +252,10 @@ public class TexCommandSet {
 	
 	public List<TexCommand> getLtxMathCommandsASorted() {
 		return fMathCommandListASorted;
+	}
+	
+	public Map<String, TexCommand> getLtxInternEnvMap() {
+		return fInternEnvMap;
 	}
 	
 }

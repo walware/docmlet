@@ -78,8 +78,7 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	public void createBlockArea(final Composite pageComposite) {
-		// Preferences
-		final Map<Preference, String> prefs = new HashMap<Preference, String>();
+		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
 		
 		prefs.put(TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF, TexEditorOptions.SMARTINSERT_GROUP_ID);
 		prefs.put(TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF, TexEditorOptions.SMARTINSERT_GROUP_ID);

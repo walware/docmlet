@@ -13,6 +13,10 @@ package de.walware.docmlet.tex.core.commands;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.text.RuleBasedCollator;
 
 
 public class TexCommand implements Comparable<TexCommand> {
@@ -129,6 +133,11 @@ public class TexCommand implements Comparable<TexCommand> {
 	
 	private static final List<Argument> NO_ARGUMENTS = Collections.emptyList();
 	
+	private static final Collator COLLATOR = Collator.getInstance(Locale.ENGLISH);
+	static {
+		((RuleBasedCollator) COLLATOR).setUpperCaseFirst(true);
+	}
+	
 	
 	private final int fType;
 	private final String fWord;
@@ -180,7 +189,7 @@ public class TexCommand implements Comparable<TexCommand> {
 	
 	@Override
 	public int compareTo(final TexCommand other) {
-		return fWord.compareTo(other.fWord);
+		return COLLATOR.compare(fWord, other.fWord);
 	}
 	
 	@Override

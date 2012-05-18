@@ -12,9 +12,7 @@
 package de.walware.docmlet.tex.ui.text;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,6 +26,8 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import de.walware.ecommons.collections.IntArrayMap;
+import de.walware.ecommons.collections.IntMap;
 import de.walware.ecommons.text.IPartitionScannerCallbackExt;
 import de.walware.ecommons.text.IPartitionScannerConfigExt;
 import de.walware.ecommons.text.Partitioner;
@@ -157,7 +157,9 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	
 	private final OperatorRule fEnvNameRule;
 	private final Map<String, EnvType> fEnvStates;
-	private char[] fEndPattern;
+	private char[] fEnvEndPattern;
+	
+	private char fVerbEndPattern;
 	
 	private Partitioner fPartitioner;
 	
@@ -172,12 +174,13 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	 * so dollar must be doubled for math modes.
 	 */
 	public LtxFastPartitionScanner(final String partitioning, final boolean templateMode) {
-		final Map<Integer, IToken> list = new HashMap<Integer, IToken>();
 		fTemplateMode = templateMode;
 		fEnvNameRule = new OperatorRule(new char[] {});
 		fEnvStates = new HashMap<String, EnvType>();
+		
+		final IntArrayMap<IToken> list = new IntArrayMap<IToken>();
 		initTokens(list);
-		final int count = maxState(list.keySet())+1;
+		final int count = list.getMaxKey()+1;
 		fStateTokens = new IToken[count];
 		for (int i = 0; i < count; i++) {
 			fStateTokens[i] = list.get(i);
@@ -190,24 +193,12 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	}
 	
 	
-	private int maxState(final Set<Integer> states) {
-		int max = 0;
-		final Iterator<Integer> iter = states.iterator();
-		while (iter.hasNext()) {
-			final int state = iter.next().intValue();
-			if (state > max) {
-				max = state;
-			}
-		}
-		return max;
-	}
-	
 	protected void addEnvRule(final String name, final int state) {
 		fEnvStates.put(name, new EnvType(name, state));
 		fEnvNameRule.addOp(name, null);
 	}
 	
-	protected void initTokens(final Map<Integer, IToken> states) {
+	protected void initTokens(final IntMap<IToken> states) {
 		states.put(S_DEFAULT, T_DEFAULT);
 		states.put(S_MATH_SPECIAL_$, T_MATH);
 		states.put(S_MATH_SPECIAL_S, T_MATH);
@@ -288,7 +279,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 		else {
 			prepareScan(0, 0);
 			fState = fStartPartitionState;
-			fEndPattern = SEQ_dummy;
+			fEnvEndPattern = SEQ_dummy;
 		}
 	}
 	
@@ -353,7 +344,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 					searchMathEnv();
 					break;
 				case S_VERBATIM_LINE:
-					searchVerbatimLine();
+					searchVerbatimLine(fVerbEndPattern, S_DEFAULT);
 					break;
 				case S_COMMENT_LINE:
 					searchCommentLine();
@@ -369,8 +360,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 					searchInternalEndEnv();
 					break;
 				default:
-					fTokenLength++;
-					searchExtState(fState, fScanner.read());
+					searchExtState(fState);
 					break;
 				}
 			} while (fToken == null);
@@ -397,6 +387,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	
 	protected void searchDefault() {
 		LOOP: while (true) {
+			int c;
 			switch (fScanner.read()) {
 			case ICharacterScanner.EOF:
 				fLast = LAST_OTHER;
@@ -413,7 +404,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				return;
 			case '\\':
 				fTokenLength++;
-				switch (fScanner.read()) {
+				switch (c = fScanner.read()) {
 				case ICharacterScanner.EOF:
 					fLast = LAST_OTHER;
 					newState(-1);
@@ -433,7 +424,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 						checkForBeginEnv();
 						return;
 					}
-					return;
+					break;
 				case 'v':
 					fTokenLength++;
 					if (readSeq2(SEQ_verb)) {
@@ -445,11 +436,11 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 							return;
 						}
 						fTokenLength++;
-						fEndPattern = new char[] { (char) c6 };
+						fVerbEndPattern = (char) c6;
 						newState(S_VERBATIM_LINE, 6); // \verb
 						return;
 					}
-					continue;
+					break;
 				case '[':
 					fTokenLength++;
 					newState(S_MATH_SPECIAL_S, 2);
@@ -460,8 +451,12 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 					return;
 				default:
 					fTokenLength++;
-					continue LOOP;
+					break;
 				}
+				if (searchExtCommand(c)) {
+					return;
+				}
+				continue LOOP;
 			case '%':
 				fTokenLength++;
 				fLast = LAST_OTHER;
@@ -473,20 +468,20 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				if (readChar('$')) {
 					if (fTemplateMode && readChar('$')) {
 						if (readChar('$')) {
-							fEndPattern = SEQ_$$$$;
+							fEnvEndPattern = SEQ_$$$$;
 							newState(S_MATH_SPECIAL_$, 4);
 							return;
 						}
-						fEndPattern = SEQ_$$;
+						fEnvEndPattern = SEQ_$$;
 						newState(S_MATH_SPECIAL_$, 3);
 						return;
 					}
-					fEndPattern = SEQ_$$;
+					fEnvEndPattern = SEQ_$$;
 					newState(S_MATH_SPECIAL_$, 2);
 					return;
 				}
 				if (!fTemplateMode) {
-					fEndPattern = SEQ_$;
+					fEnvEndPattern = SEQ_$;
 					newState(S_MATH_SPECIAL_$, 1);
 					return;
 				}
@@ -500,6 +495,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	
 	protected void searchMathSpecial() {
 		LOOP: while (true) {
+			int c;
 			switch (fScanner.read()) {
 			case ICharacterScanner.EOF:
 				fLast = LAST_OTHER;
@@ -516,7 +512,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				return;
 			case '\\':
 				fTokenLength++;
-				switch (fScanner.read()) {
+				switch (c = fScanner.read()) {
 				case ICharacterScanner.EOF:
 					fLast = LAST_OTHER;
 					newState(-1);
@@ -548,8 +544,12 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 					continue LOOP;
 				default:
 					fTokenLength++;
-					continue LOOP;
+					break;
 				}
+				if (searchExtCommand(c)) {
+					return;
+				}
+				continue LOOP;
 			case '%':
 				fTokenLength++;
 				fLast = LAST_OTHER;
@@ -558,7 +558,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				return;
 			case '$':
 				fTokenLength++;
-				if (fState == S_MATH_SPECIAL_$ && readSeq2Consuming(fEndPattern)) {
+				if (fState == S_MATH_SPECIAL_$ && readSeq2Consuming(fEnvEndPattern)) {
 					fLast = LAST_OTHER;
 					newState(S_DEFAULT);
 					return;
@@ -573,6 +573,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 	
 	protected void searchMathEnv() {
 		LOOP: while (true) {
+			int c;
 			switch (fScanner.read()) {
 			case ICharacterScanner.EOF:
 				fLast = LAST_OTHER;
@@ -589,7 +590,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				return;
 			case '\\':
 				fTokenLength++;
-				switch (fScanner.read()) {
+				switch (c = fScanner.read()) {
 				case ICharacterScanner.EOF:
 					fLast = LAST_OTHER;
 					newState(-1);
@@ -606,7 +607,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				case 'e':
 					fTokenLength++;
 					if (readCharsConsuming('n', 'd')) {
-						final int c = fScanner.read();
+						c = fScanner.read();
 						if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
 							fTokenLength++;
 							continue LOOP;
@@ -623,11 +624,15 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 						searchInternalEndEnv();
 						return;
 					}
-					continue LOOP;
+					break;
 				default:
 					fTokenLength++;
-					continue LOOP;
+					break;
 				}
+				if (searchExtCommand(c)) {
+					return;
+				}
+				continue LOOP;
 			case '%':
 				fTokenLength++;
 				fLast = LAST_OTHER;
@@ -659,7 +664,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				return;
 			case '\\':
 				fTokenLength++;
-				if (readSeqConsuming(fEndPattern)) {
+				if (readSeqConsuming(fEnvEndPattern)) {
 					fLast = LAST_OTHER;
 					newState(S_DEFAULT);
 					return;
@@ -672,8 +677,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 		}
 	}
 	
-	protected void searchVerbatimLine() {
-		final int end = fEndPattern[0];
+	protected void searchVerbatimLine(final int end, final int nextState) {
 		LOOP: while (true) {
 			final int c = fScanner.read();
 			switch (c) {
@@ -685,22 +689,27 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				fTokenLength++;
 				if (readChar('\n')) {
 					fLast = LAST_NEWLINE;
-					newState(S_DEFAULT, 2);
+					newState(nextState, 2);
 					return;
 				}
 				fLast = LAST_NEWLINE;
-				newState(S_DEFAULT, 1);
+				newState(nextState, 1);
 				return;
 			case '\n':
 				fTokenLength++;
 				fLast = LAST_NEWLINE;
-				newState(S_DEFAULT, 1);
+				newState(nextState, 1);
 				return;
 			default:
 				fTokenLength++;
 				if (c == end) {
 					fLast = LAST_OTHER;
-					newState(S_DEFAULT);
+					if (fState == S_VERBATIM_LINE) {
+						newState(nextState);
+					}
+					else {
+						newState(nextState, 1);
+					}
 					return;
 				}
 				continue LOOP;
@@ -779,7 +788,7 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 				fTokenLength++;
 				continue LOOP;
 			case '{':
-				if (readSeqConsuming(fEndPattern)) {
+				if (readSeqConsuming(fEnvEndPattern)) {
 					fTokenLength++;
 					readChar('}');
 					fLast = LAST_OTHER;
@@ -893,6 +902,21 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 		return false;
 	}
 	
+	protected final void readWhitespaceConsuming() {
+		int readed = 0;
+		while (true) {
+			final int c = fScanner.read();
+			if (c != ' ' && c != '\t') {
+				if (c >= 0) {
+					fScanner.unread();
+				}
+				fTokenLength += readed;
+				return;
+			}
+			readed++;
+		}
+	}
+	
 	protected final int readTempWhitespace() {
 		int readed = 0;
 		do {
@@ -945,15 +969,17 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 		
 		unread(count);
 		final EnvType envType = fEnvStates.get(name);
-		fEndPattern = envType.endPattern;
+		fEnvEndPattern = envType.endPattern;
 		newState(envType.state, 6); // \begin Note: we don't prefix all, because of new line handling for chunks
 	}
 	
-	protected void searchExtState(final int state, final int c) {
-		if (c == '\r' || c == '\n') {
-			fLast = LAST_NEWLINE;
-			return;
-		}
+	
+	protected final int getState() {
+		return fState;
+	}
+	
+	protected void searchExtState(final int state) {
+		throw new IllegalStateException(""+state);
 	}
 	
 	protected final void newState(final int newState) {
@@ -1073,6 +1099,10 @@ public class LtxFastPartitionScanner implements IPartitionTokenScanner, IPartiti
 			return S_MATH_ENV;
 		}
 		return getExtState(contentType);
+	}
+	
+	protected boolean searchExtCommand(int c) {
+		return false;
 	}
 	
 	protected int getExtState(final String contentType) {

@@ -167,7 +167,7 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	protected void createBlockArea(final Composite pageComposite) {
-		final Map<Preference, String> prefs = new HashMap<Preference, String>();
+		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
 		
 		prefs.put(TexCodeStyleSettings.TAB_SIZE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);
 		prefs.put(TexCodeStyleSettings.INDENT_DEFAULT_TYPE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);
@@ -220,7 +220,7 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 			final GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
 			gd.horizontalIndent = LayoutUtil.defaultIndent();
 			label.setLayoutData(gd);
-			label.setText("Environments to be intended:");
+			label.setText("Environments to be indented:");
 		}
 		fIndentEnvLabelsControl = new EditableTextList();
 		{	final Control control = fIndentEnvLabelsControl.create(depthComposite, new ViewerComparator());

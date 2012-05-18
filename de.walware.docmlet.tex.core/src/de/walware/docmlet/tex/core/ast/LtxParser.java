@@ -29,12 +29,12 @@ import de.walware.ecommons.text.InternStringCache;
 import de.walware.ecommons.text.NoStringCache;
 import de.walware.ecommons.text.SourceParseInput;
 
-import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.LtxCommandDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
+import de.walware.docmlet.tex.core.commands.TexEmbedCommand;
 import de.walware.docmlet.tex.core.parser.LtxLexer;
 
 
@@ -56,11 +56,7 @@ public class LtxParser {
 	
 	private final LtxLexer fLexer;
 	
-	private Map<String, TexCommand> fDefaultCommands;
-	private Map<String, TexCommand> fDefaultEnvs;
-	private Map<String, TexCommand> fPreambleCommands;
-	private Map<String, TexCommand> fMathCommands;
-	private Map<String, TexCommand> fMathEnvs;
+	private TexCommandSet fCommandSet;
 	
 	private Map<String, TexCommand> fCustomCommands;
 	private Map<String, TexCommand> fCustomEnvs;
@@ -93,33 +89,47 @@ public class LtxParser {
 		fOtherFactory = (labelFactory != null) ? labelFactory : NoStringCache.INSTANCE;
 	}
 	
-	protected void initCommands(final TexCommandSet config) {
-		fDefaultCommands = config.getLtxTextCommandMap();
-		fDefaultEnvs = config.getLtxTextEnvMap();
-		fPreambleCommands = config.getLtxPreambleCommandMap();
-		fMathCommands = config.getLtxMathCommandMap();
-		fMathEnvs = config.getLtxMathEnvMap();
-	}
-	
 	private TexCommand getCommand(final String controlWord) {
 		if (controlWord == "end") { //$NON-NLS-1$
 			return LtxCommandDefinitions.GENERICENV_end_COMMAND;
 		}
+		TexCommand command;
 		if (fInMath) {
-			return fMathCommands.get(controlWord);
+			command = fCommandSet.getLtxMathCommandMap().get(controlWord);
 		}
-		final TexCommand command = fPreambleCommands.get(controlWord);
+		else {
+			command = fCommandSet.getLtxPreambleCommandMap().get(controlWord);
+			if (command == null) {
+				command = fCommandSet.getLtxTextCommandMap().get(controlWord);
+			}
+		}
 		if (command != null) {
 			return command;
 		}
-		return fDefaultCommands.get(controlWord);
+		if (fCustomCommands != null) {
+			return fCustomCommands.get(controlWord);
+		}
+		return null;
 	}
 	
 	private TexCommand getEnv(final String name) {
-		if (fInMath) {
-			return fMathEnvs.get(name);
+		TexCommand command = fCommandSet.getLtxInternEnvMap().get(name);
+		if (command != null) {
+			return command;
 		}
-		return fDefaultEnvs.get(name);
+		if (fInMath) {
+			command = fCommandSet.getLtxMathEnvMap().get(name);
+		}
+		else {
+			command = fCommandSet.getLtxTextEnvMap().get(name);
+		}
+		if (command != null) {
+			return command;
+		}
+		if (fCustomEnvs != null) {
+			return fCustomEnvs.get(name);
+		}
+		return null;
 	}
 	
 	
@@ -140,13 +150,13 @@ public class LtxParser {
 	}
 	
 	
-	public SourceComponent parse(final SourceParseInput input) {
+	public SourceComponent parse(final SourceParseInput input, final TexCommandSet commandSet) {
 		if (fEmbeddedList != null) {
 			fEmbeddedList.clear();
 		}
 		fCustomCommands = null;
 		fCustomEnvs = null;
-		initCommands(TexCore.getWorkbenchAccess().getTexCommandSet());
+		fCommandSet = commandSet;
 		fLexer.setInput(input);
 		fLexer.setFull();
 		fFoundEndStackPos = -1;
@@ -508,7 +518,7 @@ public class LtxParser {
 			group.fChildren = children.toArray(new TexAstNode[children.size()]);
 		}
 		
-		if (fFoundEndStackPos >= 0) {
+//		if (fFoundEndStackPos >= 0) {
 			if (fFoundEndStackPos == fStackPos) {
 				group.setEndNode(fFoundEndOffset, fFoundEndNode);
 				fFoundEndStackPos = -1;
@@ -516,7 +526,7 @@ public class LtxParser {
 			else {
 				group.setMissingEnd();
 			}
-		}
+//		}
 		fStackPos--;
 	}
 	
@@ -581,7 +591,12 @@ public class LtxParser {
 					fLexer.consume();
 					argNode = new Group.Square(controlNode, fLexer.getOffset(), fLexer.getStopOffset());
 					putToStack(ST_SQUARED, argument.getContent());
-					parseGroup(argNode);
+					if (argument.getContent() == Argument.EMBEDDED) {
+						parseEmbedGroup(argNode, ((TexEmbedCommand) command).getEmbeddedType());
+					}
+					else {
+						parseGroup(argNode);
+					}
 					controlNode.fStopOffset = argNode.fStopOffset;
 					children.add(argNode);
 					
@@ -603,7 +618,12 @@ public class LtxParser {
 					fLexer.consume();
 					argNode = new Group.Bracket(controlNode, fLexer.getOffset(), fLexer.getStopOffset());
 					putToStack(ST_CURLY, argument.getContent());
-					parseGroup(argNode);
+					if (argument.getContent() == Argument.EMBEDDED) {
+						parseEmbedGroup(argNode, ((TexEmbedCommand) command).getEmbeddedType());
+					}
+					else {
+						parseGroup(argNode);
+					}
 					controlNode.fStopOffset = argNode.fStopOffset;
 					children.add(argNode);
 					
@@ -845,6 +865,57 @@ public class LtxParser {
 	private void handleComment() {
 		fWasLinebreak = false;
 		fLexer.consume();
+	}
+	
+	private void parseEmbedGroup(final ContainerNode group, final String type) {
+		final Embedded embedded = new Embedded.Inline(group, fLexer.getStopOffset(), type);
+		GROUP: while (fFoundEndStackPos < 0) {
+			switch (fLexer.pop()) {
+			case LtxLexer.EOF:
+				fFoundEndStackPos = 0;
+				fFoundEndNode = null;
+				break GROUP;
+			case LtxLexer.LINEBREAK:
+				break GROUP;
+			case LtxLexer.CURLY_BRACKET_CLOSE:
+				fWasLinebreak = false;
+				fLexer.consume();
+				if (fStackTypes[fStackPos] == ST_CURLY) {
+					fFoundEndStackPos = fStackPos;
+					fFoundEndOffset = fLexer.getStopOffset();
+					break GROUP;
+				}
+				continue GROUP;
+			case LtxLexer.SQUARED_BRACKET_CLOSE:
+				fWasLinebreak = false;
+				fLexer.consume();
+				if (fStackTypes[fStackPos] == ST_SQUARED) {
+					fFoundEndStackPos = fStackPos;
+					fFoundEndOffset = fLexer.getStopOffset();
+					break GROUP;
+				}
+				continue GROUP;
+			default:
+				fWasLinebreak = false;
+				fLexer.consume();
+				continue GROUP;
+			}
+		}
+		
+		embedded.fStopOffset = fLexer.getOffset();
+		group.fChildren = new TexAstNode[] { embedded };
+		if (fEmbeddedList != null) {
+			fEmbeddedList.add(embedded);
+		}
+		
+		if (fFoundEndStackPos == fStackPos) {
+			group.setEndNode(fFoundEndOffset, fFoundEndNode);
+			fFoundEndStackPos = -1;
+		}
+		else {
+			group.setMissingEnd();
+		}
+		fStackPos--;
 	}
 	
 }

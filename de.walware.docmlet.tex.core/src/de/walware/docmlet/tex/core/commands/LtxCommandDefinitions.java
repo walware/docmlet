@@ -33,7 +33,7 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 	private static ConstList<TexCommand> gAllEnvs;
 	
 	
-	private static void add(final Map<String, TexCommand> map, final TexCommand command) {
+	static final void add(final Map<String, TexCommand> map, final TexCommand command) {
 		assert (!map.containsKey(command.getControlWord())) : command.getControlWord();
 		map.put(command.getControlWord(), command);
 	}

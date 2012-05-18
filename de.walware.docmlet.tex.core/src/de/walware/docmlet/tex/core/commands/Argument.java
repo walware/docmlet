@@ -21,23 +21,30 @@ public final class Argument {
 	public static final byte OPTIONAL = 0x02;
 //	public static final byte ROUND =    0x04;
 	
-	public static final byte TITLE =                        0x11;
-	public static final byte CONTROLWORD =                  0x20;
-	public static final byte LABEL =                        0x30;
-	public static final byte LABEL_ENV =                    0x31;
-	public static final byte LABEL_REFLABEL_DEF =              0x32;
-	public static final byte LABEL_REFLABEL_REF =              0x33;
-	public static final byte LABEL_COUNTER_DEF =            0x34;
-	public static final byte LABEL_COUNTER_SET =            0x35;
-	public static final byte LABEL_COUNTER_REF =            0x36;
-	public static final byte LABEL_BIB_DEF =                0x38;
-	public static final byte LABEL_BIB_REF =                0x39;
-	public static final byte RESOURCE =                     0x40;
-	public static final byte RESOURCE_SINGLE =              0x41;
-	public static final byte RESOURCE_LIST =                0x42;
-	public static final byte NUM =                          0x50;
-	public static final byte POS =                          0x7f;
-	public static final byte LOC =                          0x7f;
+	public static final byte TITLE =                        (byte) 0x11;
+	
+	public static final byte CONTROLWORD =                  (byte) 0x20;
+	
+	public static final byte LABEL =                        (byte) 0x30;
+	public static final byte LABEL_ENV =                    (byte) 0x31;
+	public static final byte LABEL_REFLABEL_DEF =           (byte) 0x32;
+	public static final byte LABEL_REFLABEL_REF =           (byte) 0x33;
+	public static final byte LABEL_COUNTER_DEF =            (byte) 0x34;
+	public static final byte LABEL_COUNTER_SET =            (byte) 0x35;
+	public static final byte LABEL_COUNTER_REF =            (byte) 0x36;
+	public static final byte LABEL_BIB_DEF =                (byte) 0x38;
+	public static final byte LABEL_BIB_REF =                (byte) 0x39;
+	
+	public static final byte RESOURCE =                     (byte) 0x40;
+	public static final byte RESOURCE_SINGLE =              (byte) 0x41;
+	public static final byte RESOURCE_LIST =                (byte) 0x42;
+	
+	public static final byte NUM =                          (byte) 0x50;
+	
+	public static final byte POS =                          (byte) 0x7f;
+	public static final byte LOC =                          (byte) 0x7f;
+	
+	public static final byte EMBEDDED =                     (byte) 0xf1;
 	
 	
 	private final String fLabel;

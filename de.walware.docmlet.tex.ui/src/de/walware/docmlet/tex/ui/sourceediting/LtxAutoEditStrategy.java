@@ -646,7 +646,7 @@ public class LtxAutoEditStrategy extends DefaultIndentLineAutoEditStrategy
 		
 		// Compute indent
 		final LtxParser scanner = new LtxParser(new NowebLtxLexer());
-		final SourceComponent rootNode = scanner.parse(parseInput);
+		final SourceComponent rootNode = scanner.parse(parseInput, fTexCoreAccess.getTexCommandSet());
 		if (fIndenter == null) {
 			fIndenter = new LtxSourceIndenter();
 		}
