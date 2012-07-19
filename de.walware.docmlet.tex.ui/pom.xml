@@ -13,7 +13,7 @@
 	
 	<groupId>de.walware.docmlet</groupId>
 	<artifactId>de.walware.docmlet.tex.ui</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	
 </project>
