@@ -157,8 +157,10 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 	@Override
 	protected void collectContextMenuPreferencePages(final List<String> pageIds) {
 		super.collectContextMenuPreferencePages(pageIds);
-		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxTextStylesPage"); //$NON-NLS-1$
-		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxEditorTemplatesPage"); //$NON-NLS-1$
+		pageIds.add("de.walware.docmlet.tex.preferencePages.TexEditor"); //$NON-NLS-1$
+		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxTextStyles"); //$NON-NLS-1$
+		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxEditorTemplates"); //$NON-NLS-1$
+		pageIds.add("de.walware.docmlet.tex.preferencePages.TexCodeStyle"); //$NON-NLS-1$
 	}
 	
 	@Override

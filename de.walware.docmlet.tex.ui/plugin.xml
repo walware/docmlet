@@ -325,13 +325,13 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            id="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.Tex"
             class="de.walware.docmlet.tex.internal.ui.preferences.TexBasePreferencePage"
             name="%preferencePages_Tex_name">
       </page>
       <page
-            id="de.walware.docmlet.tex.preferencePages.TexCodeStylePage"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.TexCodeStyle"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_TexCodeStyle_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.TexCodeStylePreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
@@ -339,60 +339,45 @@
       </page>
       <page
             id="de.walware.docmlet.tex.preferencePages.LtxCommand"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxCommands_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.LtxCommandsPreferencePage">
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceContentAssist">
-         </keywordReference>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
       </page>
       <page
-            id="de.walware.docmlet.tex.preferencePages.TexEditorPage"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.TexEditor"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_TexEditor_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.TexEditorPreferencePage">
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceEditor">
-         </keywordReference>
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceAppearance">
-         </keywordReference>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoBracket"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoIndent"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoWrap"/>
       </page>
       <page
-            id="de.walware.docmlet.tex.preferencePages.LtxTextStylesPage"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.LtxTextStyles"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxTextStyles_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.LtxTextStylesPreferencePage">
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceEditor">
-         </keywordReference>
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceAppearance">
-         </keywordReference>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
       </page>
       <page
-            id="de.walware.docmlet.tex.preferencePages.LtxEditorTemplatesPage"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.LtxEditorTemplates"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxEditorTemplates_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.LtxEditorTemplatesPreferencePage">
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceEditor">
-         </keywordReference>
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceTemplates">
-         </keywordReference>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceTemplates"/>
       </page>
       <page
-            id="de.walware.docmlet.tex.preferencePages.LtxEditorAdvancedContentAssistPage"
-            category="de.walware.docmlet.tex.preferencePages.TexPage"
+            id="de.walware.docmlet.tex.preferencePages.LtxEditorAdvancedContentAssist"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_TexEditorAdvancedContentAssist_name"
             class="de.walware.docmlet.tex.internal.ui.preferences.LtxAdvancedContentAssistConfigurationPage">
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceEditor">
-         </keywordReference>
-         <keywordReference
-               id="de.walware.ecommons.ltk.keywords.SourceContentAssist">
-         </keywordReference>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
       </page>
    </extension>
    
