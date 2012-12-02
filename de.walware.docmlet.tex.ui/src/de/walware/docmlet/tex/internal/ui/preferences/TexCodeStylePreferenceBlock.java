@@ -14,10 +14,8 @@ package de.walware.docmlet.tex.internal.ui.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Status;
@@ -40,6 +38,7 @@ import org.eclipse.swt.widgets.Text;
 
 import de.walware.ecommons.IStatusChangeListener;
 import de.walware.ecommons.databinding.IntegerValidator;
+import de.walware.ecommons.databinding.jface.DataBindingSupport;
 import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.ui.ManagedConfigurationBlock;
 import de.walware.ecommons.text.ui.settings.IndentSettingsUI;
@@ -264,29 +263,32 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	}
 	
 	@Override
-	protected void addBindings(final DataBindingContext dbc, final Realm realm) {
-		fStdIndentSettings.addBindings(dbc, realm, fModel);
+	protected void addBindings(final DataBindingSupport db) {
+		fStdIndentSettings.addBindings(db, fModel);
 		
-		dbc.bindValue(SWTObservables.observeText(fIndentBlockDepthControl, SWT.Modify),
-				BeansObservables.observeValue(realm, fModel, TexCodeStyleSettings.INDENT_BLOCK_DEPTH_PROP),
+		db.getContext().bindValue(
+				SWTObservables.observeText(fIndentBlockDepthControl, SWT.Modify),
+				BeansObservables.observeValue(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_BLOCK_DEPTH_PROP),
 				new UpdateValueStrategy().setAfterGetValidator(new IntegerValidator(1, 10, Messages.CodeStyle_Indent_IndentInBlocks_error_message)),
-				null);
-		dbc.bindValue(SWTObservables.observeText(fIndentEnvDepthControl, SWT.Modify),
-				BeansObservables.observeValue(realm, fModel, TexCodeStyleSettings.INDENT_ENV_DEPTH_PROP),
+				null );
+		db.getContext().bindValue(
+				SWTObservables.observeText(fIndentEnvDepthControl, SWT.Modify),
+				BeansObservables.observeValue(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_ENV_DEPTH_PROP),
 				new UpdateValueStrategy().setAfterGetValidator(new IntegerValidator(1, 10, Messages.CodeStyle_Indent_IndentInEnvs_error_message)),
-				null);
+				null );
 		
-		final WritableSet labels = new WritableSet(realm);
+		final WritableSet labels = new WritableSet(db.getRealm());
 		fIndentEnvLabelsControl.setInput(labels);
-		dbc.bindSet(labels, BeansObservables.observeSet(realm, fModel, TexCodeStyleSettings.INDENT_ENV_LABELS_PROP),
-				null, null );
+		db.getContext().bindSet(
+				labels,
+				BeansObservables.observeSet(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_ENV_LABELS_PROP) );
 	}
 	
 	@Override
 	protected void updateControls() {
 		fModel.load(this);
 		fModel.resetDirty();
-		getDbc().updateTargets();  // required for invalid target values
+		getDataBinding().getContext().updateTargets();  // required for invalid target values
 		fIndentEnvLabelsControl.refresh();
 	}
 	

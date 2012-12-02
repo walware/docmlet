@@ -14,8 +14,6 @@ package de.walware.docmlet.tex.internal.ui.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -30,6 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
 import de.walware.ecommons.IStatusChangeListener;
+import de.walware.ecommons.databinding.jface.DataBindingSupport;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
 import de.walware.ecommons.ltk.ui.sourceediting.SmartInsertSettingsUI;
 import de.walware.ecommons.preferences.Preference;
@@ -226,37 +225,28 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 	
 	
 	@Override
-	protected void addBindings(final DataBindingContext dbc, final Realm realm) {
-		dbc.bindValue(SWTObservables.observeSelection(fSmartInsertControl),
-				createObservable(TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF),
-				null, null);
-		dbc.bindValue(ViewersObservables.observeSingleSelection(fSmartInsertTabActionControl),
-				createObservable(TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF),
-				null, null);
-		dbc.bindValue(SWTObservables.observeSelection(fSmartInsertCloseBracketsControl),
-				createObservable(TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF),
-				null, null);
-		dbc.bindValue(SWTObservables.observeSelection(fSmartInsertCloseParenthesisControl),
-				createObservable(TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF),
-				null, null);
-		dbc.bindValue(SWTObservables.observeSelection(fSmartInsertCloseMathDollarControl),
-				createObservable(TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF),
-				null, null);
-		dbc.bindValue(SWTObservables.observeSelection(fSmartInsertHardWrapTextControl),
-				createObservable(TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF),
-				null, null);
+	protected void addBindings(final DataBindingSupport db) {
+		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertControl),
+				createObservable(TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF) );
+		db.getContext().bindValue(ViewersObservables.observeSingleSelection(fSmartInsertTabActionControl),
+				createObservable(TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF) );
+		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseBracketsControl),
+				createObservable(TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF) );
+		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseParenthesisControl),
+				createObservable(TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF) );
+		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseMathDollarControl),
+				createObservable(TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF) );
+		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertHardWrapTextControl),
+				createObservable(TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF) );
 		
-		dbc.bindValue(SWTObservables.observeSelection(fFoldingEnableControl),
-				createObservable(TexEditorOptions.FOLDING_ENABLED_PREF),
-				null, null);
+		db.getContext().bindValue(SWTObservables.observeSelection(fFoldingEnableControl),
+				createObservable(TexEditorOptions.FOLDING_ENABLED_PREF) );
 		
-		dbc.bindValue(SWTObservables.observeSelection(fMarkOccurrencesControl),
-				createObservable(TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF),
-				null, null);
+		db.getContext().bindValue(SWTObservables.observeSelection(fMarkOccurrencesControl),
+				createObservable(TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF) );
 		
-		dbc.bindValue(SWTObservables.observeSelection(fProblemsEnableControl),
-				createObservable(LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF),
-				null, null);
+		db.getContext().bindValue(SWTObservables.observeSelection(fProblemsEnableControl),
+				createObservable(LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF) );
 	}
 	
 }
