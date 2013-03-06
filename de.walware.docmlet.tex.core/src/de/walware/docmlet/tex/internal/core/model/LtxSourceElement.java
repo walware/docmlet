@@ -243,7 +243,7 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		
 		@Override
 		public String getId() {
-			return "noweb:"+fExternType;
+			return "noweb:"+fExternType; //$NON-NLS-1$
 		}
 		
 		@Override
@@ -319,6 +319,29 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 			return super.getAdapter(required);
 		}
 		
+		
+		@Override
+		public int hashCode() {
+			int h = (IModelElement.C1_EMBEDDED & MASK_C2) * fExternType.hashCode() + fOccurrenceCount;
+			if (fForeign != null) {
+				h =+ fForeign.hashCode() * 23917;
+			}
+			return h;
+		}
+		
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof EmbeddedRef)) {
+				return false;
+			}
+			final EmbeddedRef other = (EmbeddedRef) obj;
+			return ((getSourceParent().equals(other.getSourceParent()) )
+					&& ((fForeign != null) ? fForeign.equals(other.fForeign) : null == other.fForeign) );
+		}
+		
 	}
 	
 	
@@ -384,14 +407,17 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 	
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof LtxSourceElement) {
-			final LtxSourceElement other = (LtxSourceElement) obj;
-			return ( (fType & MASK_C2) == (other.fType & MASK_C2))
-					&& (fOccurrenceCount == other.fOccurrenceCount)
-					&& ( ((fType & MASK_C1) == C1_SOURCE) || (getSourceParent().equals(other.getSourceParent())) )
-					&& (getElementName().equals(other.getElementName()) );
+		if (this == obj) {
+			return true;
 		}
-		return false;
+		if (!(obj instanceof LtxSourceElement)) {
+			return false;
+		}
+		final LtxSourceElement other = (LtxSourceElement) obj;
+		return ( (fType & MASK_C2) == (other.fType & MASK_C2))
+				&& (fOccurrenceCount == other.fOccurrenceCount)
+				&& ( ((fType & MASK_C1) == C1_SOURCE) || (getSourceParent().equals(other.getSourceParent())) )
+				&& (getElementName().equals(other.getElementName()) );
 	}
 	
 }

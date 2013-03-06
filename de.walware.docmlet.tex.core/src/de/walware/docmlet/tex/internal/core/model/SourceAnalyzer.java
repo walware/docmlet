@@ -111,10 +111,12 @@ public class SourceAnalyzer extends TexAstVisitor {
 					access.finish();
 				}
 			}
+			
 			if (fMinSectionLevel == Integer.MAX_VALUE) {
 				fMinSectionLevel = 0;
 				fMaxSectionLevel = 0;
 			}
+			
 			if (customCommands != null) {
 				customCommands = Collections.unmodifiableMap(customCommands);
 			}
