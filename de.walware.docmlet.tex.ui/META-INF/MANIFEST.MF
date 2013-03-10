@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Vendor: WalWare.de
 Bundle-Name: DocMLET TeX UI
 Bundle-SymbolicName: de.walware.docmlet.tex.ui;singleton:=true
-Bundle-Version: 1.0.3.qualifier
+Bundle-Version: 1.0.4.qualifier
 Bundle-Activator: de.walware.docmlet.tex.internal.ui.TexUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
@@ -16,8 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.views,
  org.eclipse.compare,
  de.walware.docmlet.tex.core;bundle-version="1.0.0",
- de.walware.ecommons.uimisc;bundle-version="[1.2.0,1.4.0)",
- de.walware.ecommons.ltk.ui;bundle-version="[2.1.0,2.2.0)"
+ de.walware.ecommons.uimisc;bundle-version="[1.4.0,1.5.0)",
+ de.walware.ecommons.ltk.ui;bundle-version="[2.2.0,2.3.0)"
 Import-Package: de.walware.ecommons,
  de.walware.ecommons.collections;version="1.0.0",
  de.walware.ecommons.databinding;version="0.10.0",
