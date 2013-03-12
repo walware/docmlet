@@ -32,6 +32,11 @@ public class LtxSourceUnit extends GenericResourceSourceUnit implements ILtxSour
 		return TexModel.LTX_TYPE_ID;
 	}
 	
+	@Override
+	public String getContentTypeId() {
+		return TexCore.LTX_CONTENT_ID;
+	}
+	
 	
 	@Override
 	public ITexCoreAccess getTexCoreAccess() {

@@ -18,6 +18,8 @@ public class TexCore {
 	
 	public static final String PLUGIN_ID = "de.walware.docmlet.tex.core"; //$NON-NLS-1$
 	
+	public static final String LTX_CONTENT_ID = "net.sourceforge.texlipse.contentTypes.Latex"; //$NON-NLS-1$
+	
 	
 	public static ITexCoreAccess getWorkbenchAccess() {
 		return TexCorePlugin.getDefault().getWorkbenchAccess();

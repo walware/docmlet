@@ -43,6 +43,11 @@ public final class LtxEditorUriSourceUnit extends GenericUriSourceUnit implement
 	}
 	
 	@Override
+	public String getContentTypeId() {
+		return TexCore.LTX_CONTENT_ID;
+	}
+	
+	@Override
 	public WorkingContext getWorkingContext() {
 		return LTK.EDITOR_CONTEXT;
 	}

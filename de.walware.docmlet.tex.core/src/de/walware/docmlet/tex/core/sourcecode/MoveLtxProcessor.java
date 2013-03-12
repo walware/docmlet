@@ -11,16 +11,16 @@
 
 package de.walware.docmlet.tex.core.sourcecode;
 
+import de.walware.ecommons.ltk.core.ElementSet;
 import de.walware.ecommons.ltk.core.refactoring.CommonMoveProcessor;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringAdapter;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringDestination;
-import de.walware.ecommons.ltk.core.refactoring.RefactoringElementSet;
 
 
 public class MoveLtxProcessor extends CommonMoveProcessor {
 	
 	
-	public MoveLtxProcessor(final RefactoringElementSet elementsToMove,
+	public MoveLtxProcessor(final ElementSet elementsToMove,
 			final RefactoringDestination destination, final RefactoringAdapter adapter) {
 		super(elementsToMove, destination, adapter);
 	}

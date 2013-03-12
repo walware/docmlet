@@ -31,7 +31,7 @@
    </extension>
    
    <extension
-         point="de.walware.ecommons.ltk.workingContexts">
+         point="de.walware.ecommons.ltk.modelTypes">
       <unitType modelTypeId="ltx"
             contextKey="editor.default"
             unitFactory="de.walware.docmlet.tex.internal.ui.LtxEditorWorkingCopyFactory">

@@ -20,10 +20,10 @@ import de.walware.ecommons.ltk.IModelElement;
 import de.walware.ecommons.ltk.ISourceElement;
 import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.LTK;
+import de.walware.ecommons.ltk.core.ElementSet;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringAdapter;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringDestination;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringDestination.Position;
-import de.walware.ecommons.ltk.core.refactoring.RefactoringElementSet;
 import de.walware.ecommons.text.BasicHeuristicTokenScanner;
 
 import de.walware.docmlet.tex.core.TexCore;
@@ -55,7 +55,7 @@ public class LtxRefactoringAdapter extends RefactoringAdapter {
 	}
 	
 	@Override
-	public boolean canInsert(final RefactoringElementSet elements, final ISourceElement to,
+	public boolean canInsert(final ElementSet elements, final ISourceElement to,
 			final RefactoringDestination.Position pos) {
 		if (super.canInsert(elements, to, pos)) {
 			if ((to.getElementType() & IModelElement.MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {

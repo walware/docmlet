@@ -35,7 +35,7 @@
    </extension>
    
    <extension
-         point="de.walware.ecommons.ltk.workingContexts">
+         point="de.walware.ecommons.ltk.modelTypes">
       <unitType modelTypeId="ltx"
             contextKey="persistence.default"
             unitFactory="de.walware.docmlet.tex.internal.core.model.LtxSourceUnitFactory">

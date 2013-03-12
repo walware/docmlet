@@ -11,15 +11,15 @@
 
 package de.walware.docmlet.tex.core.sourcecode;
 
+import de.walware.ecommons.ltk.core.ElementSet;
 import de.walware.ecommons.ltk.core.refactoring.CommonDeleteProcessor;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringAdapter;
-import de.walware.ecommons.ltk.core.refactoring.RefactoringElementSet;
 
 
 public class DeleteLtxProcessor extends CommonDeleteProcessor {
 	
 	
-	public DeleteLtxProcessor(final RefactoringElementSet elements, final RefactoringAdapter adapter) {
+	public DeleteLtxProcessor(final ElementSet elements, final RefactoringAdapter adapter) {
 		super(elements, adapter);
 	}
 	

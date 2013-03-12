@@ -316,7 +316,12 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 			if (IAstNode.class.equals(required)) {
 				return fAstNode;
 			}
-			return super.getAdapter(required);
+			{	final Object adapter = super.getAdapter(required);
+				if (adapter != null) {
+					return adapter;
+				}
+			}
+			return fForeign.getAdapter(required);
 		}
 		
 		

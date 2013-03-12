@@ -11,16 +11,16 @@
 
 package de.walware.docmlet.tex.core.sourcecode;
 
+import de.walware.ecommons.ltk.core.ElementSet;
 import de.walware.ecommons.ltk.core.refactoring.CommonCopyProcessor;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringAdapter;
 import de.walware.ecommons.ltk.core.refactoring.RefactoringDestination;
-import de.walware.ecommons.ltk.core.refactoring.RefactoringElementSet;
 
 
 public class CopyLtxProcessor extends CommonCopyProcessor {
 	
 	
-	public CopyLtxProcessor(final RefactoringElementSet elementsToCopy,
+	public CopyLtxProcessor(final ElementSet elementsToCopy,
 			final RefactoringDestination destination, final RefactoringAdapter adapter) {
 		super(elementsToCopy, destination, adapter);
 	}
