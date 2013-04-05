@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -65,8 +64,8 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 	private Button fSmartInsertHardWrapTextControl;
 	
 	private Button fFoldingEnableControl;
+	private Button fFoldingRestoreStateControl;
 	private Button fMarkOccurrencesControl;
-	private Button fSpellEnableControl;
 	private Button fProblemsEnableControl;
 	
 	
@@ -87,6 +86,7 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 		prefs.put(TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, TexEditorOptions.SMARTINSERT_GROUP_ID);
 		
 		prefs.put(TexEditorOptions.FOLDING_ENABLED_PREF, null);
+		prefs.put(TexEditorOptions.FOLDING_RESTORE_STATE_ENABLED_PREF, TexEditorOptions.FOLDING_SHARED_GROUP_ID);
 		
 		prefs.put(TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF, null);
 		
@@ -101,9 +101,16 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 		
 		// Code Folding
 		LayoutUtil.addSmallFiller(pageComposite, false);
+		
 		{	fFoldingEnableControl = new Button(pageComposite, SWT.CHECK);
 			fFoldingEnableControl.setText(Messages.EditorOptions_Folding_Enable_label);
-			fFoldingEnableControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			fFoldingEnableControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		}
+		{	fFoldingRestoreStateControl = new Button(pageComposite, SWT.CHECK);
+			fFoldingRestoreStateControl.setText(Messages.EditorOptions_Folding_RestoreState_Enable_label);
+			final GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			gd.horizontalIndent = LayoutUtil.defaultIndent();
+			fFoldingRestoreStateControl.setLayoutData(gd);
 		}
 		
 		// Annotation
@@ -111,14 +118,14 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 		
 		{	fMarkOccurrencesControl = new Button(pageComposite, SWT.CHECK);
 			fMarkOccurrencesControl.setText(Messages.EditorOptions_MarkOccurrences_Enable_label);
-			fMarkOccurrencesControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			fMarkOccurrencesControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		}
 		
 		LayoutUtil.addSmallFiller(pageComposite, false);
 		
 		{	fProblemsEnableControl = new Button(pageComposite, SWT.CHECK);
 			fProblemsEnableControl.setText(Messages.EditorOptions_ProblemChecking_Enable_label);
-			fProblemsEnableControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			fProblemsEnableControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		}
 		
 		LayoutUtil.addSmallFiller(pageComposite, true);
@@ -140,7 +147,7 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 		final Group composite = new Group(pageComposite, SWT.NONE);
 		composite.setText(Messages.EditorOptions_SmartInsert_label+':');
 		final int n = 4;
-		composite.setLayout(LayoutUtil.applyGroupDefaults(new GridLayout(), n));
+		composite.setLayout(LayoutUtil.createGroupGrid(n));
 		fSmartInsertControl = new Button(composite, SWT.CHECK);
 		fSmartInsertControl.setText(Messages.EditorOptions_SmartInsert_AsDefault_label);
 		fSmartInsertControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, n, 1));
@@ -226,26 +233,38 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	protected void addBindings(final DataBindingSupport db) {
-		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fSmartInsertControl),
 				createObservable(TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF) );
-		db.getContext().bindValue(ViewersObservables.observeSingleSelection(fSmartInsertTabActionControl),
+		db.getContext().bindValue(
+				ViewersObservables.observeSingleSelection(fSmartInsertTabActionControl),
 				createObservable(TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF) );
-		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseBracketsControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fSmartInsertCloseBracketsControl),
 				createObservable(TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF) );
-		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseParenthesisControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fSmartInsertCloseParenthesisControl),
 				createObservable(TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF) );
-		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertCloseMathDollarControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fSmartInsertCloseMathDollarControl),
 				createObservable(TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF) );
-		db.getContext().bindValue(SWTObservables.observeSelection(fSmartInsertHardWrapTextControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fSmartInsertHardWrapTextControl),
 				createObservable(TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF) );
 		
-		db.getContext().bindValue(SWTObservables.observeSelection(fFoldingEnableControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fFoldingEnableControl),
 				createObservable(TexEditorOptions.FOLDING_ENABLED_PREF) );
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fFoldingRestoreStateControl),
+				createObservable(TexEditorOptions.FOLDING_RESTORE_STATE_ENABLED_PREF) );
 		
-		db.getContext().bindValue(SWTObservables.observeSelection(fMarkOccurrencesControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fMarkOccurrencesControl),
 				createObservable(TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF) );
 		
-		db.getContext().bindValue(SWTObservables.observeSelection(fProblemsEnableControl),
+		db.getContext().bindValue(
+				SWTObservables.observeSelection(fProblemsEnableControl),
 				createObservable(LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF) );
 	}
 	

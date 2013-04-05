@@ -35,6 +35,11 @@ public class TexEditorOptions {
 	public static final BooleanPref FOLDING_ENABLED_PREF = new BooleanPref(
 			TEXEDITOR_NODE, "Folding.enabled"); //$NON-NLS-1$
 	
+	public static final String FOLDING_SHARED_GROUP_ID = "tex/tex.editor/folding.shared"; //$NON-NLS-1$
+	
+	public static final BooleanPref FOLDING_RESTORE_STATE_ENABLED_PREF = new BooleanPref(
+			TEXEDITOR_NODE, "Folding.RestoreState.enabled"); //$NON-NLS-1$
+	
 	public static final BooleanPref MARKOCCURRENCES_ENABLED_PREF = new BooleanPref(
 			TEXEDITOR_NODE, "MarkOccurrences.enabled"); //$NON-NLS-1$
 	

@@ -56,6 +56,7 @@ public class Messages extends NLS {
 	public static String EditorOptions_SmartInsert_HardWrapText_label;
 	
 	public static String EditorOptions_Folding_Enable_label;
+	public static String EditorOptions_Folding_RestoreState_Enable_label;
 	public static String EditorOptions_MarkOccurrences_Enable_label;
 	public static String EditorOptions_ProblemChecking_Enable_label;
 	public static String EditorOptions_AnnotationAppearance_info;

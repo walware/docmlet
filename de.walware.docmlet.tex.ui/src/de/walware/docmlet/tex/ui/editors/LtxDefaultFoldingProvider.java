@@ -28,6 +28,8 @@ import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingAnnota
 import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingProvider;
 import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingStructureComputationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.NodeFoldingProvider;
+import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.PreferencesUtil;
 
 import de.walware.docmlet.tex.core.ast.Embedded;
 import de.walware.docmlet.tex.core.ast.TexAstVisitor;
@@ -41,8 +43,8 @@ import de.walware.docmlet.tex.core.model.TexModel;
 public class LtxDefaultFoldingProvider implements FoldingProvider {
 	
 	
-	private static final String TYPE_SECTION = "de.walware.docmlet.tex.Section";
-	private static final String TYPE_EMBEDDED = "de.walware.docmlet.tex.Embedded";
+	private static final String TYPE_SECTION = "de.walware.docmlet.tex.Section"; //$NON-NLS-1$
+	private static final String TYPE_EMBEDDED = "de.walware.docmlet.tex.Embedded"; //$NON-NLS-1$
 	
 	
 	private static class ElementFinder extends TexAstVisitor {
@@ -134,6 +136,8 @@ public class LtxDefaultFoldingProvider implements FoldingProvider {
 		
 		public int minLines;
 		
+		public boolean isRestoreStateEnabled;
+		
 	}
 	
 	
@@ -162,8 +166,14 @@ public class LtxDefaultFoldingProvider implements FoldingProvider {
 	@Override
 	public boolean checkConfig(final Set<String> groupIds) {
 		boolean changed = false;
-		if (groupIds == null) {
+		if (groupIds == null
+				|| groupIds.contains(TexEditorOptions.FOLDING_SHARED_GROUP_ID) ) {
 			final FoldingConfiguration config = new FoldingConfiguration();
+			final IPreferenceAccess prefs = PreferencesUtil.getInstancePrefs();
+			
+			config.isRestoreStateEnabled = prefs.getPreferenceValue(
+					TexEditorOptions.FOLDING_RESTORE_STATE_ENABLED_PREF );
+			
 			fConfig = config;
 			changed |= true;
 		}
@@ -171,6 +181,11 @@ public class LtxDefaultFoldingProvider implements FoldingProvider {
 			changed |= fEmbeddedProvider.checkConfig(groupIds);
 		}
 		return changed;
+	}
+	
+	@Override
+	public boolean isRestoreStateEnabled() {
+		return fConfig.isRestoreStateEnabled;
 	}
 	
 	@Override

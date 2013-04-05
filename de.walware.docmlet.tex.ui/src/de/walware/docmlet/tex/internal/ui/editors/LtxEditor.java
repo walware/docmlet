@@ -23,9 +23,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 
 import de.walware.ecommons.ltk.ISourceUnitModelInfo;
-import de.walware.ecommons.ltk.LTK;
 import de.walware.ecommons.ltk.ast.AstSelection;
-import de.walware.ecommons.ltk.ui.ElementInfoController;
 import de.walware.ecommons.ltk.ui.sourceediting.AbstractMarkOccurrencesProvider;
 import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditorAddon;
@@ -71,8 +69,6 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 	}
 	
 	
-	private ElementInfoController fModelProvider;
-	
 	private LtxViewerConfigurator fTexConfig;
 	
 	
@@ -90,8 +86,7 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 	protected SourceEditorViewerConfigurator createConfiguration() {
 		setDocumentProvider(TexUIPlugin.getDefault().getTexDocumentProvider());
 		
-		fModelProvider = new ElementInfoController(TexModel.getModelManager(), LTK.EDITOR_CONTEXT);
-		enableStructuralFeatures(fModelProvider,
+		enableStructuralFeatures(TexModel.getModelManager(),
 				TexEditorOptions.FOLDING_ENABLED_PREF,
 				TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF );
 		
@@ -132,8 +127,8 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 	@Override
 	protected void setupConfiguration(final IEditorInput newInput) {
 		super.setupConfiguration(newInput);
+		
 		final ILtxSourceUnit su = getSourceUnit();
-		fModelProvider.setInput(su);
 		fTexConfig.setSource((su != null) ? su.getTexCoreAccess() : null);
 	}
 	

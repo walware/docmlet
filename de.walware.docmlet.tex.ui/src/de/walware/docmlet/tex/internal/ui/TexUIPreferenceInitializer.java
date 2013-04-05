@@ -21,6 +21,7 @@ import static de.walware.ecommons.text.ui.presentation.ITextPresentationConstant
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
 
@@ -49,7 +50,7 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = TexUIPlugin.getDefault().getPreferenceStore();
-		final DefaultScope scope = new DefaultScope();
+		final IScopeContext scope = DefaultScope.INSTANCE;
 		final IEclipsePreferences pref = scope.getNode(TexUIPlugin.PLUGIN_ID);
 		final ThemeUtil theme = new ThemeUtil();
 		
@@ -146,7 +147,8 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertSinglePref(), Boolean.FALSE);
 			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertPrefixPref(), Boolean.FALSE);
 		}
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_ENABLED_PREF, Boolean.TRUE); 
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_RESTORE_STATE_ENABLED_PREF, Boolean.TRUE);
 		PreferencesUtil.setPrefValue(scope, TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
 		
 		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
@@ -157,6 +159,7 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
 		
 		PreferencesUtil.setPrefValue(scope, LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
+		
 	}
 	
 }
