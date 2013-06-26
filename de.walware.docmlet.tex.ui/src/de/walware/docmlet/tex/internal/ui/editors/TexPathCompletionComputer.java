@@ -24,6 +24,7 @@ import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.IWorkspaceSourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
+import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IContentAssistComputer;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.PathCompletionComputor;
 
@@ -56,7 +57,7 @@ public class TexPathCompletionComputer extends PathCompletionComputor {
 	}
 	
 	@Override
-	public void sessionStarted(final ISourceEditor editor) {
+	public void sessionStarted(final ISourceEditor editor, final ContentAssist assist) {
 		fBaseResource = null;
 		fBaseFileStore = null;
 		{
@@ -76,7 +77,7 @@ public class TexPathCompletionComputer extends PathCompletionComputor {
 			}
 		}
 		
-		super.sessionStarted(editor);
+		super.sessionStarted(editor, assist);
 	}
 	
 	@Override
