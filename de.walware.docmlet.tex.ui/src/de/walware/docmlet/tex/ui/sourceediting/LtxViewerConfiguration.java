@@ -19,13 +19,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
-import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
 
 import de.walware.ecommons.ltk.ui.sourceediting.EcoReconciler2;
@@ -39,7 +37,6 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssistProcessor;
 import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.text.ICharPairMatcher;
 import de.walware.ecommons.text.IIndentSettings;
-import de.walware.ecommons.text.ui.presentation.AbstractRuleBasedScanner;
 import de.walware.ecommons.text.ui.presentation.SingleTokenScanner;
 import de.walware.ecommons.ui.ColorManager;
 import de.walware.ecommons.ui.util.DialogUtil;
@@ -67,15 +64,17 @@ import de.walware.docmlet.tex.ui.text.LtxMathTextStyleScanner;
 public class LtxViewerConfiguration extends SourceEditorViewerConfiguration {
 	
 	
+	private static final String[] NONE_DEFAULT_CONTENT_TYPES = new String[] {
+			ITexDocumentConstants.LTX_MATH_CONTENT_TYPE,
+			ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE,
+			ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE,
+			ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE,
+	};
+	
 	public static IPreferenceStore getTexPreferenceStore() {
 		return TexUIPlugin.getDefault().getPreferenceStore();
 	}
 	
-	
-	protected LtxDefaultTextStyleScanner fDefaultScanner;
-	protected LtxDefaultTextStyleScanner fMathScanner;
-	protected AbstractRuleBasedScanner fCommentScanner;
-	protected AbstractRuleBasedScanner fVerbatimScanner;
 	
 	protected LtxDoubleClickStrategy fDoubleClickStrategy;
 	private LtxAutoEditStrategy fAutoEditStrategy;
@@ -97,30 +96,47 @@ public class LtxViewerConfiguration extends SourceEditorViewerConfiguration {
 				colorManager,
 				TexUIPreferences.EDITING_DECO_PREFERENCES,
 				TexUIPreferences.EDITING_ASSIST_PREFERENCES);
-		setScanners(createScanners());
+		initScanners();
 	}
 	
 	protected void setCoreAccess(final ITexCoreAccess access) {
 		fTexCoreAccess = (access != null) ? access : TexCore.getWorkbenchAccess();
 	}
 	
-	protected ITokenScanner[] createScanners() {
+	protected void initScanners() {
 		final IPreferenceStore preferenceStore = getPreferences();
 		final ColorManager colorManager = getColorManager();
 		
-		fDefaultScanner = new LtxDefaultTextStyleScanner(colorManager, preferenceStore);
-		fMathScanner = new LtxMathTextStyleScanner(colorManager, preferenceStore);
-		fCommentScanner = new SingleTokenScanner(colorManager, preferenceStore,
-				ITexTextStyles.GROUP_ID, ITexTextStyles.TS_COMMENT);
-		fVerbatimScanner = new SingleTokenScanner(colorManager, preferenceStore,
-				ITexTextStyles.GROUP_ID, ITexTextStyles.TS_VERBATIM);
-		
-		return new ITokenScanner[] {
-				fDefaultScanner,
-				fMathScanner,
-				fCommentScanner,
-				fVerbatimScanner,
-		};
+		addScanner(ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE,
+				new LtxDefaultTextStyleScanner(colorManager, preferenceStore) );
+		addScanner(ITexDocumentConstants.LTX_MATH_CONTENT_TYPE,
+				new LtxMathTextStyleScanner(colorManager, preferenceStore) );
+		addScanner(ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE,
+				new SingleTokenScanner(colorManager, preferenceStore,
+						ITexTextStyles.GROUP_ID, ITexTextStyles.TS_COMMENT ) );
+		addScanner(ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE,
+				new SingleTokenScanner(colorManager, preferenceStore,
+						ITexTextStyles.GROUP_ID, ITexTextStyles.TS_COMMENT ) );
+		addScanner(ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE,
+				new SingleTokenScanner(colorManager, preferenceStore,
+						ITexTextStyles.GROUP_ID, ITexTextStyles.TS_VERBATIM ) );
+	}
+	
+	
+	@Override
+	public void initPresentationReconciler(final PresentationReconciler reconciler) {
+		{	final DefaultDamagerRepairer dr = new DefaultDamagerRepairer(
+					getScanner(ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE) );
+			reconciler.setDamager(dr, ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE);
+			reconciler.setRepairer(dr, ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE);
+			reconciler.setDamager(dr, ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE);
+			reconciler.setRepairer(dr, ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE);
+		}
+		for (final String contentType : NONE_DEFAULT_CONTENT_TYPES) {
+			final DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getScanner(contentType));
+			reconciler.setDamager(dr, contentType);
+			reconciler.setRepairer(dr, contentType);
+		}
 	}
 	
 	
@@ -164,41 +180,6 @@ public class LtxViewerConfiguration extends SourceEditorViewerConfiguration {
 			fDoubleClickStrategy = new LtxDoubleClickStrategy(new LtxHeuristicTokenScanner());
 		}
 		return fDoubleClickStrategy;
-	}
-	
-	
-	@Override
-	public IPresentationReconciler getPresentationReconciler(final ISourceViewer sourceViewer) {
-		final PresentationReconciler reconciler = new PresentationReconciler();
-		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-		
-		initDefaultPresentationReconciler(reconciler);
-		
-		return reconciler;
-	}
-	
-	public void initDefaultPresentationReconciler(final PresentationReconciler reconciler) {
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(fDefaultScanner);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE);
-		
-		dr = new DefaultDamagerRepairer(fMathScanner);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_MATH_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_MATH_CONTENT_TYPE);
-		
-		dr = new DefaultDamagerRepairer(fCommentScanner);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE);
-		
-		dr = new DefaultDamagerRepairer(fCommentScanner);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE);
-		
-		dr = new DefaultDamagerRepairer(fVerbatimScanner);
-		reconciler.setDamager(dr, ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE);
-		reconciler.setRepairer(dr, ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE);
 	}
 	
 	
