@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 import de.walware.ecommons.preferences.IPreferenceAccess;
 import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.Preference.StringSetPref;
@@ -98,7 +98,7 @@ public class TexCommandSet {
 					filteredCommands[j++] = command;
 				}
 			}
-			fAllCommands = new ConstList<TexCommand>((j == filteredCommands.length) ?
+			fAllCommands = new ConstArrayList<TexCommand>((j == filteredCommands.length) ?
 					filteredCommands : Arrays.copyOfRange(filteredCommands, 0, j) );
 			
 			sortedCommands = Arrays.copyOfRange(filteredCommands, 0, j);
@@ -120,7 +120,7 @@ public class TexCommandSet {
 				}
 			}
 			fTextCommandMap = Collections.unmodifiableMap(set);
-			fTextCommandListASorted = new ConstList<TexCommand>((j == commands.length) ?
+			fTextCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[textEnvs.size()];
@@ -134,7 +134,7 @@ public class TexCommandSet {
 				}
 			}
 			fTextEnvMap = Collections.unmodifiableMap(set);
-			fTextEnvListASorted = new ConstList<TexCommand>((j == commands.length) ?
+			fTextEnvListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[preamble.size()];
@@ -148,7 +148,7 @@ public class TexCommandSet {
 				}
 			}
 			fPreambleCommandMap = Collections.unmodifiableMap(set);
-			fPreambleCommandListASorted = new ConstList<TexCommand>((j == commands.length) ?
+			fPreambleCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[mathCommands.size()];
@@ -162,7 +162,7 @@ public class TexCommandSet {
 				}
 			}
 			fMathCommandMap = Collections.unmodifiableMap(set);
-			fMathCommandListASorted = new ConstList<TexCommand>((j == commands.length) ?
+			fMathCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[mathEnvs.size()];
@@ -176,7 +176,7 @@ public class TexCommandSet {
 				}
 			}
 			fMathEnvMap = Collections.unmodifiableMap(set);
-			fMathEnvListASorted = new ConstList<TexCommand>((j == commands.length) ?
+			fMathEnvListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		

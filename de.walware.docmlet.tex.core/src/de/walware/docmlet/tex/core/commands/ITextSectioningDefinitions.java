@@ -18,44 +18,44 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C2_SECTIONING_SUBS
 import static de.walware.docmlet.tex.core.commands.TexCommand.C2_SECTIONING_SUBSUBSECTION;
 import static de.walware.docmlet.tex.core.commands.TexCommand.SECTIONING;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 
 
 public interface ITextSectioningDefinitions {
 	
 	
 	TexCommand SECTIONING_part_COMMAND = new TexCommand(C2_SECTIONING_PART,
-			"part", true, new ConstList<Argument>( //$NON-NLS-1$
+			"part", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new Part");
 	TexCommand SECTIONING_chapter_COMMAND = new TexCommand(C2_SECTIONING_CHAPTER,
-			"chapter", true, new ConstList<Argument>( //$NON-NLS-1$
+			"chapter", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new Chapter");
 	TexCommand SECTIONING_section_COMMAND = new TexCommand(C2_SECTIONING_SECTION,
-			"section", true, new ConstList<Argument>( //$NON-NLS-1$
+			"section", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new Section");
 	TexCommand SECTIONING_subsection_COMMAND = new TexCommand(C2_SECTIONING_SUBSECTION,
-			"subsection", true, new ConstList<Argument>(
+			"subsection", true, new ConstArrayList<Argument>(
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new SubSection");
 	TexCommand SECTIONING_subsubsection_COMMAND = new TexCommand(C2_SECTIONING_SUBSUBSECTION,
-			"subsubsection", true, new ConstList<Argument>( //$NON-NLS-1$
+			"subsubsection", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts new SubSubSection");
 	TexCommand SECTIONING_paragraph_COMMAND = new TexCommand(SECTIONING | 0x60,
-			"paragraph", true, new ConstList<Argument>( //$NON-NLS-1$
+			"paragraph", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new Paragraph");
 	TexCommand SECTIONING_subparagraph_COMMAND = new TexCommand(SECTIONING | 0x70,
-			"subparagraph", true, new ConstList<Argument>( //$NON-NLS-1$
+			"subparagraph", true, new ConstArrayList<Argument>( //$NON-NLS-1$
 					new Argument(Argument.OPTIONAL, Argument.TITLE),
 					new Argument(Argument.REQUIRED, Argument.TITLE)
 			), "Starts a new SubParagraph");

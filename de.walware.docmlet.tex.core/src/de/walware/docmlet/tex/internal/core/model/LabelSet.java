@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 
 import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
@@ -34,7 +34,7 @@ public class LabelSet implements ITexLabelSet {
 		final Set<String> labelSet = map.keySet();
 		final String[] labelArray = labelSet.toArray(new String[labelSet.size()]);
 		Arrays.sort(labelArray);
-		fLabelsSorted = new ConstList<String>(labelArray);
+		fLabelsSorted = new ConstArrayList<String>(labelArray);
 		fMap = map;
 	}
 	

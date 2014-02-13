@@ -13,32 +13,32 @@ package de.walware.docmlet.tex.core.commands;
 
 import static de.walware.docmlet.tex.core.commands.TexCommand.C2_STYLE_MATH;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 
 
 public interface IMathStylingDefinitions {
 	
 	
 	TexCommand STYLE_mathnormal_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathnormal", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathnormal", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Normal Math font"); // 2e
 	TexCommand STYLE_mathrm_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathrm", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathrm", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Roman Typeface font family"); // 2e
 	TexCommand STYLE_mathsf_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathsf", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathsf", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Sans-Serif Typeface font family"); // 2e
 	TexCommand STYLE_mathtt_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathtt", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathtt", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Typewriter-like Face font family"); // 2e
 	TexCommand STYLE_mathcal_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathcal", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathcal", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Calligraphic font family"); // 2e
 	TexCommand STYLE_mathbf_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathbf", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathbf", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Bold Weight font series"); // 2e
 	TexCommand STYLE_mathit_COMMAND = new LtxFontCommand(C2_STYLE_MATH,
-			"mathit", new ConstList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
+			"mathit", new ConstArrayList<Argument>(new Argument(Argument.REQUIRED, Argument.NONE)),
 			"Prints given text using Italic font shape"); // 2e
 	
 	

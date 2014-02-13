@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 import de.walware.ecommons.ltk.IModelElement;
 import de.walware.ecommons.ltk.ISourceStructElement;
 import de.walware.ecommons.ltk.ISourceUnit;
@@ -85,7 +85,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 		
 	}
 	
-	private static List<TexCommand> PREAMBLE_DOCU_COMMANDS = new ConstList<TexCommand>(
+	private static List<TexCommand> PREAMBLE_DOCU_COMMANDS = new ConstArrayList<TexCommand>(
 			IPreambleDefinitions.PREAMBLE_documentclass_COMMAND
 	);
 	

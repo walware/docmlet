@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.ISourceStructElement;
 
@@ -255,7 +255,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 					access = new EnvLabelAccess[1];
 					access[0] = new EnvLabelAccess(node.getBeginNode(), endLabel);
 				}
-				final ConstList<TexLabelAccess> list = new ConstList<TexLabelAccess>(access);
+				final ConstArrayList<TexLabelAccess> list = new ConstArrayList<TexLabelAccess>(access);
 				for (int i = 0; i < access.length; i++) {
 					access[i].fAll = list;
 					access[i].getNode().addAttachment(access[i]);

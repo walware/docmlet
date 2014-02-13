@@ -26,7 +26,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_R
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_RELSTD;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_ROOTFRAC;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 
 
 public interface IMathSymbolDefinitions {
@@ -209,22 +209,22 @@ public interface IMathSymbolDefinitions {
 	
 	//-- Roots, Fractions, ... --
 	TexCommand MATHSYMBOL_sqrt_COMMAND = new TexCommand(C3_MATHSYMBOL_OP_ROOTFRAC,
-			"sqrt", false, new ConstList<Argument>(
+			"sqrt", false, new ConstArrayList<Argument>(
 					new Argument(Argument.OPTIONAL, Argument.NONE),
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Root of given value and optional radix"); // std
 	TexCommand MATHSYMBOL_frac_COMMAND = new TexCommand(C3_MATHSYMBOL_OP_ROOTFRAC,
-			"frac", false, new ConstList<Argument>(
+			"frac", false, new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE),
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Fraction of given numerator and denominator"); // std
 	TexCommand MATHSYMBOL_dfrac_COMMAND = new TexCommand(C3_MATHSYMBOL_OP_ROOTFRAC,
-			"dfrac", false, new ConstList<Argument>(
+			"dfrac", false, new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE),
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Fraction (display-style sized) of given numerator and denominator"); // std
 	TexCommand MATHSYMBOL_tfrac_COMMAND = new TexCommand(C3_MATHSYMBOL_OP_ROOTFRAC,
-			"tfrac", false, new ConstList<Argument>(
+			"tfrac", false, new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE),
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Fraction (text-style sized) of given numerator and denominator"); // std
@@ -681,59 +681,59 @@ public interface IMathSymbolDefinitions {
 	
 	//-- Accents --
 	TexCommand MATHSYMBOL_grave_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"grave", new ConstList<Argument>(
+			"grave", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints accent Grave above given text", "\u0300"); // std \u02CB
 	TexCommand MATHSYMBOL_acute_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"acute", new ConstList<Argument>(
+			"acute", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 					), "Prints accent Acute above given text", "\u0301"); // std u02CA
 	TexCommand MATHSYMBOL_hat_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"hat", new ConstList<Argument>(
+			"hat", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints accent Circumflex (hat) above given text", "\u0302"); // std u02C6
 	TexCommand MATHSYMBOL_tilde_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"tilde", new ConstList<Argument>(
+			"tilde", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Tilde above given text", "\u0303"); // std u02DC
 	TexCommand MATHSYMBOL_bar_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"bar", new ConstList<Argument>(
+			"bar", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Macron (bar) above given text", "\u0304"); // std u00AF
 	TexCommand MATHSYMBOL_overline_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"overline", new ConstList<Argument>(
+			"overline", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 					), "Prints Line above given text", "\u0305"); // std u00AF
 	TexCommand MATHSYMBOL_breve_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"breve", new ConstList<Argument>(
+			"breve", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Breve above given text", "\u0306"); // std u02D8
 	TexCommand MATHSYMBOL_check_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"check", new ConstList<Argument>(
+			"check", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Carot (inversed hat) above given text", "\u030C"); // std u02C7
 	TexCommand MATHSYMBOL_dot_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"dot", new ConstList<Argument>(
+			"dot", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Dot above given text", "\u0307"); // std u02D9
 	TexCommand MATHSYMBOL_ddot_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"ddot", new ConstList<Argument>(
+			"ddot", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Diaeresis (two dots) above given text", "\u0308"); // std u00A8
 	TexCommand MATHSYMBOL_dddot_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"dddot", new ConstList<Argument>(
+			"dddot", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Three Dots above given text", "\u20DB"); // ams
 	TexCommand MATHSYMBOL_vec_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"vec", new ConstList<Argument>(
+			"vec", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints Vector indicator/Right Arrow above given text", "\u20D7"); // std
 	TexCommand MATHSYMBOL_widehat_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"widehat", new ConstList<Argument>(
+			"widehat", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints wide accent Circumflex (hat) above given text", null); // std
 	TexCommand MATHSYMBOL_widetilde_COMMAND = new LtxPrintCommand(C3_MATHSYMBOL_ACCENTS_,
-			"widetilde", new ConstList<Argument>(
+			"widetilde", new ConstArrayList<Argument>(
 					new Argument(Argument.REQUIRED, Argument.NONE)
 			), "Prints wide Tilde above given text", null); // std
 	

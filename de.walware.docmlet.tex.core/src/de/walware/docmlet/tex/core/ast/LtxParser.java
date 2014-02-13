@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 import de.walware.ecommons.text.IStringCache;
 import de.walware.ecommons.text.InternStringCache;
 import de.walware.ecommons.text.NoStringCache;
@@ -858,7 +858,7 @@ public class LtxParser {
 				map = fCustomCommands;
 			}
 			map.put(controlWord, new TexCommand(0, controlWord, false,
-					new ConstList<Argument>(args), "(custom)"));
+					new ConstArrayList<Argument>(args), "(custom)"));
 		}
 	}
 	

@@ -48,7 +48,7 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 
-import de.walware.ecommons.collections.ConstList;
+import de.walware.ecommons.collections.ConstArrayList;
 import de.walware.ecommons.ltk.LTK;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
@@ -714,7 +714,7 @@ public class LtxAutoEditStrategy extends DefaultIndentLineAutoEditStrategy
 		
 		final TexBracketLevel level = new TexBracketLevel(fDocument,
 				fScanner.getPartitioningConfig().getPartitioning(),
-				new ConstList<LinkedPosition>(position), (mode & 0xffff0000) );
+				new ConstArrayList<LinkedPosition>(position), (mode & 0xffff0000) );
 		
 		/* create UI */
 		final LinkedModeUI ui = new LinkedModeUI(model, fViewer);
