@@ -20,7 +20,6 @@ import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.IModelManager;
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.SourceContent;
-import de.walware.ecommons.ltk.SourceContentLines;
 import de.walware.ecommons.text.FixInterningStringCache;
 import de.walware.ecommons.text.LineInformationCreator;
 import de.walware.ecommons.text.SourceParseInput;
@@ -49,8 +48,6 @@ public class Reconciler {
 		
 		public SourceParseInput parseInput;
 		public int parseOffset;
-		
-		private SourceContentLines contentLines;
 		
 		public AstInfo ast;
 		
@@ -90,16 +87,6 @@ public class Reconciler {
 		fManager = manager;
 	}
 	
-	
-	protected SourceContentLines getContentLines(final Data data) {
-		if (data.contentLines == null) {
-			synchronized (fLineInformationCreator) {
-				data.contentLines = new SourceContentLines(data.content,
-						fLineInformationCreator.create(data.content.text) );
-			}
-		}
-		return data.contentLines;
-	}
 	
 	protected void reconcile(final LtxSuModelContainer<?> adapter,
 			final int level, final IProgressMonitor monitor) {
@@ -167,11 +154,11 @@ public class Reconciler {
 						&& data.newModel == adapter.getCurrentModel() ) {
 					problemRequestor = adapter.createProblemRequestor(data.ast.stamp);
 					if (problemRequestor != null) {
-						f3ProblemReporter.run(su, getContentLines(data), data.newModel,
+						f3ProblemReporter.run(su, data.content, data.newModel,
 								problemRequestor, level, monitor);
 						
 						if (data.embedded != null) {
-							data.embedded.reportEmbeddedProblems(getContentLines(data), data.newModel, 
+							data.embedded.reportEmbeddedProblems(data.content, data.newModel, 
 									problemRequestor, level, monitor);
 						}
 					}

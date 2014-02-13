@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.IProblemRequestor;
-import de.walware.ecommons.ltk.SourceContentLines;
+import de.walware.ecommons.ltk.SourceContent;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.internal.core.model.LtxProblemAstVisitor;
@@ -33,7 +33,7 @@ public class LtxProblemReporter {
 	}
 	
 	
-	public void run(final ILtxSourceUnit su, final SourceContentLines content, 
+	public void run(final ILtxSourceUnit su, final SourceContent content, 
 			final ILtxModelInfo model,
 			final IProblemRequestor requestor, final int level, final IProgressMonitor monitor) {
 		final AstInfo ast = model.getAst();

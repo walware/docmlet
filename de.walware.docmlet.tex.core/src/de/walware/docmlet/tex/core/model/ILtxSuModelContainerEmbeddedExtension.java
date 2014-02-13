@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.SourceContent;
-import de.walware.ecommons.ltk.SourceContentLines;
 
 import de.walware.docmlet.tex.core.ast.Embedded;
 
@@ -34,7 +33,7 @@ public interface ILtxSuModelContainerEmbeddedExtension {
 			List<EmbeddedReconcileItem> list,
 			int level, IProgressMonitor monitor);
 	
-	void reportEmbeddedProblems(SourceContentLines content, ILtxModelInfo texModel,
+	void reportEmbeddedProblems(SourceContent content, ILtxModelInfo texModel,
 			IProblemRequestor problemRequestor,
 			int level, IProgressMonitor monitor);
 	

@@ -21,7 +21,6 @@ import de.walware.ecommons.ltk.IProblem;
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.SourceContent;
-import de.walware.ecommons.ltk.SourceContentLines;
 import de.walware.ecommons.ltk.core.impl.Problem;
 import de.walware.ecommons.text.ILineInformation;
 
@@ -41,7 +40,7 @@ public class LtxProblemModelCheck {
 	
 	
 	private ISourceUnit fCurrentUnit;
-	private SourceContent fCurrentContent;
+	private String fCurrentText;
 	private ILineInformation fCurrentLines;
 	private IProblemRequestor fCurrentRequestor;
 	
@@ -51,12 +50,12 @@ public class LtxProblemModelCheck {
 	private final int fLevelRefUndefined = IProblem.SEVERITY_WARNING;
 	
 	
-	public void run(final ILtxSourceUnit su, final SourceContentLines content,
+	public void run(final ILtxSourceUnit su, final SourceContent content,
 			final ILtxModelInfo model, final IProblemRequestor requestor) {
 		try {
 			fCurrentUnit = su;
-			fCurrentContent = content;
-			fCurrentLines = content.lines;
+			fCurrentText = content.getText();
+			fCurrentLines = content.getLines();
 			
 			fCurrentRequestor = requestor;
 			checkLabels(model);
@@ -99,8 +98,8 @@ public class LtxProblemModelCheck {
 		if (startOffset < 0) {
 			startOffset = 0;
 		}
-		if (stopOffset > fCurrentContent.text.length()) {
-			stopOffset = fCurrentContent.text.length();
+		if (stopOffset > fCurrentText.length()) {
+			stopOffset = fCurrentText.length();
 		}
 		fProblemBuffer.add(new Problem(TexModel.LTX_TYPE_ID, severity, code, message, fCurrentUnit,
 				startOffset, stopOffset ));
