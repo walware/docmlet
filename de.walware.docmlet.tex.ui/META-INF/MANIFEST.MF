@@ -7,7 +7,7 @@ Bundle-Version: 1.0.5.qualifier
 Bundle-Activator: de.walware.docmlet.tex.internal.ui.TexUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.filesystem,
  org.eclipse.core.databinding,
