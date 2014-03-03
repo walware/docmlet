@@ -33,38 +33,38 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 	
 	private static class ModelDelta implements IModelElementDelta {
 		
-		private final int fLevel;
-		private final IModelElement fElement;
-		private final ISourceUnitModelInfo fOldInfo;
-		private final AstInfo fOldAst;
-		private final ISourceUnitModelInfo fNewInfo;
-		private final AstInfo fNewAst;
+		private final int level;
+		private final IModelElement element;
+		private final ISourceUnitModelInfo oldInfo;
+		private final AstInfo oldAst;
+		private final ISourceUnitModelInfo newInfo;
+		private final AstInfo newAst;
 		
 		
 		public ModelDelta(final IModelElement element,
 				final ISourceUnitModelInfo oldInfo, final ISourceUnitModelInfo newInfo) {
-			fLevel = IModelManager.MODEL_FILE;
-			fElement = element;
-			fOldInfo = oldInfo;
-			fOldAst = (oldInfo != null) ? oldInfo.getAst() : null;
-			fNewInfo = newInfo;
-			fNewAst = (newInfo != null) ? newInfo.getAst() : null;
+			this.level = IModelManager.MODEL_FILE;
+			this.element = element;
+			this.oldInfo = oldInfo;
+			this.oldAst = (oldInfo != null) ? oldInfo.getAst() : null;
+			this.newInfo = newInfo;
+			this.newAst = (newInfo != null) ? newInfo.getAst() : null;
 		}
 		
 		
 		@Override
 		public IModelElement getModelElement() {
-			return fElement;
+			return this.element;
 		}
 		
 		@Override
 		public AstInfo getOldAst() {
-			return fOldAst;
+			return this.oldAst;
 		}
 		
 		@Override
 		public AstInfo getNewAst() {
-			return fNewAst;
+			return this.newAst;
 		}
 		
 	}
@@ -88,9 +88,9 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 	}
 	
 	
-	private final EventJob fEventJob = new EventJob(this);
+	private final EventJob eventJob = new EventJob(this);
 	
-	private final Reconciler fReconciler = new Reconciler(this);
+	private final LtxReconciler reconciler = new LtxReconciler(this);
 	
 	
 	public LtxModelManager(final String typeId) {
@@ -99,27 +99,27 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 	
 	
 	public void dispose() {
-		fEventJob.dispose();
+		this.eventJob.dispose();
 	}
 	
 	
 	public EventJob getEventJob() {
-		return fEventJob;
+		return this.eventJob;
 	}
 	
 	@Override
 	public void reconcile(final SourceUnitModelContainer<?, ?> adapter,
 			final int level, final IProgressMonitor monitor) {
 		if (adapter instanceof LtxSuModelContainer) {
-			fReconciler.reconcile((LtxSuModelContainer) adapter, level, monitor);
+			this.reconciler.reconcile((LtxSuModelContainer<?>) adapter, level, monitor);
 		}
 	}
 	
 	@Override
 	protected void reconcile(final ISourceUnit su, final int level, final IProgressMonitor monitor) {
-		final LtxSuModelContainer adapter = (LtxSuModelContainer) su.getAdapter(LtxSuModelContainer.class);
+		final LtxSuModelContainer<?> adapter = (LtxSuModelContainer<?>) su.getAdapter(LtxSuModelContainer.class);
 		if (adapter != null) {
-			fReconciler.reconcile(adapter, level, monitor);
+			this.reconciler.reconcile(adapter, level, monitor);
 		}
 	}
 	

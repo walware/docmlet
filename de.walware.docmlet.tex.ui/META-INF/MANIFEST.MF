@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.compare,
+ org.eclipse.ui.ide,
  de.walware.docmlet.tex.core;bundle-version="[1.0.0,1.1.0)",
  de.walware.ecommons.uimisc;bundle-version="[1.5.0,1.6.0)",
  de.walware.ecommons.ltk.ui;bundle-version="[2.3.0,2.4.0)"

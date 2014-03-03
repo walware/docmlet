@@ -11,6 +11,7 @@
 
 package de.walware.docmlet.tex.internal.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -35,6 +36,13 @@ public class TexCorePlugin extends Plugin {
 	 */
 	public static TexCorePlugin getDefault() {
 		return gPlugin;
+	}
+	
+	public static final void log(final IStatus status) {
+		final Plugin plugin = getDefault();
+		if (plugin != null) {
+			plugin.getLog().log(status);
+		}
 	}
 	
 	

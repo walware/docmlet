@@ -20,6 +20,9 @@ public class TexUIMessages extends NLS {
 	public static String Proposal_RenameInFile_label;
 	public static String Proposal_RenameInFile_description;
 	
+	public static String TexProject_ConvertTask_label;
+	public static String TexProject_ConvertTask_error_message;
+	
 	
 	static {
 		NLS.initializeMessages(TexUIMessages.class.getName(), TexUIMessages.class);

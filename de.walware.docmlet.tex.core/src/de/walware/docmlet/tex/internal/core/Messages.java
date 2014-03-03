@@ -17,8 +17,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	
 	
-	public static String CommandCategory_Math_prefix;
-	
 	public static String CommandCategory_Sectioning_label;
 	public static String CommandCategory_Label_label;
 	public static String CommandCategory_TextStyling_label;
@@ -39,6 +37,8 @@ public class Messages extends NLS {
 	public static String CommandCategory_MathSymbols_Dots_label;
 	public static String CommandCategory_MathSymbols_Accents_label;
 	public static String CommandCategory_MathSymbols_Brackets_label;
+	
+	public static String TexProject_ConfigureTask_label;
 	
 	
 	static {

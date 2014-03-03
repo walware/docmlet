@@ -39,6 +39,49 @@
    </extension>
    
    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.project"
+            defaultHandler="de.walware.docmlet.tex.internal.ui.ConvertToTexProjectHandler"
+            id="de.walware.docmlet.tex.commands.ConvertToTexProject"
+            name="Convert to TeX Projects (StatET)">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.projectConfigure?endof=additions">
+         <command
+               commandId="de.walware.docmlet.tex.commands.ConvertToTexProject"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.open">
+                        </test>
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="de.walware.docmlet.tex.natures.Tex">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.editors">
       <editor
             id="de.walware.docmlet.tex.editors.Ltx"

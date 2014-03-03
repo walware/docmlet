@@ -30,8 +30,8 @@ import de.walware.docmlet.tex.core.model.TexModel;
 public class LtxReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, ISourceUnitStrategy {
 	
 	
-	private ISourceUnit fInput;
-	private IProgressMonitor fMonitor;
+	private ISourceUnit input;
+	private IProgressMonitor monitor;
 	
 	
 	public LtxReconcilingStrategy() {
@@ -49,7 +49,7 @@ public class LtxReconcilingStrategy implements IReconcilingStrategy, IReconcilin
 	
 	@Override
 	public void setInput(final ISourceUnit input) {
-		fInput = input;
+		this.input= input;
 	}
 	
 	@Override
@@ -64,23 +64,23 @@ public class LtxReconcilingStrategy implements IReconcilingStrategy, IReconcilin
 	
 	@Override
 	public void setProgressMonitor(final IProgressMonitor monitor) {
-		fMonitor = monitor;
+		this.monitor= monitor;
 	}
 	
 	
 	protected void reconcile() {
-		final ISourceUnit su = fInput;
-		if (!(su instanceof ILtxSourceUnit) || fMonitor.isCanceled()) {
+		final ISourceUnit su= this.input;
+		if (!(su instanceof ILtxSourceUnit) || this.monitor.isCanceled()) {
 			return;
 		}
-		final LtxSuModelContainer adapter = (LtxSuModelContainer) su.getAdapter(LtxSuModelContainer.class);
+		final LtxSuModelContainer<?> adapter= (LtxSuModelContainer<?>) su.getAdapter(LtxSuModelContainer.class);
 		if (adapter == null) {
 			return;
 		}
-		final IModelManager modelManager = TexModel.getModelManager();
+		final IModelManager modelManager= TexModel.getModelManager();
 		if (modelManager != null) {
 			modelManager.reconcile(adapter, (IModelManager.MODEL_FILE | IModelManager.RECONCILER),
-					fMonitor );
+					this.monitor );
 		}
 	}
 	

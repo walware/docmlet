@@ -15,18 +15,28 @@ import de.walware.ecommons.ltk.IModelManager;
 import de.walware.ecommons.ltk.core.impl.SourceUnitModelContainer;
 
 
-public class LtxSuModelContainer<SuType extends ILtxSourceUnit> extends SourceUnitModelContainer<SuType, ILtxModelInfo> {
+public class LtxSuModelContainer<U extends ILtxSourceUnit>
+		extends SourceUnitModelContainer<U, ILtxModelInfo> {
 	
 	
-	public LtxSuModelContainer(final SuType su) {
+	public LtxSuModelContainer(final U su) {
 		super(su);
 	}
 	
 	
 	@Override
+	public boolean isContainerFor(final String modelTypeId) {
+		return (modelTypeId == TexModel.LTX_TYPE_ID);
+	}
+	
+	@Override
+	public Class<?> getAdapterClass() {
+		return LtxSuModelContainer.class;
+	}
+	
+	@Override
 	protected IModelManager getModelManager() {
 		return TexModel.getModelManager();
 	}
-	
 	
 }

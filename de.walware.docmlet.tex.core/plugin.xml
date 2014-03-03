@@ -36,6 +36,9 @@
    
    <extension
          point="de.walware.ecommons.ltk.modelTypes">
+      <modelType
+            id="ltx">
+      </modelType>
       <unitType modelTypeId="ltx"
             contextKey="persistence.default"
             unitFactory="de.walware.docmlet.tex.internal.core.model.LtxSourceUnitFactory">
@@ -50,6 +53,27 @@
                type="de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner">
          </adapter>
       </adapterFactory>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.resources.natures"
+         id="de.walware.docmlet.tex.natures.Tex"
+         name="TeX (StatET)">
+      <runtime>
+         <run class="de.walware.docmlet.tex.internal.core.TexProject"/>
+      </runtime>
+      <builder
+            id="de.walware.docmlet.tex.builders.Tex">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.core.resources.builders"
+         id="de.walware.docmlet.tex.builders.Tex"
+         name="TeX Builder (StatET)">
+      <builder
+            hasNature="true">
+         <run class="de.walware.docmlet.tex.internal.core.builder.TexProjectBuilder"/>
+      </builder>
    </extension>
    
    <extension
