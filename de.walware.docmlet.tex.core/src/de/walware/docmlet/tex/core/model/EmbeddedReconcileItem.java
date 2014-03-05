@@ -44,7 +44,9 @@ public class EmbeddedReconcileItem {
 	}
 	
 	public void setModelTypeElement(final ISourceStructElement element) {
-		fElement.setForeign(element);
+		if (element != null) {
+			fElement.setForeign(element);
+		}
 	}
 	
 }

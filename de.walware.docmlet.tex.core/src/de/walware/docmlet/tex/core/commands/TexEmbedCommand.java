@@ -17,19 +17,19 @@ import java.util.List;
 public class TexEmbedCommand extends TexCommand {
 	
 	
-	private final String fEmbeddedType;
+	private final String embeddedType;
 	
 	
 	public TexEmbedCommand(final int type, final String embeddedType,
 			final String word, final boolean asterisk, final List<Argument> arguments,
 			final String description) {
 		super(type, word, asterisk, arguments, description);
-		fEmbeddedType = embeddedType;
+		this.embeddedType= embeddedType;
 	}
 	
 	
 	public String getEmbeddedType() {
-		return fEmbeddedType;
+		return this.embeddedType;
 	}
 	
 }

@@ -168,6 +168,9 @@ public class LtxReconciler {
 				data.embedded.reconcileEmbeddedAst(data.content, embeddedNodes, flags, monitor);
 			}
 			else {
+				this.f1Lexer.setNowebType(null);
+				this.f1Parser.setCollectEmebeddedNodes(false);
+				
 				sourceNode= this.f1Parser.parse(input, data.texCoreAccess.getTexCommandSet());
 			}
 			data.ast= new AstInfo(1, data.content.stamp, sourceNode);
@@ -187,8 +190,8 @@ public class LtxReconciler {
 			final boolean isOK= (model != null);
 			
 			if (data.embedded != null) {
-				data.embedded.reconcileEmbeddedModel(data.content, model, this.f2SourceAnalyzer.getEmbeddedItems(),
-						flags, monitor);
+				data.embedded.reconcileEmbeddedModel(data.content, model,
+						this.f2SourceAnalyzer.getEmbeddedItems(), flags, monitor );
 			}
 			
 			if (isOK) {

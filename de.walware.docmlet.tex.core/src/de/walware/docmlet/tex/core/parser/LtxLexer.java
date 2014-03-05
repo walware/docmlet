@@ -19,70 +19,76 @@ import de.walware.ecommons.text.SourceParseInput;
 public class LtxLexer {
 	
 	
-	public static final int EOF = -1;
+	//-- Types --//
 	
-	protected static final int NONE = 0;
+	public static final int EOF=                            -1;
 	
-	public static final int LINEBREAK = 1;
-	public static final int WHITESPACE = 2;
+	protected static final int NONE=                        0;
 	
-	public static final int CONTROL_NONE = 3;
-	public static final int CONTROL_WORD = 4;
-	public static final int CONTROL_CHAR = 5;
+	public static final int LINEBREAK=                      0x01;
+	public static final int WHITESPACE=                     0x02;
 	
-	public static final int ASTERISK = 9;
-	public static final int CURLY_BRACKET_OPEN = 10;
-	public static final int CURLY_BRACKET_CLOSE = 11;
-	public static final int SQUARED_BRACKET_OPEN = 12;
-	public static final int SQUARED_BRACKET_CLOSE = 13;
+	public static final int DEFAULT_TEXT=                   0x03;
 	
-	public static final int DEFAULT_TEXT = 8;
+	public static final int CONTROL_NONE=                   0x04;
+	public static final int CONTROL_WORD=                   0x05;
+	public static final int CONTROL_CHAR=                   0x06;
 	
-	public static final int MATH_$ = 15;
-	public static final int MATH_$$ = 16;
+	public static final int ASTERISK=                       0x08;
+	public static final int CURLY_BRACKET_OPEN=             0x09;
+	public static final int CURLY_BRACKET_CLOSE=            0x0A;
+	public static final int SQUARED_BRACKET_OPEN=           0x0B;
+	public static final int SQUARED_BRACKET_CLOSE=          0x0C;
 	
-	public static final int LINE_COMMENT = 19;
+	public static final int MATH_$=                         0x0E;
+	public static final int MATH_$$=                        0x0F;
 	
-	public static final int VERBATIM_TEXT = 20;
+	public static final int LINE_COMMENT=                   0x10;
 	
-	public static final int EMBEDDED = 21;
+	public static final int VERBATIM_TEXT=                  0x11;
 	
-	public static final int SUB_OPEN_MISSING = 1;
-	public static final int SUB_CLOSE_MISSING = 2;
+	public static final int EMBEDDED=                       0x12;
 	
+	//-- Subtypes --//
 	
-	protected static final int S_DEFAULT = 0;
-	
-	protected static final int S_VERBATIME_ENV = 1;
-	
-	protected static final int S_VERBATIME_LINE = 2;
-	
-	protected static final int S_EMBEDDED = 3;
+	public static final int SUB_OPEN_MISSING=               0x01;
+	public static final int SUB_CLOSE_MISSING=              0x02;
 	
 	
-	protected SourceParseInput fInput;
+	//-- States --//
 	
-	private int fFoundType;
-	private int fFoundSubtype;
-	private int fFoundOffset;
-	private int fFoundNum;
-	private int fFoundLength;
-	private String fFoundText;
+	protected static final int S_DEFAULT=                   0x00;
 	
-	private boolean fWasLinebreak;
+	protected static final int S_VERBATIME_ENV=             0x01;
 	
-	private int fState;
-	private int fSavedVerbatimState;
-	private int fSavedEmbeddedState;
+	protected static final int S_VERBATIME_LINE=            0x02;
 	
-	private boolean fReportSquaredBrackets = false;
-	private boolean fReportStars = false;
-	private boolean fReport$$ = true;
+	protected static final int S_EMBEDDED=                  0x03;
 	
-	private char[] fEndPattern;
 	
-	private boolean fCreateControlTexts;
-	private final IStringCache fControlTextFactory;
+	protected SourceParseInput input;
+	
+	private int foundType;
+	private int foundSubtype;
+	private int foundOffset;
+	private int foundNum;
+	private int foundLength;
+	private String foundText;
+	
+	private boolean wasLinebreak;
+	
+	private int state;
+	private int savedVerbatimState;
+	private int savedEmbeddedState;
+	
+	private char[] endPattern;
+	
+	private boolean reportSquaredBrackets= false;
+	private boolean reportStars= false;
+	private boolean report$$= true;
+	
+	private boolean createControlTexts;
+	private final IStringCache controlTextFactory;
 	
 	
 	public LtxLexer(final SourceParseInput input) {
@@ -95,79 +101,79 @@ public class LtxLexer {
 	}
 	
 	public LtxLexer(final IStringCache controlTextFactory) {
-		fControlTextFactory = (controlTextFactory != null) ? controlTextFactory : InternStringCache.INSTANCE;
+		this.controlTextFactory= (controlTextFactory != null) ? controlTextFactory : InternStringCache.INSTANCE;
 	}
 	
 	
 	private void reset() {
-		fFoundOffset = fInput.getIndex();
-		fFoundNum = 0;
-		fFoundLength = 0;
-		fFoundType = NONE;
+		this.foundOffset= this.input.getIndex();
+		this.foundNum= 0;
+		this.foundLength= 0;
+		this.foundType= NONE;
 		
-		fReportSquaredBrackets = false;
-		fReportStars = false;
-		fReport$$ = true;
+		this.reportSquaredBrackets= false;
+		this.reportStars= false;
+		this.report$$= true;
 	}
 	
 	public void setInput(final SourceParseInput input) {
-		fInput = input;
+		this.input= input;
 	}
 	
 	public void setFull() {
-		fInput.init();
+		this.input.init();
 		reset();
 	}
 	
 	public void setRange(final int offset, final int length) {
-		fInput.init(offset, offset+length);
+		this.input.init(offset, offset+length);
 		reset();
 	}
 	
 	public void setReportAsterisk(final boolean enable) {
-		fReportStars = enable;
+		this.reportStars= enable;
 	}
 	
 	public void setReportSquaredBrackets(final boolean enable) {
-		fReportSquaredBrackets = enable;
+		this.reportSquaredBrackets= enable;
 	}
 	
 	public void setReport$$(final boolean enable) {
-		fReport$$ = enable;
+		this.report$$= enable;
 	}
 	
 	public void setCreateControlTexts(final boolean enable) {
-		fCreateControlTexts = enable;
+		this.createControlTexts= enable;
 	}
 	
 	public void setModeVerbatimEnv(final char[] pattern) {
-		fState = S_VERBATIME_ENV;
-		fEndPattern = pattern;
+		this.state= S_VERBATIME_ENV;
+		this.endPattern= pattern;
 	}
 	
 	public void setModeVerbatimLine() {
-		fSavedVerbatimState = fState;
-		fState = S_VERBATIME_LINE;
+		this.savedVerbatimState= this.state;
+		this.state= S_VERBATIME_LINE;
 	}
 	
 	public final int pop() {
-		return (fFoundType != NONE) ? fFoundType : next();
+		return (this.foundType != NONE) ? this.foundType : next();
 	}
 	
 	public final void consume() {
-		fFoundType = NONE;
+		this.foundType= NONE;
 	}
 	
 	public int next() {
-		fFoundType = NONE;
-		SEARCH_NEXT: while (fFoundType == NONE) {
-			fInput.consume(fFoundNum, fFoundLength);
-			fFoundOffset = fInput.getIndex();
-			if (fWasLinebreak) {
-				fWasLinebreak = false;
-				handleNewLine(fFoundOffset, 0);
+		this.foundType= NONE;
+		SEARCH_NEXT: while (this.foundType == NONE) {
+			this.input.consume(this.foundNum, this.foundLength);
+			this.foundOffset= this.input.getIndex();
+			if (this.wasLinebreak) {
+				this.wasLinebreak= false;
+				handleNewLine(this.foundOffset, 0);
 			}
-			switch (fState) {
+			switch (this.state) {
 			case S_DEFAULT:
 				searchDefault();
 				continue SEARCH_NEXT;
@@ -182,124 +188,124 @@ public class LtxLexer {
 				continue SEARCH_NEXT;
 			}
 		}
-		return fFoundType;
+		return this.foundType;
 	}
 	
 	public final int getType() {
-		return fFoundType;
+		return this.foundType;
 	}
 	
 	public final int getSubtype() {
-		return fFoundSubtype;
+		return this.foundSubtype;
 	}
 	
 	public final int getOffset() {
-		return fFoundOffset;
+		return this.foundOffset;
 	}
 	
 	public final int getLength() {
-		return fFoundLength;
+		return this.foundLength;
 	}
 	
 	public final int getStopOffset() {
-		return fFoundOffset + fFoundLength;
+		return this.foundOffset + this.foundLength;
 	}
 	
 	public final String getText() {
-		return fFoundText;
+		return this.foundText;
 	}
 	
 	public final String getFullText(final IStringCache factory) {
 		return (factory != null) ?
-				fInput.substring(1, fFoundNum, factory) :
-				fInput.substring(1, fFoundNum);
+				this.input.substring(1, this.foundNum, factory) :
+				this.input.substring(1, this.foundNum);
 	}
 	
 	protected int getNum() {
-		return fFoundNum;
+		return this.foundNum;
 	}
 	
 	protected void setEmbeddedBegin() {
-		fSavedEmbeddedState = fState;
-		fState = S_EMBEDDED;
+		this.savedEmbeddedState= this.state;
+		this.state= S_EMBEDDED;
 	}
 	protected void setEmbeddedEnd(final int num, final String text) {
-		fFoundType = EMBEDDED;
-		fFoundNum = num;
-		fFoundLength = fInput.getLength(num);
-		fFoundText = text;
-		switch (fInput.get(num)) {
+		this.foundType= EMBEDDED;
+		this.foundNum= num;
+		this.foundLength= this.input.getLength(num);
+		this.foundText= text;
+		switch (this.input.get(num)) {
 		case '\r':
 		case '\n':
-			fWasLinebreak = true;
+			this.wasLinebreak= true;
 		}
-		fState = fSavedEmbeddedState;
+		this.state= this.savedEmbeddedState;
 	}
 	
 	protected void searchDefault() {
 		int num;
-		switch (fInput.get(1)) {
+		switch (this.input.get(1)) {
 		// eof
 		case SourceParseInput.EOF:
-			fFoundType = EOF;
-			fFoundLength = fInput.getLength(fFoundNum = 0);
-			fFoundText = null;
+			this.foundType= EOF;
+			this.foundLength= this.input.getLength(this.foundNum= 0);
+			this.foundText= null;
 			return;
 		// linebreak
 		case '\r':
-			if (fInput.get(2) == '\n') {
-				fFoundType = LINEBREAK;
-				fFoundLength = fInput.getLength(fFoundNum = 2);
-				fFoundText = null;
-				fWasLinebreak = true;
+			if (this.input.get(2) == '\n') {
+				this.foundType= LINEBREAK;
+				this.foundLength= this.input.getLength(this.foundNum= 2);
+				this.foundText= null;
+				this.wasLinebreak= true;
 				return;
 			}
 			//$FALL-THROUGH$
 		case '\n':
-			fFoundType = LINEBREAK;
-			fFoundLength = fInput.getLength(fFoundNum = 1);
-			fFoundText = null;
-			fWasLinebreak = true;
+			this.foundType= LINEBREAK;
+			this.foundLength= this.input.getLength(this.foundNum= 1);
+			this.foundText= null;
+			this.wasLinebreak= true;
 			return;
 		// whitespace
 		case '\f':
 		case ' ':
 		case '\t':
-			num = 1;
+			num= 1;
 			LOOP : while (true) {
-				switch (fInput.get(++num)) {
+				switch (this.input.get(++num)) {
 				case ' ':
 				case '\t':
 					continue LOOP;
 				default:
-					fFoundType = WHITESPACE;
-					fFoundLength = fInput.getLength(fFoundNum = num-1);
-					fFoundText = null;
+					this.foundType= WHITESPACE;
+					this.foundLength= this.input.getLength(this.foundNum= num-1);
+					this.foundText= null;
 					return;
 				}
 			}
 		
 		case '\\':
-			switch (fFoundSubtype = fInput.get(2)) {
+			switch (this.foundSubtype= this.input.get(2)) {
 			case SourceParseInput.EOF:
-				fFoundType = CONTROL_NONE;
-				fFoundLength = fInput.getLength(fFoundNum = 1);
-				fFoundText = null;
+				this.foundType= CONTROL_NONE;
+				this.foundLength= this.input.getLength(this.foundNum= 1);
+				this.foundText= null;
 				return;
 			case '\r':
-				if (fInput.get(3) == '\n') {
-					fFoundType = CONTROL_CHAR;
-					fFoundLength = fInput.getLength(fFoundNum = 3);
-					fFoundText = "\n";
-					fWasLinebreak = true;
+				if (this.input.get(3) == '\n') {
+					this.foundType= CONTROL_CHAR;
+					this.foundLength= this.input.getLength(this.foundNum= 3);
+					this.foundText= "\n"; //$NON-NLS-1$
+					this.wasLinebreak= true;
 					return;
 				}
 				//$FALL-THROUGH$
 			case '\n':
-				fFoundType = CONTROL_CHAR;
-				fFoundLength = fInput.getLength(fFoundNum = 2);
-				fFoundText = "\n";
-				fWasLinebreak = true;
+				this.foundType= CONTROL_CHAR;
+				this.foundLength= this.input.getLength(this.foundNum= 2);
+				this.foundText= "\n"; //$NON-NLS-1$
+				this.wasLinebreak= true;
 				return;
 			case 'a':
 			case 'b':
@@ -353,9 +359,9 @@ public class LtxLexer {
 			case 'X':
 			case 'Y':
 			case 'Z':
-				num = 2;
+				num= 2;
 				LOOP: while (true) {
-					switch (fInput.get(++num)) {
+					switch (this.input.get(++num)) {
 					case 'a':
 					case 'b':
 					case 'c':
@@ -410,92 +416,92 @@ public class LtxLexer {
 					case 'Z':
 						continue LOOP;
 					default:
-						fFoundType = CONTROL_WORD;
-						fFoundLength = fInput.getLength(fFoundNum = num - 1);
-						fFoundText = (fCreateControlTexts) ? fInput.substring(2, num - 2, fControlTextFactory) : null;
+						this.foundType= CONTROL_WORD;
+						this.foundLength= this.input.getLength(this.foundNum= num - 1);
+						this.foundText= (this.createControlTexts) ? this.input.substring(2, num - 2, this.controlTextFactory) : null;
 						return;
 					}
 				}
 			
 			default:
-				fFoundType = CONTROL_CHAR;
-				fFoundLength = fInput.getLength(fFoundNum = 2);
-				fFoundText = (fCreateControlTexts) ? fInput.substring(2, 1, fControlTextFactory) : null;
+				this.foundType= CONTROL_CHAR;
+				this.foundLength= this.input.getLength(this.foundNum= 2);
+				this.foundText= (this.createControlTexts) ? this.input.substring(2, 1, this.controlTextFactory) : null;
 				return;
 			}
 		
 		// star
 		case '*':
-			if (fReportStars) {
-				fFoundType = ASTERISK;
-				fFoundLength = fInput.getLength(fFoundNum = 1);
-				fFoundText = null;
+			if (this.reportStars) {
+				this.foundType= ASTERISK;
+				this.foundLength= this.input.getLength(this.foundNum= 1);
+				this.foundText= null;
 				return;
 			}
 			break;
 		
 		// brackets
 		case '{':
-			fFoundType = CURLY_BRACKET_OPEN;
-			fFoundLength = fInput.getLength(fFoundNum = 1);
-			fFoundText = null;
+			this.foundType= CURLY_BRACKET_OPEN;
+			this.foundLength= this.input.getLength(this.foundNum= 1);
+			this.foundText= null;
 			return;
 		case '}':
-			fFoundType = CURLY_BRACKET_CLOSE;
-			fFoundLength = fInput.getLength(fFoundNum = 1);
-			fFoundText = null;
+			this.foundType= CURLY_BRACKET_CLOSE;
+			this.foundLength= this.input.getLength(this.foundNum= 1);
+			this.foundText= null;
 			return;
 		
 		case '[':
-			if (fReportSquaredBrackets) {
-				fFoundType = SQUARED_BRACKET_OPEN;
-				fFoundLength = fInput.getLength(fFoundNum = 1);
-				fFoundText = null;
+			if (this.reportSquaredBrackets) {
+				this.foundType= SQUARED_BRACKET_OPEN;
+				this.foundLength= this.input.getLength(this.foundNum= 1);
+				this.foundText= null;
 				return;
 			}
 			break;
 		case ']':
-			if (fReportSquaredBrackets) {
-				fFoundType = SQUARED_BRACKET_CLOSE;
-				fFoundLength = fInput.getLength(fFoundNum = 1);
-				fFoundText = null;
+			if (this.reportSquaredBrackets) {
+				this.foundType= SQUARED_BRACKET_CLOSE;
+				this.foundLength= this.input.getLength(this.foundNum= 1);
+				this.foundText= null;
 				return;
 			}
 			break;
 		
 		// math
 		case '$':
-			if (fReport$$ && fInput.get(2) == '$') {
-				fFoundType = MATH_$$;
-				fFoundLength = fInput.getLength(fFoundNum = 2);
-				fFoundText = null;
+			if (this.report$$ && this.input.get(2) == '$') {
+				this.foundType= MATH_$$;
+				this.foundLength= this.input.getLength(this.foundNum= 2);
+				this.foundText= null;
 				return;
 			}
-			fFoundType = MATH_$;
-			fFoundLength = fInput.getLength(fFoundNum = 1);
-			fFoundText = null;
+			this.foundType= MATH_$;
+			this.foundLength= this.input.getLength(this.foundNum= 1);
+			this.foundText= null;
 			return;
 			
 		// line comment - in tex including linebreak
 		case '%':
-			num = 1;
+			num= 1;
 			LOOP: while (true) {
-				switch (fInput.get(++num)) {
+				switch (this.input.get(++num)) {
 				case SourceParseInput.EOF:
-					fFoundType = LINE_COMMENT;
-					fFoundLength = fInput.getLength(fFoundNum = num - 1);
-					fFoundText = null;
+					this.foundType= LINE_COMMENT;
+					this.foundLength= this.input.getLength(this.foundNum= num - 1);
+					this.foundText= null;
 					return;
 				case '\r':
-					if (fInput.get(num+1) == '\n') {
+					if (this.input.get(num+1) == '\n') {
 						num++;
 					}
 					//$FALL-THROUGH$
 				case '\n':
-					fFoundType = LINE_COMMENT;
-					fFoundLength = fInput.getLength(fFoundNum = num);
-					fFoundText = null;
-					fWasLinebreak = true;
+					this.foundType= LINE_COMMENT;
+					this.foundLength= this.input.getLength(this.foundNum= num);
+					this.foundText= null;
+					this.wasLinebreak= true;
 					return;
 				default:
 					continue LOOP;
@@ -507,9 +513,9 @@ public class LtxLexer {
 		}
 		
 		// consume text
-		{	int tmp = num = 1;
+		{	int tmp= num= 1;
 			LOOP: while (true) {
-				switch (fInput.get(++tmp)) {
+				switch (this.input.get(++tmp)) {
 				case SourceParseInput.EOF:
 				case '\r':
 				case '\n':
@@ -519,16 +525,16 @@ public class LtxLexer {
 				case '}':
 				case '%':
 				case '$':
-					fFoundType = DEFAULT_TEXT;
-					fFoundLength = fInput.getLength(fFoundNum = num);
-					fFoundText = null;
+					this.foundType= DEFAULT_TEXT;
+					this.foundLength= this.input.getLength(this.foundNum= num);
+					this.foundText= null;
 					return;
 				case '[':
 				case ']':
-					if (fReportSquaredBrackets) {
-						fFoundType = DEFAULT_TEXT;
-						fFoundLength = fInput.getLength(fFoundNum = num);
-						fFoundText = null;
+					if (this.reportSquaredBrackets) {
+						this.foundType= DEFAULT_TEXT;
+						this.foundLength= this.input.getLength(this.foundNum= num);
+						this.foundText= null;
 						return;
 					}
 					continue LOOP;
@@ -536,7 +542,7 @@ public class LtxLexer {
 				case '\t':
 					continue LOOP;
 				default:
-					num = tmp;
+					num= tmp;
 					continue LOOP;
 				}
 			}
@@ -544,39 +550,39 @@ public class LtxLexer {
 	}
 	
 	protected void searchVerbatimEnv() {
-		int num = 1;
+		int num= 1;
 		LOOP: while (true) {
-			switch (fInput.get(++num)) {
+			switch (this.input.get(++num)) {
 			case SourceParseInput.EOF:
-				fFoundType = VERBATIM_TEXT;
-				fFoundSubtype = SUB_CLOSE_MISSING;
-				fFoundLength = fInput.getLength(fFoundNum = num - 1);
-				fFoundText = null;
-				fState = S_DEFAULT;
+				this.foundType= VERBATIM_TEXT;
+				this.foundSubtype= SUB_CLOSE_MISSING;
+				this.foundLength= this.input.getLength(this.foundNum= num - 1);
+				this.foundText= null;
+				this.state= S_DEFAULT;
 				return;
 			case '\r':
-				if (fInput.get(num+1) == '\n') {
+				if (this.input.get(num+1) == '\n') {
 					num++;
 				}
 				//$FALL-THROUGH$
 			case '\n':
-				fFoundLength = fInput.getLength(fFoundNum = num);
-				handleNewLine(fFoundOffset + fFoundLength, num);
-				if (fState != S_VERBATIME_ENV) {
-					fFoundType = VERBATIM_TEXT;
-					fFoundSubtype = 0;
-					fFoundLength = fInput.getLength(fFoundNum = num);
-					fFoundText = null;
+				this.foundLength= this.input.getLength(this.foundNum= num);
+				handleNewLine(this.foundOffset + this.foundLength, num);
+				if (this.state != S_VERBATIME_ENV) {
+					this.foundType= VERBATIM_TEXT;
+					this.foundSubtype= 0;
+					this.foundLength= this.input.getLength(this.foundNum= num);
+					this.foundText= null;
 					return;
 				}
 				continue LOOP;
 			case '\\':
-				if (fInput.subequals(num+1, fEndPattern)) {
-					fFoundType = VERBATIM_TEXT;
-					fFoundSubtype = 0;
-					fFoundLength = fInput.getLength(fFoundNum = num - 1);
-					fFoundText = null;
-					fState = S_DEFAULT;
+				if (this.input.subequals(num+1, this.endPattern)) {
+					this.foundType= VERBATIM_TEXT;
+					this.foundSubtype= 0;
+					this.foundLength= this.input.getLength(this.foundNum= num - 1);
+					this.foundText= null;
+					this.state= S_DEFAULT;
 					return;
 				}
 				continue LOOP;
@@ -587,36 +593,36 @@ public class LtxLexer {
 	}
 	
 	protected void searchVerbatimLine() {
-		final int end = fInput.get(1);
+		final int end= this.input.get(1);
 		if (end < 0x20) {
-			fFoundType = VERBATIM_TEXT;
-			fFoundSubtype = SUB_OPEN_MISSING;
-			fFoundLength = fFoundNum = 0;
-			fFoundText = null;
-			fState = fSavedVerbatimState;
+			this.foundType= VERBATIM_TEXT;
+			this.foundSubtype= SUB_OPEN_MISSING;
+			this.foundLength= this.foundNum= 0;
+			this.foundText= null;
+			this.state= this.savedVerbatimState;
 			return;
 		}
-		int num = 1;
+		int num= 1;
 		LOOP: while (true) {
-			final int c = fInput.get(++num);
+			final int c= this.input.get(++num);
 			switch (c) {
 			case SourceParseInput.EOF:
 			case '\r':
 			case '\n':
-				fFoundType = VERBATIM_TEXT;
-				fFoundSubtype = SUB_CLOSE_MISSING;
-				fFoundLength = fInput.getLength(fFoundNum = num - 1);
-				fFoundText = null;
-//				fFoundText = (fCreateControlTexts) ? fInput.substring(1, 1) : null;
+				this.foundType= VERBATIM_TEXT;
+				this.foundSubtype= SUB_CLOSE_MISSING;
+				this.foundLength= this.input.getLength(this.foundNum= num - 1);
+				this.foundText= null;
+//				this.foundText= (this.createControlTexts) ? this.input.substring(1, 1) : null;
 				return;
 			default:
 				if (c == end) {
-					fFoundType = VERBATIM_TEXT;
-					fFoundSubtype = 0;
-					fFoundLength = fInput.getLength(fFoundNum = num);
-					fFoundText = null;
-//					fFoundText = (fCreateControlTexts) ? fInput.substring(1, 1) : null;
-					fState = fSavedVerbatimState;
+					this.foundType= VERBATIM_TEXT;
+					this.foundSubtype= 0;
+					this.foundLength= this.input.getLength(this.foundNum= num);
+					this.foundText= null;
+//					this.foundText= (this.createControlTexts) ? this.input.substring(1, 1) : null;
+					this.state= this.savedVerbatimState;
 					return;
 				}
 				continue LOOP;

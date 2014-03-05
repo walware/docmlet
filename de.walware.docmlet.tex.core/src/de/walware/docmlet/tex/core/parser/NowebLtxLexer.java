@@ -18,7 +18,7 @@ import de.walware.ecommons.text.SourceParseInput;
 public class NowebLtxLexer extends LtxLexer {
 	
 	
-	private String fNowebType;
+	private String nowebType;
 	
 	
 	public NowebLtxLexer() {
@@ -31,15 +31,15 @@ public class NowebLtxLexer extends LtxLexer {
 	
 	
 	public void setNowebType(final String modelTypeId) {
-		fNowebType = modelTypeId;
+		this.nowebType = modelTypeId;
 	}
 	
 	
 	@Override
 	protected void handleNewLine(final int offset, int num) {
 		super.handleNewLine(offset, num);
-		if (fNowebType != null
-				&& fInput.get(++num) == '<' && fInput.get(++num) == '<') {
+		if (this.nowebType != null
+				&& this.input.get(++num) == '<' && this.input.get(++num) == '<') {
 			setEmbeddedBegin();
 		}
 	}
@@ -48,31 +48,31 @@ public class NowebLtxLexer extends LtxLexer {
 	protected void searchEmbedded() {
 		int num = 2;
 		CHUNK_CONTENT: while (true) {
-			switch (fInput.get(++num)) {
+			switch (this.input.get(++num)) {
 			case SourceParseInput.EOF:
-				setEmbeddedEnd(num-1, fNowebType);
+				setEmbeddedEnd(num-1, this.nowebType);
 				return;
 			case '\r':
-				if (fInput.get(num+1) == '\n') {
+				if (this.input.get(num+1) == '\n') {
 					num++;
 				}
 				//$FALL-THROUGH$
 			case '\n':
-				super.handleNewLine(fInput.getIndex()+fInput.getLength(num), num);
-				if (fInput.get(num+1) == '@') {
+				super.handleNewLine(this.input.getIndex() + this.input.getLength(num), num);
+				if (this.input.get(num+1) == '@') {
 					num++;
 					CHUNK_END: while (true) {
-						switch (fInput.get(++num)) {
+						switch (this.input.get(++num)) {
 						case SourceParseInput.EOF:
-							setEmbeddedEnd(num-1, fNowebType);
+							setEmbeddedEnd(num-1, this.nowebType);
 							return;
 						case '\r':
-							if (fInput.get(num+1) == '\n') {
+							if (this.input.get(num+1) == '\n') {
 								num++;
 							}
 							//$FALL-THROUGH$
 						case '\n':
-							setEmbeddedEnd(num, fNowebType);
+							setEmbeddedEnd(num, this.nowebType);
 							return;
 						default:
 							continue CHUNK_END;

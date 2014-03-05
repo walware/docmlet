@@ -50,87 +50,86 @@ import de.walware.docmlet.tex.internal.core.model.RefLabelAccess.Shared;
 public class SourceAnalyzer extends TexAstVisitor {
 	
 	
-	private static final Integer ONE = 1;
+	private static final Integer ONE= 1;
 	
 	
-	private String fInput;
+	private String input;
 	
-	private LtxSourceElement.Container fElement;
+	private LtxSourceElement.Container currentElement;
 	
-	private final StringBuilder fTitleBuilder = new StringBuilder();
-	private boolean fTitleDoBuild;
-	private LtxSourceElement.Container fTitleElement;
-	private final Map<String, Integer> fStructNamesCounter = new HashMap<String, Integer>();
+	private final StringBuilder titleBuilder= new StringBuilder();
+	private boolean titleDoBuild;
+	private LtxSourceElement.Container titleElement;
+	private final Map<String, Integer> structNamesCounter= new HashMap<>();
 	
-	private Map<String, RefLabelAccess.Shared> fLabels = new HashMap<String, RefLabelAccess.Shared>();
-	private final List<EmbeddedReconcileItem> fEmbeddedItems = new ArrayList<EmbeddedReconcileItem>();
+	private Map<String, RefLabelAccess.Shared> labels= new HashMap<>();
+	private final List<EmbeddedReconcileItem> embeddedItems= new ArrayList<>();
 	
-	private int fMinSectionLevel;
-	private int fMaxSectionLevel;
+	private int minSectionLevel;
+	private int maxSectionLevel;
 	
 	
 	public void clear() {
-		fInput = null;
-		fElement = null;
+		this.input= null;
+		this.currentElement= null;
 		
-		fTitleBuilder.setLength(0);
-		fTitleDoBuild = false;
-		fTitleElement = null;
+		this.titleBuilder.setLength(0);
+		this.titleDoBuild= false;
+		this.titleElement= null;
 		
-		if (fLabels == null || !fLabels.isEmpty()) {
-			fLabels = new HashMap<String, RefLabelAccess.Shared>();
+		if (this.labels == null || !this.labels.isEmpty()) {
+			this.labels= new HashMap<>();
 		}
-		fEmbeddedItems.clear();
+		this.embeddedItems.clear();
 		
-		fMinSectionLevel = Integer.MAX_VALUE;
-		fMaxSectionLevel = Integer.MIN_VALUE;
+		this.minSectionLevel= Integer.MAX_VALUE;
+		this.maxSectionLevel= Integer.MIN_VALUE;
 	}
 	
 	public LtxSourceModelInfo createModel(final ILtxSourceUnit su, final String input,
 			final AstInfo ast,
-			Map<String, TexCommand> customCommands,
-			Map<String, TexCommand> customEnvs) {
+			Map<String, TexCommand> customCommands, Map<String, TexCommand> customEnvs) {
 		clear();
-		fInput = input;
+		this.input= input;
 		if (!(ast.root instanceof TexAstNode)) {
 			return null;
 		}
-		final ISourceStructElement root = fElement = new LtxSourceElement.SourceContainer(
+		final ISourceStructElement root= this.currentElement= new LtxSourceElement.SourceContainer(
 				ILtxSourceElement.C2_SOURCE_FILE, su, (TexAstNode) ast.root);
 		try {
 			((TexAstNode) ast.root).acceptInTex(this);
 			
 			final Map<String, RefLabelAccess.Shared> labels;
-			if (fLabels.isEmpty()) {
-				labels = Collections.emptyMap();
+			if (this.labels.isEmpty()) {
+				labels= Collections.emptyMap();
 			}
 			else {
-				labels = fLabels;
-				fLabels = null;
+				labels= this.labels;
+				this.labels= null;
 				for (final Shared access : labels.values()) {
 					access.finish();
 				}
 			}
 			
-			if (fMinSectionLevel == Integer.MAX_VALUE) {
-				fMinSectionLevel = 0;
-				fMaxSectionLevel = 0;
+			if (this.minSectionLevel == Integer.MAX_VALUE) {
+				this.minSectionLevel= 0;
+				this.maxSectionLevel= 0;
 			}
 			
 			if (customCommands != null) {
-				customCommands = Collections.unmodifiableMap(customCommands);
+				customCommands= Collections.unmodifiableMap(customCommands);
 			}
 			else {
-				customCommands = Collections.emptyMap();
+				customCommands= Collections.emptyMap();
 			}
 			if (customEnvs != null) {
-				customEnvs = Collections.unmodifiableMap(customEnvs);
+				customEnvs= Collections.unmodifiableMap(customEnvs);
 			}
 			else {
-				customEnvs = Collections.emptyMap();
+				customEnvs= Collections.emptyMap();
 			}
-			final LtxSourceModelInfo model = new LtxSourceModelInfo(ast, root,
-					fMinSectionLevel, fMaxSectionLevel, labels, customCommands, customEnvs );
+			final LtxSourceModelInfo model= new LtxSourceModelInfo(ast, root,
+					this.minSectionLevel, this.maxSectionLevel, labels, customCommands, customEnvs );
 			return model;
 		}
 		catch (final InvocationTargetException e) {
@@ -139,46 +138,46 @@ public class SourceAnalyzer extends TexAstVisitor {
 	}
 	
 	public List<EmbeddedReconcileItem> getEmbeddedItems() {
-		return fEmbeddedItems;
+		return this.embeddedItems;
 	}
 	
 	
 	private void exitContainer(final int stop, final boolean forward) {
-		fElement.fLength = ((forward) ?
-						readLinebreakForward((stop >= 0) ? stop : fElement.fOffset + fElement.fLength, fInput.length()) :
-						readLinebreakBackward((stop >= 0) ? stop : fElement.fOffset + fElement.fLength, 0) ) -
-				fElement.fOffset;
-		final List<LtxSourceElement> children = fElement.fChildren;
+		this.currentElement.fLength= ((forward) ?
+						readLinebreakForward((stop >= 0) ? stop : this.currentElement.fOffset + this.currentElement.fLength, this.input.length()) :
+						readLinebreakBackward((stop >= 0) ? stop : this.currentElement.fOffset + this.currentElement.fLength, 0) ) -
+				this.currentElement.fOffset;
+		final List<LtxSourceElement> children= this.currentElement.fChildren;
 		if (!children.isEmpty()) {
 			for (final LtxSourceElement element : children) {
 				if ((element.getElementType() & MASK_C2) == C2_SECTIONING) {
-					final Map<String, Integer> names = fStructNamesCounter;
-					final String name = element.getElementName().getDisplayName();
-					final Integer occ = names.get(name);
+					final Map<String, Integer> names= this.structNamesCounter;
+					final String name= element.getElementName().getDisplayName();
+					final Integer occ= names.get(name);
 					if (occ == null) {
 						names.put(name, ONE);
 					}
 					else {
 						names.put(name, Integer.valueOf(
-								(element.fOccurrenceCount = occ + 1) ));
+								(element.fOccurrenceCount= occ + 1) ));
 					}
 				}
 			}
-			fStructNamesCounter.clear();
+			this.structNamesCounter.clear();
 		}
-		fElement = fElement.getModelParent();
+		this.currentElement= this.currentElement.getModelParent();
 	}
 	
 	private int readLinebreakForward(int offset, final int limit) {
 		if (offset < limit) {
-			switch(fInput.charAt(offset)) {
+			switch(this.input.charAt(offset)) {
 			case '\n':
-				if (++offset < limit && fInput.charAt(offset) == '\r') {
+				if (++offset < limit && this.input.charAt(offset) == '\r') {
 					return ++offset;
 				}
 				return offset;
 			case '\r':
-				if (++offset < limit && fInput.charAt(offset) == '\n') {
+				if (++offset < limit && this.input.charAt(offset) == '\n') {
 					return ++offset;
 				}
 				return offset;
@@ -188,14 +187,14 @@ public class SourceAnalyzer extends TexAstVisitor {
 	}
 	private int readLinebreakBackward(int offset, final int limit) {
 		if (offset > limit) {
-			switch(fInput.charAt(offset-1)) {
+			switch(this.input.charAt(offset-1)) {
 			case '\n':
-				if (--offset > limit && fInput.charAt(offset-1) == '\r') {
+				if (--offset > limit && this.input.charAt(offset-1) == '\r') {
 					return --offset;
 				}
 				return offset;
 			case '\r':
-				if (--offset < limit && fInput.charAt(offset-1) == '\n') {
+				if (--offset < limit && this.input.charAt(offset-1) == '\n') {
 					return --offset;
 				}
 				return offset;
@@ -206,26 +205,26 @@ public class SourceAnalyzer extends TexAstVisitor {
 	
 	@Override
 	public void visit(final SourceComponent node) throws InvocationTargetException {
-		fElement.fOffset = node.getOffset();
+		this.currentElement.fOffset= node.getOffset();
 		node.acceptInTexChildren(this);
-		if (fTitleElement != null) {
+		if (this.titleElement != null) {
 			finishTitleText();
 		}
-		while ((fElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+		while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
 			exitContainer(node.getStopOffset(), true);
 		}
-		exitContainer(node.getStopOffset() - fElement.fOffset, true);
+		exitContainer(node.getStopOffset() - this.currentElement.fOffset, true);
 	}
 	
 	@Override
 	public void visit(final Environment node) throws InvocationTargetException {
-		final TexCommand command = node.getBeginNode().getCommand();
+		final TexCommand command= node.getBeginNode().getCommand();
 		
 		if ((command.getType() & TexCommand.MASK_C2) == TexCommand.C2_ENV_DOCUMENT_BEGIN) {
-			if (fTitleElement != null) {
+			if (this.titleElement != null) {
 				finishTitleText();
 			}
-			while ((fElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+			while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
 				exitContainer(node.getOffset(), false);
 			}
 		}
@@ -233,31 +232,31 @@ public class SourceAnalyzer extends TexAstVisitor {
 		node.acceptInTexChildren(this);
 		
 		if ((command.getType() & TexCommand.MASK_C2) == TexCommand.C2_ENV_DOCUMENT_BEGIN) {
-			if (fTitleElement != null) {
+			if (this.titleElement != null) {
 				finishTitleText();
 			}
-			while ((fElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+			while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
 				exitContainer((node.getEndNode() != null) ?
 						node.getEndNode().getOffset() : node.getStopOffset(), false );
 			}
 		}
 		
-		{	final TexAstNode beginLabel = getLabelNode(node.getBeginNode());
+		{	final TexAstNode beginLabel= getLabelNode(node.getBeginNode());
 			if (beginLabel != null) {
 				final EnvLabelAccess[] access;
-				final TexAstNode endLabel = getLabelNode(node.getEndNode());
+				final TexAstNode endLabel= getLabelNode(node.getEndNode());
 				if (endLabel != null) {
-					access = new EnvLabelAccess[2];
-					access[0] = new EnvLabelAccess(node.getBeginNode(), beginLabel);
-					access[1] = new EnvLabelAccess(node.getEndNode(), endLabel);
+					access= new EnvLabelAccess[2];
+					access[0]= new EnvLabelAccess(node.getBeginNode(), beginLabel);
+					access[1]= new EnvLabelAccess(node.getEndNode(), endLabel);
 				}
 				else {
-					access = new EnvLabelAccess[1];
-					access[0] = new EnvLabelAccess(node.getBeginNode(), endLabel);
+					access= new EnvLabelAccess[1];
+					access[0]= new EnvLabelAccess(node.getBeginNode(), endLabel);
 				}
-				final ConstArrayList<TexLabelAccess> list = new ConstArrayList<TexLabelAccess>(access);
-				for (int i = 0; i < access.length; i++) {
-					access[i].fAll = list;
+				final ConstArrayList<TexLabelAccess> list= new ConstArrayList<TexLabelAccess>(access);
+				for (int i= 0; i < access.length; i++) {
+					access[i].fAll= list;
 					access[i].getNode().addAttachment(access[i]);
 				}
 			}
@@ -266,112 +265,112 @@ public class SourceAnalyzer extends TexAstVisitor {
 	
 	@Override
 	public void visit(final ControlNode node) throws InvocationTargetException {
-		final TexCommand command = node.getCommand();
+		final TexCommand command= node.getCommand();
 		COMMAND: if (command != null) {
 			switch (command.getType() & TexCommand.MASK_MAIN) {
 			case TexCommand.PREAMBLE:
 				if (command == IPreambleDefinitions.PREAMBLE_documentclass_COMMAND) {
-					if (fTitleElement != null) {
+					if (this.titleElement != null) {
 						finishTitleText();
 					}
-					while ((fElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+					while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
 						exitContainer(node.getOffset(), false);
 					}
 					initElement(new LtxSourceElement.StructContainer(
-							ILtxSourceElement.C2_PREAMBLE, fElement, node ));
-					fElement.fName = TexElementName.create(TexElementName.TITLE, "Preamble");
+							ILtxSourceElement.C2_PREAMBLE, this.currentElement, node ));
+					this.currentElement.fName= TexElementName.create(TexElementName.TITLE, "Preamble");
 				}
 				break;
 			case TexCommand.SECTIONING:
-				if ((fElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {
+				if ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {
 					exitContainer(node.getOffset(), false);
 				}
-				if ((fElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
-						|| (fElement.getElementType() & MASK_C1) == ILtxSourceElement.C1_SOURCE ) {
-					final int level = (command.getType() & 0xf0) >> 4;
+				if ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
+						|| (this.currentElement.getElementType() & MASK_C1) == ILtxSourceElement.C1_SOURCE ) {
+					final int level= (command.getType() & 0xf0) >> 4;
 					if (level > 5) {
 						break COMMAND;
 					}
-					if (fTitleElement != null) {
+					if (this.titleElement != null) {
 						finishTitleText();
 						break COMMAND;
 					}
 					
-					while ((fElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
-							&& (fElement.getElementType() & 0xf) >= level) {
+					while ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
+							&& (this.currentElement.getElementType() & 0xf) >= level) {
 						exitContainer(node.getOffset(), false);
 					}
 					initElement(new LtxSourceElement.StructContainer(
-							ILtxSourceElement.C2_SECTIONING | level, fElement, node ));
+							ILtxSourceElement.C2_SECTIONING | level, this.currentElement, node ));
 					
-					fMinSectionLevel = Math.min(fMinSectionLevel, level);
-					fMaxSectionLevel = Math.max(fMaxSectionLevel, level);
+					this.minSectionLevel= Math.min(this.minSectionLevel, level);
+					this.maxSectionLevel= Math.max(this.maxSectionLevel, level);
 					
-					final int count = node.getChildCount();
+					final int count= node.getChildCount();
 					if (count > 0) {
-						fTitleElement = fElement;
-						fTitleDoBuild = true;
-						final TexAstNode titleNode = node.getChild(0);
-						fTitleElement.fNameRegion = TexAst.getInnerRegion(titleNode);
+						this.titleElement= this.currentElement;
+						this.titleDoBuild= true;
+						final TexAstNode titleNode= node.getChild(0);
+						this.titleElement.fNameRegion= TexAst.getInnerRegion(titleNode);
 						node.getChild(0).acceptInTex(this);
-						if (fTitleElement != null) {
+						if (this.titleElement != null) {
 							finishTitleText();
 						}
-						for (int i = 1; i < count; i++) {
+						for (int i= 1; i < count; i++) {
 							node.getChild(i).acceptInTex(this);
 						}
 					}
 					else {
-						fElement.fName = TexElementName.create(TexElementName.TITLE, "");
+						this.currentElement.fName= TexElementName.create(TexElementName.TITLE, "");
 					}
-					fElement.fLength = Math.max(fElement.fLength, node.getLength());
+					this.currentElement.fLength= Math.max(this.currentElement.fLength, node.getLength());
 					return;
 				}
 				break;
 			case TexCommand.LABEL:
 				if ((command.getType() & TexCommand.MASK_C2) == TexCommand.C2_LABEL_REFLABEL) {
-					final TexAstNode nameNode = getLabelNode(node);
+					final TexAstNode nameNode= getLabelNode(node);
 					if (nameNode != null) {
-						final String label = nameNode.getText();
-						RefLabelAccess.Shared shared = fLabels.get(label);
+						final String label= nameNode.getText();
+						RefLabelAccess.Shared shared= this.labels.get(label);
 						if (shared == null) {
-							shared = new RefLabelAccess.Shared(label);
-							fLabels.put(label, shared);
+							shared= new RefLabelAccess.Shared(label);
+							this.labels.put(label, shared);
 						}
-						final RefLabelAccess access = new RefLabelAccess(shared, node, nameNode);
+						final RefLabelAccess access= new RefLabelAccess(shared, node, nameNode);
 						if ((command.getType() & TexCommand.MASK_C3) == TexCommand.C3_LABEL_REFLABEL_DEF) {
 							access.fFlags |= RefLabelAccess.A_WRITE;
 						}
 						node.addAttachment(access);
 					}
-					final boolean prevDoBuild = fTitleDoBuild;
-					fTitleDoBuild = false;
+					final boolean prevDoBuild= this.titleDoBuild;
+					this.titleDoBuild= false;
 					node.acceptInTexChildren(this);
-					if (prevDoBuild && fTitleElement != null) {
-						fTitleDoBuild = true;
+					if (prevDoBuild && this.titleElement != null) {
+						this.titleDoBuild= true;
 					}
 					
-					fElement.fLength = node.getStopOffset() - fElement.getOffset();
+					this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 					return;
 				}
 			case TexCommand.SYMBOL:
 			case TexCommand.MATHSYMBOL:
 				if (command instanceof LtxPrintCommand
 						&& command.getArguments().isEmpty()
-						&& fTitleDoBuild) {
-					final String text = ((LtxPrintCommand) command).getText();
+						&& this.titleDoBuild) {
+					final String text= ((LtxPrintCommand) command).getText();
 					if (text != null) {
 						if (text.length() == 1 && Character.getType(text.charAt(0)) == Character.NON_SPACING_MARK) {
-							final int size = fTitleBuilder.length();
+							final int size= this.titleBuilder.length();
 							node.acceptInTexChildren(this);
-							if (fTitleElement != null && fTitleBuilder.length() == size + 1) {
-								fTitleBuilder.append(text);
+							if (this.titleElement != null && this.titleBuilder.length() == size + 1) {
+								this.titleBuilder.append(text);
 							}
 							
-							fElement.fLength = node.getStopOffset() - fElement.getOffset();
+							this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 							return;
 						}
-						fTitleBuilder.append(text);
+						this.titleBuilder.append(text);
 					}
 				}
 				break;
@@ -380,61 +379,67 @@ public class SourceAnalyzer extends TexAstVisitor {
 		
 		node.acceptInTexChildren(this);
 		
-		fElement.fLength = node.getStopOffset() - fElement.getOffset();
+		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 	}
 	
 	private void initElement(final LtxSourceElement.Container element) {
-		if (fElement.fChildren.isEmpty()) {
-			fElement.fChildren = new ArrayList<LtxSourceElement>();
+		if (this.currentElement.fChildren.isEmpty()) {
+			this.currentElement.fChildren= new ArrayList<>();
 		}
-		fElement.fChildren.add(element);
-		fElement = element;
+		this.currentElement.fChildren.add(element);
+		this.currentElement= element;
 	}
 	
 	@Override
 	public void visit(final Text node) throws InvocationTargetException {
-		if (fTitleDoBuild) {
-			fTitleBuilder.append(fInput, node.getOffset(), node.getStopOffset());
-			if (fTitleBuilder.length() >= 100) {
+		if (this.titleDoBuild) {
+			this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
+			if (this.titleBuilder.length() >= 100) {
 				finishTitleText();
 			}
 		}
 		
-		fElement.fLength = node.getStopOffset() - fElement.getOffset();
+		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
-		if (!node.isInline()) {
-			if (fTitleDoBuild) {
-				fTitleBuilder.append(fInput, node.getOffset(), node.getStopOffset());
-				if (fTitleBuilder.length() >= 100) {
+		if (node.isInline()) {
+			if (this.titleDoBuild) {
+				this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
+				if (this.titleBuilder.length() >= 100) {
 					finishTitleText();
 				}
 			}
-			if (fElement.fChildren.isEmpty()) {
-				fElement.fChildren = new ArrayList<LtxSourceElement>();
-			}
-			final EmbeddedRef element = new LtxSourceElement.EmbeddedRef(node.getText(), fElement,
-					node );
-			element.fOffset = node.getOffset();
-			element.fLength = node.getLength();
-			element.fName = TexElementName.create(0, ""); //$NON-NLS-1$
-			fElement.fChildren.add(element);
-			fEmbeddedItems.add(new EmbeddedReconcileItem(node, element));
+			this.embeddedItems.add(new EmbeddedReconcileItem(node, null));
 		}
-		fElement.fLength = node.getStopOffset() - fElement.getOffset();
+		else {
+			if (this.titleElement != null) {
+				finishTitleText();
+			}
+			if (this.currentElement.fChildren.isEmpty()) {
+				this.currentElement.fChildren= new ArrayList<>();
+			}
+			final EmbeddedRef element= new LtxSourceElement.EmbeddedRef(node.getText(),
+					this.currentElement, node );
+			element.fOffset= node.getOffset();
+			element.fLength= node.getLength();
+			element.fName= TexElementName.create(0, ""); //$NON-NLS-1$
+			this.currentElement.fChildren.add(element);
+			this.embeddedItems.add(new EmbeddedReconcileItem(node, element));
+		}
+		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 	}
 	
 	
 	private TexAstNode getLabelNode(TexAstNode node) {
 		if (node != null && node.getNodeType() == NodeType.CONTROL && node.getChildCount() > 0) {
-			node = node.getChild(0);
+			node= node.getChild(0);
 			if (node.getNodeType() == NodeType.LABEL) {
 				return node;
 			}
 			if (node.getNodeType() == NodeType.GROUP && node.getChildCount() > 0) {
-				node = node.getChild(0);
+				node= node.getChild(0);
 				if (node.getNodeType() == NodeType.LABEL) {
 					return node;
 				}
@@ -444,28 +449,28 @@ public class SourceAnalyzer extends TexAstVisitor {
 	}
 	
 	private void finishTitleText() {
-		{	boolean wasWhitespace = false;
-			int idx = 0;
-			while (idx < fTitleBuilder.length()) {
-				if (fTitleBuilder.charAt(idx) == ' ') {
+		{	boolean wasWhitespace= false;
+			int idx= 0;
+			while (idx < this.titleBuilder.length()) {
+				if (this.titleBuilder.charAt(idx) == ' ') {
 					if (wasWhitespace) {
-						fTitleBuilder.deleteCharAt(idx);
+						this.titleBuilder.deleteCharAt(idx);
 					}
 					else {
-						wasWhitespace = true;
+						wasWhitespace= true;
 						idx++;
 					}
 				}
 				else {
-					wasWhitespace = false;
+					wasWhitespace= false;
 					idx++;
 				}
 			}
 		}
-		fTitleElement.fName = TexElementName.create(TexElementName.TITLE, fTitleBuilder.toString());
-		fTitleBuilder.setLength(0);
-		fTitleElement = null;
-		fTitleDoBuild = false;
+		this.titleElement.fName= TexElementName.create(TexElementName.TITLE, this.titleBuilder.toString());
+		this.titleBuilder.setLength(0);
+		this.titleElement= null;
+		this.titleDoBuild= false;
 	}
 	
 }
