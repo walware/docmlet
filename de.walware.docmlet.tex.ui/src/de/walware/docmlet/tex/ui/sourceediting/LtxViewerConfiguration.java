@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
@@ -30,6 +31,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.EcoReconciler2;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditorAddon;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditor1;
+import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewer;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfiguration;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssistComputerRegistry;
@@ -48,6 +50,7 @@ import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.internal.ui.editors.LtxContentAssistProcessor;
 import de.walware.docmlet.tex.internal.ui.editors.LtxReconcilingStrategy;
+import de.walware.docmlet.tex.internal.ui.sourceediting.LtxQuickOutlineInformationProvider;
 import de.walware.docmlet.tex.ui.TexUIPreferences;
 import de.walware.docmlet.tex.ui.editors.LtxQuickAssistProcessor;
 import de.walware.docmlet.tex.ui.editors.TexEditorOptions;
@@ -297,5 +300,20 @@ public class LtxViewerConfiguration extends SourceEditorViewerConfiguration {
 				TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF );
 	}
 	
+	
+	@Override
+	protected IInformationProvider getQuickInformationProvider(final ISourceViewer sourceViewer,
+			final int operation) {
+		final ISourceEditor editor= getSourceEditor();
+		if (editor == null) {
+			return null;
+		}
+		switch (operation) {
+		case SourceEditorViewer.SHOW_SOURCE_OUTLINE:
+			return new LtxQuickOutlineInformationProvider(editor, operation);
+		default:
+			return null;
+		}
+	}
 	
 }

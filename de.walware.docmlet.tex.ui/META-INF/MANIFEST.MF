@@ -28,4 +28,5 @@ Export-Package: de.walware.docmlet.tex.ui,
  de.walware.docmlet.tex.ui.actions,
  de.walware.docmlet.tex.ui.editors,
  de.walware.docmlet.tex.ui.sourceediting,
- de.walware.docmlet.tex.ui.text
+ de.walware.docmlet.tex.ui.text,
+ de.walware.docmlet.tex.ui.util
