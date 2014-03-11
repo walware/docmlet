@@ -19,7 +19,7 @@ import de.walware.docmlet.tex.internal.core.TexCorePlugin;
 public class TexModel {
 	
 	
-	public static final String LTX_TYPE_ID = "ltx";
+	public static final String LTX_TYPE_ID = "ltx"; //$NON-NLS-1$
 	
 	
 	public static IModelManager getModelManager() {

@@ -17,6 +17,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 
 import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.PreferencesUtil;
@@ -34,8 +35,8 @@ public class TexCorePreferenceInitializer extends AbstractPreferenceInitializer 
 	
 	@Override
 	public void initializeDefaultPreferences() {
-		final DefaultScope scope = new DefaultScope();
-		final Map<Preference<?>, Object> map = new HashMap<Preference<?>, Object>();
+		final IScopeContext scope = DefaultScope.INSTANCE;
+		final Map<Preference<?>, Object> map = new HashMap<>();
 		
 		{	final IEclipsePreferences node = scope.getNode(TexCommandSet.QUALIFIER);
 			node.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF.getKey(),

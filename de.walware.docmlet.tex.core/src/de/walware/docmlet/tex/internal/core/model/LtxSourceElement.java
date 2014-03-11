@@ -42,7 +42,7 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 			return children;
 		}
 		else {
-			final ArrayList<ISourceStructElement> filtered = new ArrayList<ISourceStructElement>(children.size());
+			final ArrayList<ISourceStructElement> filtered = new ArrayList<>(children.size());
 			for (final ISourceStructElement child : children) {
 				if (filter.include(child)) {
 					filtered.add(child);

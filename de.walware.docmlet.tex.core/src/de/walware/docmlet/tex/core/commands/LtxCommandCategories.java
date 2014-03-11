@@ -102,7 +102,7 @@ public class LtxCommandCategories {
 				final Cat cat = getCat(command);
 				if (cat != null) {
 					if (lists[cat.ordinal()] == null) {
-						lists[cat.ordinal()] = new ArrayList<TexCommand>();
+						lists[cat.ordinal()] = new ArrayList<>();
 					}
 					lists[cat.ordinal()].add(command);
 				}
@@ -112,13 +112,13 @@ public class LtxCommandCategories {
 			}
 		}
 		
-		final List<Category> categories = new ArrayList<LtxCommandCategories.Category>(lists.length);
+		final List<Category> categories = new ArrayList<>(lists.length);
 		for (int i = 0; i < lists.length; i++) {
 			if (lists[i] != null) {
-				categories.add(new Category(cats[i], new ConstArrayList<TexCommand>(lists[i])));
+				categories.add(new Category(cats[i], new ConstArrayList<>(lists[i])));
 			}
 		}
-		fCategories = new ConstArrayList<Category>(categories);
+		fCategories = new ConstArrayList<>(categories);
 	}
 	
 	

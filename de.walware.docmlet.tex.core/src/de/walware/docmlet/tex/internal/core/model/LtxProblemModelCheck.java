@@ -45,7 +45,7 @@ public class LtxProblemModelCheck {
 	private IProblemRequestor fCurrentRequestor;
 	
 	private final MessageBuilder fMessageBuilder = new MessageBuilder();
-	private final List<IProblem> fProblemBuffer = new ArrayList<IProblem>(BUFFER_SIZE);
+	private final List<IProblem> fProblemBuffer = new ArrayList<>(BUFFER_SIZE);
 	
 	private final int fLevelRefUndefined = IProblem.SEVERITY_WARNING;
 	

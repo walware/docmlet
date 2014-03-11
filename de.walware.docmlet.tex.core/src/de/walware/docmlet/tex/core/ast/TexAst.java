@@ -63,7 +63,7 @@ public class TexAst {
 		while (idxArgs < resolved.length && idxValues < node.getChildCount()) {
 			final TexAstNode child = node.getChild(idxValues);
 			if ((arguments.get(idxArgs).getType() & Argument.OPTIONAL) != 0) {
-				if (child.getText() == "[") {
+				if (child.getText() == "[") { //$NON-NLS-1$
 					idxValues++;
 					resolved[idxArgs++] = child;
 					continue;
@@ -74,7 +74,7 @@ public class TexAst {
 				}
 			}
 			else {
-				if (child.getText() == "[") {
+				if (child.getText() == "[") { //$NON-NLS-1$
 					idxValues++;
 					continue;
 				}

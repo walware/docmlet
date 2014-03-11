@@ -48,12 +48,12 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 			}
 		}
 		return (i == commands.length) ?
-				new ConstArrayList<TexCommand>(commands) :
-				new ConstArrayList<TexCommand>(Arrays.copyOfRange(commands, 0, i));
+				new ConstArrayList<>(commands) :
+				new ConstArrayList<>(Arrays.copyOfRange(commands, 0, i));
 	}
 	
 	static {
-		{	final LinkedHashMap<String, TexCommand> map = new LinkedHashMap<String, TexCommand>();
+		{	final LinkedHashMap<String, TexCommand> map = new LinkedHashMap<>();
 			
 			add(map, ENV_document_BEGIN);
 			
@@ -113,10 +113,10 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 			add(map, ENV_Vmatrix_BEGIN);
 			
 			gWordEnvMap = map;
-			gAllEnvs = new ConstArrayList<TexCommand>(map.values());
+			gAllEnvs = new ConstArrayList<>(map.values());
 		}
 		{	
-			final LinkedHashMap<String, TexCommand> map = new LinkedHashMap<String, TexCommand>();
+			final LinkedHashMap<String, TexCommand> map = new LinkedHashMap<>();
 			
 			add(map, PREAMBLE_documentclass_COMMAND);
 			add(map, PREAMBLE_usepackage_COMMAND);
@@ -603,7 +603,7 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 			add(map, BIB_bibliographystyle_COMMAND);
 			
 			gWordCommandMap = map;
-			gAllCommands = new ConstArrayList<TexCommand>(gWordCommandMap.values());
+			gAllCommands = new ConstArrayList<>(gWordCommandMap.values());
 			
 //			System.out.println(gAllEnvs.size());
 //			System.out.println(gAllCommands.size());

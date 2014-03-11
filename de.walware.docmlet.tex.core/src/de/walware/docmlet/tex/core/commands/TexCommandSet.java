@@ -49,7 +49,7 @@ public class TexCommandSet {
 	
 	public static final String GROUP_ID = "ltx/ltx.commands"; //$NON-NLS-1$
 	
-	private static final Map<String, TexCommand> LTX_INTERN_ENVS = new IdentityHashMap<String, TexCommand>();
+	private static final Map<String, TexCommand> LTX_INTERN_ENVS = new IdentityHashMap<>();
 	
 	static {
 		add(LTX_INTERN_ENVS, IEnvDefinitions.ENV_Sinput_BEGIN);
@@ -98,7 +98,7 @@ public class TexCommandSet {
 					filteredCommands[j++] = command;
 				}
 			}
-			fAllCommands = new ConstArrayList<TexCommand>((j == filteredCommands.length) ?
+			fAllCommands = new ConstArrayList<>((j == filteredCommands.length) ?
 					filteredCommands : Arrays.copyOfRange(filteredCommands, 0, j) );
 			
 			sortedCommands = Arrays.copyOfRange(filteredCommands, 0, j);
@@ -110,7 +110,7 @@ public class TexCommandSet {
 			Arrays.sort(sortedEnvs);
 		}
 		{	final TexCommand[] commands = new TexCommand[textCommands.size()];
-			final Map<String, TexCommand> set = new IdentityHashMap<String, TexCommand>(textCommands.size());
+			final Map<String, TexCommand> set = new IdentityHashMap<>(textCommands.size());
 			int j = 0;
 			for (int i = 0; i < sortedCommands.length; i++) {
 				final TexCommand command = sortedCommands[i];
@@ -120,11 +120,11 @@ public class TexCommandSet {
 				}
 			}
 			fTextCommandMap = Collections.unmodifiableMap(set);
-			fTextCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
+			fTextCommandListASorted = new ConstArrayList<>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[textEnvs.size()];
-			final Map<String, TexCommand> set = new IdentityHashMap<String, TexCommand>(textEnvs.size());
+			final Map<String, TexCommand> set = new IdentityHashMap<>(textEnvs.size());
 			int j = 0;
 			for (int i = 0; i < sortedEnvs.length; i++) {
 				final TexCommand command = sortedEnvs[i];
@@ -134,11 +134,11 @@ public class TexCommandSet {
 				}
 			}
 			fTextEnvMap = Collections.unmodifiableMap(set);
-			fTextEnvListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
+			fTextEnvListASorted = new ConstArrayList<>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[preamble.size()];
-			final Map<String, TexCommand> set = new IdentityHashMap<String, TexCommand>(preamble.size());
+			final Map<String, TexCommand> set = new IdentityHashMap<>(preamble.size());
 			int j = 0;
 			for (int i = 0; i < sortedCommands.length; i++) {
 				final TexCommand command = sortedCommands[i];
@@ -148,11 +148,11 @@ public class TexCommandSet {
 				}
 			}
 			fPreambleCommandMap = Collections.unmodifiableMap(set);
-			fPreambleCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
+			fPreambleCommandListASorted = new ConstArrayList<>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[mathCommands.size()];
-			final Map<String, TexCommand> set = new IdentityHashMap<String, TexCommand>(mathCommands.size());
+			final Map<String, TexCommand> set = new IdentityHashMap<>(mathCommands.size());
 			int j = 0;
 			for (int i = 0; i < sortedCommands.length; i++) {
 				final TexCommand command = sortedCommands[i];
@@ -162,11 +162,11 @@ public class TexCommandSet {
 				}
 			}
 			fMathCommandMap = Collections.unmodifiableMap(set);
-			fMathCommandListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
+			fMathCommandListASorted = new ConstArrayList<>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		{	final TexCommand[] commands = new TexCommand[mathEnvs.size()];
-			final Map<String, TexCommand> set = new IdentityHashMap<String, TexCommand>(mathEnvs.size());
+			final Map<String, TexCommand> set = new IdentityHashMap<>(mathEnvs.size());
 			int j = 0;
 			for (int i = 0; i < sortedEnvs.length; i++) {
 				final TexCommand command = sortedEnvs[i];
@@ -176,7 +176,7 @@ public class TexCommandSet {
 				}
 			}
 			fMathEnvMap = Collections.unmodifiableMap(set);
-			fMathEnvListASorted = new ConstArrayList<TexCommand>((j == commands.length) ?
+			fMathEnvListASorted = new ConstArrayList<>((j == commands.length) ?
 					commands : Arrays.copyOfRange(commands, 0, j) );
 		}
 		

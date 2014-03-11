@@ -38,7 +38,7 @@ public class RefLabelAccess extends TexLabelAccess {
 		
 		public Shared(final String label) {
 			fLabel = label;
-			fAll = new ArrayList<TexLabelAccess>(8);
+			fAll = new ArrayList<>(8);
 		}
 		
 		

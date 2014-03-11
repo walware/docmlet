@@ -34,7 +34,7 @@ public class LabelSet implements ITexLabelSet {
 		final Set<String> labelSet = map.keySet();
 		final String[] labelArray = labelSet.toArray(new String[labelSet.size()]);
 		Arrays.sort(labelArray);
-		fLabelsSorted = new ConstArrayList<String>(labelArray);
+		fLabelsSorted = new ConstArrayList<>(labelArray);
 		fMap = map;
 	}
 	

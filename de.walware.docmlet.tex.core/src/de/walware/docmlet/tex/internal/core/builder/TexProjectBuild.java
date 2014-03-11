@@ -293,7 +293,7 @@ public class TexProjectBuild extends TexProjectTask
 						
 						clearLtx((IFile) unit.getResource(), participant);
 						
-						final LtxSuModelContainer<ILtxSourceUnit> adapter= (LtxSuModelContainer) unit.getAdapter(LtxSuModelContainer.class);
+						final LtxSuModelContainer<ILtxSourceUnit> adapter= (LtxSuModelContainer<ILtxSourceUnit>) unit.getAdapter(LtxSuModelContainer.class);
 						if (adapter != null) {
 							ltxReconciler.reconcile(adapter, IModelManager.MODEL_FILE, sub.newChild(3));
 							

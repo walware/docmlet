@@ -37,7 +37,7 @@ public class Group extends ContainerNode {
 		
 		@Override
 		public String getText() {
-			return "{";
+			return "{"; //$NON-NLS-1$
 		}
 		
 	}
@@ -52,7 +52,7 @@ public class Group extends ContainerNode {
 		
 		@Override
 		public String getText() {
-			return "[";
+			return "["; //$NON-NLS-1$
 		}
 		
 	}

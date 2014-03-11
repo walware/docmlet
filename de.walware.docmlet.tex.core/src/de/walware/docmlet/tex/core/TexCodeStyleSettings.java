@@ -44,7 +44,7 @@ public class TexCodeStyleSettings extends AbstractPreferencesModelObject
 	public static final IntPref TAB_SIZE_PREF = new IntPref(
 			QUALIFIER, "Tab.size"); //$NON-NLS-1$
 	
-	public static final EnumPref<IndentationType> INDENT_DEFAULT_TYPE_PREF = new EnumPref<IndentationType>(
+	public static final EnumPref<IndentationType> INDENT_DEFAULT_TYPE_PREF = new EnumPref<>(
 			QUALIFIER, "Indent.type", IndentationType.class); //$NON-NLS-1$
 	
 	public static final IntPref INDENT_SPACES_COUNT_PREF = new IntPref(
@@ -113,7 +113,7 @@ public class TexCodeStyleSettings extends AbstractPreferencesModelObject
 		setLineWidth(80);
 		setIndentBlockDepth(1);
 		setIndentEnvDepth(1);
-		setIndentEnvLabels(new HashSet<String>(Arrays.asList(new String[] {
+		setIndentEnvLabels(new HashSet<>(Arrays.asList(new String[] {
 				"itemize", "enumerate", "description", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		})));
 	}
