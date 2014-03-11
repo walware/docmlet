@@ -796,10 +796,18 @@ public class LtxParser {
 	}
 	
 	private void parseDef(final ControlNode node, final TexCommand command) {
-		int type = 0;
-		if ((command.getType() & TexCommand.MASK_C3) == TexCommand.C3_PREAMBLE_CONTROLDEF_ENV) {
-			type = 1;
+		final int type;
+		switch ((command.getType() & TexCommand.MASK_C3)) {
+		case TexCommand.C3_PREAMBLE_CONTROLDEF_COMMAND:
+			type= 0;
+			break;
+		case TexCommand.C3_PREAMBLE_CONTROLDEF_ENV:
+			type= 1;
+			break;
+		default:
+			return;
 		}
+		
 		final String controlWord;
 		final TexAstNode[] argNodes = TexAst.resolveArguments(node);
 		TexAstNode argNode;
