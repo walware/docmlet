@@ -321,7 +321,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 						}
 					}
 					else {
-						this.currentElement.fName= TexElementName.create(TexElementName.TITLE, "");
+						this.currentElement.fName= TexElementName.create(TexElementName.TITLE, ""); //$NON-NLS-1$
 					}
 					this.currentElement.fLength= Math.max(this.currentElement.fLength, node.getLength());
 					return;
@@ -353,6 +353,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 					this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 					return;
 				}
+				break;
 			case TexCommand.SYMBOL:
 			case TexCommand.MATHSYMBOL:
 				if (command instanceof LtxPrintCommand
