@@ -41,6 +41,7 @@ import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.text.edits.TextEdit;
@@ -237,6 +238,11 @@ public class LtxAutoEditStrategy extends DefaultIndentLineAutoEditStrategy
 				fSettings.fByDefaultEnabled);
 	}
 	
+	private final boolean isBlockSelection() {
+		final StyledText textWidget= fViewer.getTextWidget();
+		return (textWidget.getBlockSelection() && textWidget.getSelectionRanges().length > 2);
+	}
+	
 	private final boolean isClosedBracket(final int backwardOffset, final int forwardOffset,
 			final String currentPartition, final int searchType) {
 		int[] balance = new int[3];
@@ -284,7 +290,7 @@ public class LtxAutoEditStrategy extends DefaultIndentLineAutoEditStrategy
 		if (fIgnoreCommands || c.doit == false || c.text == null) {
 			return;
 		}
-		if (!isSmartInsertEnabled()) {
+		if (!isSmartInsertEnabled() || isBlockSelection()) {
 			super.customizeDocumentCommand(d, c);
 			return;
 		}
@@ -320,7 +326,7 @@ public class LtxAutoEditStrategy extends DefaultIndentLineAutoEditStrategy
 	 * @return <code>true</code>, if key was processed by method
 	 */
 	private boolean customizeKeyPressed(final char c) {
-		if (!isSmartInsertEnabled() || !UIAccess.isOkToUse(fViewer)) {
+		if (!isSmartInsertEnabled() || !UIAccess.isOkToUse(fViewer) || isBlockSelection()) {
 			return false;
 		}
 		fDocument = (AbstractDocument) fViewer.getDocument();
