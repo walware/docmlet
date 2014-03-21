@@ -123,7 +123,7 @@ public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
 	
 	protected final ApplyData getApplyData() {
 		if (fApplyData == null) {
-			fApplyData = new ApplyData(fContext);
+			fApplyData = new ApplyData(getInvocationContext());
 		}
 		return fApplyData;
 	}

@@ -66,10 +66,10 @@ public class LtxEditorTemplatesCompletionComputer extends TemplatesCompletionCom
 			final AbstractDocument document = (AbstractDocument) context.getSourceViewer().getDocument();
 			final ITypedRegion partition = document.getPartition(editor.getPartitioning().getPartitioning(), region.getOffset(), true);
 			if (partition.getType() == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE) {
-				return fTypeRegistry.getContextType(LtxEditorContextType.LTX_MATH_CONTEXT_TYPE_ID);
+				return getTypeRegistry().getContextType(LtxEditorContextType.LTX_MATH_CONTEXT_TYPE_ID);
 			}
 			else {
-				return fTypeRegistry.getContextType(LtxEditorContextType.LTX_DEFAULT_CONTEXT_TYPE_ID);
+				return getTypeRegistry().getContextType(LtxEditorContextType.LTX_DEFAULT_CONTEXT_TYPE_ID);
 			}
 		}
 		catch (final BadPartitioningException e) {} 

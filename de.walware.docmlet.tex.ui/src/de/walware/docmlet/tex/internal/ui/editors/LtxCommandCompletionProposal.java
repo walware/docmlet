@@ -282,7 +282,7 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 	
 	protected final ApplyData getApplyData() {
 		if (fApplyData == null) {
-			fApplyData = new ApplyData(fContext);
+			fApplyData = new ApplyData(getInvocationContext());
 		}
 		return fApplyData;
 	}
@@ -467,10 +467,12 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 	
 	private LinkedModeUI createLinkedMode(final ApplyData data, final int offset, final IntList positions)
 			throws BadLocationException {
+		final AssistInvocationContext context= getInvocationContext();
+		
 		final LinkedModeModel model = new LinkedModeModel();
 		int pos = 0;
 		
-		final List<LinkedPosition> linked = new ArrayList<LinkedPosition>(positions.size());
+		final List<LinkedPosition> linked = new ArrayList<>(positions.size());
 		for (int i = 0; i < positions.size() - 1; i++) {
 			final LinkedPositionGroup group = new LinkedPositionGroup();
 			final LinkedPosition position = (positions.get(i) % 2 == 1) ?
@@ -486,7 +488,7 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 		model.forceInstall();
 		
 		final TexBracketLevel level = new TexBracketLevel(data.getDocument(),
-				fContext.getEditor().getPartitioning().getPartitioning(), linked,
+				context.getEditor().getPartitioning().getPartitioning(), linked,
 				TexBracketLevel.AUTODELETE );
 		
 		/* create UI */
