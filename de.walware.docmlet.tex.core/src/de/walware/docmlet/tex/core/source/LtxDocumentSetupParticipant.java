@@ -9,12 +9,10 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.tex.ui.text;
+package de.walware.docmlet.tex.core.source;
 
 import de.walware.ecommons.text.Partitioner;
 import de.walware.ecommons.text.PartitionerDocumentSetupParticipant;
-
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
 
 
 /**

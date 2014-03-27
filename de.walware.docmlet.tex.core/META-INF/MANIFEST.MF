@@ -10,6 +10,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  de.walware.ecommons.ltk.core;bundle-version="[2.3.0,2.4.0)",
+ org.eclipse.core.filebuffers,
  org.eclipse.ltk.core.refactoring
 Import-Package: com.ibm.icu.text;version="4.4.2.2",
  de.walware.ecommons,
@@ -21,5 +22,5 @@ Export-Package: de.walware.docmlet.tex.core,
  de.walware.docmlet.tex.core.commands,
  de.walware.docmlet.tex.core.model,
  de.walware.docmlet.tex.core.parser,
- de.walware.docmlet.tex.core.sourcecode,
- de.walware.docmlet.tex.core.text
+ de.walware.docmlet.tex.core.source,
+ de.walware.docmlet.tex.core.sourcecode

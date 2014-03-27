@@ -9,13 +9,10 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.tex.ui.text;
+package de.walware.docmlet.tex.core.source;
 
 import de.walware.ecommons.text.ITokenScanner;
 import de.walware.ecommons.text.PairMatcher;
-
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
 
 
 /**
@@ -24,7 +21,7 @@ import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
 public class LtxBracketPairMatcher extends PairMatcher {
 	
 	
-	public static final char[][] BRACKETS = { {'{', '}'}, {'(', ')'}, {'[', ']'} };
+	public static final char[][] BRACKETS= { {'{', '}'}, {'(', ')'}, {'[', ']'} };
 	
 	
 	public LtxBracketPairMatcher() {

@@ -23,7 +23,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.TemplatesCompletionComputer;
 
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 
 

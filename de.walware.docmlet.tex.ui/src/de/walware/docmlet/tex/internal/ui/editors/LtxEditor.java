@@ -36,7 +36,7 @@ import de.walware.ecommons.ui.SharedUIResources;
 
 import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.ui.editors.ILtxEditor;
 import de.walware.docmlet.tex.ui.editors.LtxDefaultFoldingProvider;

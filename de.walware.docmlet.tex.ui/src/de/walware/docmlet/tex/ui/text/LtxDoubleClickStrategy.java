@@ -22,8 +22,9 @@ import org.eclipse.jface.text.TextUtilities;
 import de.walware.ecommons.text.BasicHeuristicTokenScanner;
 import de.walware.ecommons.text.PairMatcher;
 
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.LtxBracketPairMatcher;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 
 
 /**

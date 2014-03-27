@@ -24,8 +24,9 @@ public class TexCommandLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(final Object element) {
 		if (element instanceof TexCommand) {
-			final String key = TexImages.getCommandImageKey((TexCommand) element);
-			return (key != null) ? TexImages.getImageRegistry().get(key) : null;
+			final TexUIResources texResources= TexUIResources.INSTANCE;
+			final String key = texResources.getCommandImageId((TexCommand) element);
+			return (key != null) ? texResources.getImage(key) : null;
 		}
 		return null;
 	}
@@ -37,7 +38,7 @@ public class TexCommandLabelProvider extends LabelProvider {
 		}
 		if (element instanceof TexCommand) {
 			final TexCommand command = (TexCommand) element;
-			return command.getControlWord() + " – " + command.getDescription();
+			return command.getControlWord() + " – " + command.getDescription(); //$NON-NLS-1$
 		}
 		return super.getText(element);
 	}

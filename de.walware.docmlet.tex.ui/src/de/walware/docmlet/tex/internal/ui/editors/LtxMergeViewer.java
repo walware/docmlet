@@ -20,9 +20,9 @@ import de.walware.ecommons.ltk.ui.compare.CompareMergeTextViewer;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
 import de.walware.ecommons.ui.SharedUIResources;
 
+import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
 import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfiguration;
 import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfigurator;
-import de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant;
 
 
 public class LtxMergeViewer extends CompareMergeTextViewer {

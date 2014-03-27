@@ -13,8 +13,8 @@ package de.walware.docmlet.tex.internal.core;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 
 
 public class ModelAdapterFactory implements IAdapterFactory {

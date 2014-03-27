@@ -11,7 +11,6 @@
 
 package de.walware.docmlet.tex.ui;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -29,18 +28,18 @@ import de.walware.docmlet.tex.core.model.TexLabelAccess;
 public class TexLabelProvider extends StyledCellLabelProvider implements IElementLabelProvider, ILabelProvider {
 	
 	
-	private ImageRegistry fTexImageRegistry;
+	private TexUIResources texResources;
 	
 	
 	public TexLabelProvider() {
-		fTexImageRegistry = TexImages.getImageRegistry();
+		texResources= TexUIResources.INSTANCE;
 	}
 	
 	
 	@Override
 	public void dispose() {
 		super.dispose();
-		fTexImageRegistry = null;
+		texResources = null;
 	}
 	
 	
@@ -59,17 +58,17 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 	public Image getImage(final IModelElement element) {
 		switch (element.getElementType() & IModelElement.MASK_C3) {
 		case ILtxSourceElement.C2_PREAMBLE:
-			return fTexImageRegistry.get(TexImages.OBJ_PREAMBLE);
+			return texResources.getImage(TexUIResources.OBJ_PREAMBLE_IMAGE_ID);
 		case ILtxSourceElement.C2_SECTIONING+TexCommand.PART_LEVEL:
-			return fTexImageRegistry.get(TexImages.OBJ_PART);
+			return texResources.getImage(TexUIResources.OBJ_PART_IMAGE_ID);
 		case ILtxSourceElement.C2_SECTIONING+TexCommand.CHAPTER_LEVEL:
-			return fTexImageRegistry.get(TexImages.OBJ_CHAPTER);
+			return texResources.getImage(TexUIResources.OBJ_CHAPTER_IMAGE_ID);
 		case ILtxSourceElement.C2_SECTIONING+TexCommand.SECTION_LEVEL:
-			return fTexImageRegistry.get(TexImages.OBJ_SECTION);
+			return texResources.getImage(TexUIResources.OBJ_SECTION_IMAGE_ID);
 		case ILtxSourceElement.C2_SECTIONING+TexCommand.SUBSECTION_LEVEL:
-			return fTexImageRegistry.get(TexImages.OBJ_SUBSECTION);
+			return texResources.getImage(TexUIResources.OBJ_SUBSECTION_IMAGE_ID);
 		case ILtxSourceElement.C2_SECTIONING+TexCommand.SUBSUBSECTION_LEVEL:
-			return fTexImageRegistry.get(TexImages.OBJ_SUBSUBSECTION);
+			return texResources.getImage(TexUIResources.OBJ_SUBSUBSECTION_IMAGE_ID);
 		default:
 			return null;
 		}
@@ -77,7 +76,7 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 	
 	public Image getImage(final TexLabelAccess access) {
 		if (access.getType() == TexLabelAccess.LABEL) {
-			return fTexImageRegistry.get(TexImages.OBJ_LABEL);
+			return texResources.getImage(TexUIResources.OBJ_LABEL_IMAGE_ID);
 		}
 		return null;
 	}

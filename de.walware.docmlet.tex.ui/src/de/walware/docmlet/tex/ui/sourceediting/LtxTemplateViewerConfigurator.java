@@ -23,7 +23,7 @@ import de.walware.ecommons.ui.ColorManager;
 import de.walware.ecommons.ui.SharedUIResources;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
-import de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant;
+import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
 
 
 public class LtxTemplateViewerConfigurator extends LtxViewerConfigurator {

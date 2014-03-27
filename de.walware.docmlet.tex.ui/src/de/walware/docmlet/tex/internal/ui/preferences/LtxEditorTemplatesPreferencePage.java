@@ -33,7 +33,7 @@ import de.walware.ecommons.text.Partitioner;
 import de.walware.ecommons.text.ui.TextViewerEditorColorUpdater;
 import de.walware.ecommons.text.ui.TextViewerJFaceUpdater;
 
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.internal.ui.editors.LtxEditorContextType;
 import de.walware.docmlet.tex.ui.sourceediting.LtxTemplateViewerConfigurator;

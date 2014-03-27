@@ -44,9 +44,9 @@ import de.walware.ecommons.ui.util.UIAccess;
 import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.IEnvDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
-import de.walware.docmlet.tex.ui.TexImages;
+import de.walware.docmlet.tex.ui.TexUIResources;
 
 
 public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrite
@@ -257,8 +257,8 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 	
 	@Override
 	public Image getImage() {
-		final String key = TexImages.getCommandImageKey(fCommand);
-		return (key != null) ? TexImages.getImageRegistry().get(key) : null;
+		final String key = TexUIResources.INSTANCE.getCommandImageId(fCommand);
+		return (key != null) ? TexUIResources.INSTANCE.getImage(key) : null;
 	}
 	
 	@Override

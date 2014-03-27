@@ -26,7 +26,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.CompletionProposalWithOverwrite;
 
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 
 

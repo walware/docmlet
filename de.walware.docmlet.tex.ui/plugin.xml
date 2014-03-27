@@ -23,14 +23,6 @@
    </extension>
    
    <extension
-         point="org.eclipse.core.filebuffers.documentSetup">
-      <participant
-            class="de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant"
-            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex">
-      </participant>
-   </extension>
-   
-   <extension
          point="de.walware.ecommons.ltk.modelTypes">
       <unitType modelTypeId="ltx"
             contextKey="editor.default"

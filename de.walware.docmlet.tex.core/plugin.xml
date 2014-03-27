@@ -25,13 +25,20 @@
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
+            id="net.sourceforge.texlipse.contentTypes.Latex"
             base-type="org.eclipse.core.runtime.text"
             default-charset="ISO-8859-1"
             file-extensions="tex,ltx,sty,cls"
-            id="net.sourceforge.texlipse.contentTypes.Latex"
             name="%contentTypes_Latex_name"
             priority="normal">
       </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.core.filebuffers.documentSetup">
+      <participant
+            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex"
+            class="de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant">
+      </participant>
    </extension>
    
    <extension
@@ -50,7 +57,7 @@
             modelTypeId="ltx"
             class="de.walware.docmlet.tex.internal.core.ModelAdapterFactory">
          <adapter
-               type="de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner">
+               type="de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner">
          </adapter>
       </adapterFactory>
    </extension>
@@ -80,24 +87,19 @@
          point="org.eclipse.team.core.fileTypes">
       <fileTypes
             extension="tex"
-            type="text">
-      </fileTypes>
+            type="text"/>
       <fileTypes
             extension="ltx"
-            type="text">
-      </fileTypes>
+            type="text"/>
       <fileTypes
             extension="sty"
-            type="text">
-      </fileTypes>
+            type="text"/>
       <fileTypes
             extension="cls"
-            type="text">
-      </fileTypes>
+            type="text"/>
       <fileTypes
             extension="bib"
-            type="text">
-      </fileTypes>
+            type="text"/>
    </extension>
    
 </plugin>

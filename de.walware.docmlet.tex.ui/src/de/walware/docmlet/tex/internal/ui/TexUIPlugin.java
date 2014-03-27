@@ -36,7 +36,7 @@ import de.walware.ecommons.ltk.ui.util.CombinedPreferenceStore;
 import de.walware.ecommons.ui.util.ImageRegistryUtil;
 
 import de.walware.docmlet.tex.internal.ui.editors.LtxDocumentProvider;
-import de.walware.docmlet.tex.ui.TexImages;
+import de.walware.docmlet.tex.ui.TexUIResources;
 
 
 public class TexUIPlugin extends AbstractUIPlugin {
@@ -147,15 +147,15 @@ public class TexUIPlugin extends AbstractUIPlugin {
 		}
 		final ImageRegistryUtil util = new ImageRegistryUtil(this);
 		
-		util.register(TexImages.OBJ_PREAMBLE, ImageRegistryUtil.T_OBJ, "preamble.gif");
+		util.register(TexUIResources.OBJ_PREAMBLE_IMAGE_ID, ImageRegistryUtil.T_OBJ, "preamble.gif");
 		
-		util.register(TexImages.OBJ_PART, ImageRegistryUtil.T_OBJ, "sectioning-part.png");
-		util.register(TexImages.OBJ_CHAPTER, ImageRegistryUtil.T_OBJ, "sectioning-chapter.png");
-		util.register(TexImages.OBJ_SECTION, ImageRegistryUtil.T_OBJ, "sectioning-section.png");
-		util.register(TexImages.OBJ_SUBSECTION, ImageRegistryUtil.T_OBJ, "sectioning-subsection.png");
-		util.register(TexImages.OBJ_SUBSUBSECTION, ImageRegistryUtil.T_OBJ, "sectioning-subsubsection.png");
+		util.register(TexUIResources.OBJ_PART_IMAGE_ID, ImageRegistryUtil.T_OBJ, "sectioning-part.png");
+		util.register(TexUIResources.OBJ_CHAPTER_IMAGE_ID, ImageRegistryUtil.T_OBJ, "sectioning-chapter.png");
+		util.register(TexUIResources.OBJ_SECTION_IMAGE_ID, ImageRegistryUtil.T_OBJ, "sectioning-section.png");
+		util.register(TexUIResources.OBJ_SUBSECTION_IMAGE_ID, ImageRegistryUtil.T_OBJ, "sectioning-subsection.png");
+		util.register(TexUIResources.OBJ_SUBSUBSECTION_IMAGE_ID, ImageRegistryUtil.T_OBJ, "sectioning-subsubsection.png");
 		
-		util.register(TexImages.OBJ_LABEL, ImageRegistryUtil.T_OBJ, "label.png");
+		util.register(TexUIResources.OBJ_LABEL_IMAGE_ID, ImageRegistryUtil.T_OBJ, "label.png");
 		
 		final Map<String, String> commandMap = new HashMap<String, String>();
 		
@@ -460,17 +460,17 @@ public class TexUIPlugin extends AbstractUIPlugin {
 		}
 		
 		// elements
-		commandMap.put("part", TexImages.OBJ_PART);
-		commandMap.put("chapter", TexImages.OBJ_CHAPTER);
-		commandMap.put("section", TexImages.OBJ_SECTION);
-		commandMap.put("subsection", TexImages.OBJ_SUBSECTION);
-		commandMap.put("subsubsection", TexImages.OBJ_SUBSUBSECTION);
+		commandMap.put("part", TexUIResources.OBJ_PART_IMAGE_ID);
+		commandMap.put("chapter", TexUIResources.OBJ_CHAPTER_IMAGE_ID);
+		commandMap.put("section", TexUIResources.OBJ_SECTION_IMAGE_ID);
+		commandMap.put("subsection", TexUIResources.OBJ_SUBSECTION_IMAGE_ID);
+		commandMap.put("subsubsection", TexUIResources.OBJ_SUBSUBSECTION_IMAGE_ID);
 		
-		commandMap.put("label", TexImages.OBJ_LABEL);
-		commandMap.put("ref", TexImages.OBJ_LABEL);
-		commandMap.put("pageref", TexImages.OBJ_LABEL);
-		commandMap.put("nameref", TexImages.OBJ_LABEL);
-		commandMap.put("eqref", TexImages.OBJ_LABEL);
+		commandMap.put("label", TexUIResources.OBJ_LABEL_IMAGE_ID);
+		commandMap.put("ref", TexUIResources.OBJ_LABEL_IMAGE_ID);
+		commandMap.put("pageref", TexUIResources.OBJ_LABEL_IMAGE_ID);
+		commandMap.put("nameref", TexUIResources.OBJ_LABEL_IMAGE_ID);
+		commandMap.put("eqref", TexUIResources.OBJ_LABEL_IMAGE_ID);
 		
 		// alias
 		commandMap.put("dots", TexUIPlugin.PLUGIN_ID + "/image/obj/c-2026"); //$NON-NLS-1$ //$NON-NLS-2$

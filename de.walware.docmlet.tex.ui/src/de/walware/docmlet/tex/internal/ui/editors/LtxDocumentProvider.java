@@ -32,8 +32,8 @@ import de.walware.ecommons.preferences.SettingsChangeNotifier.ChangeListener;
 
 import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
+import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
 import de.walware.docmlet.tex.ui.editors.LtxEditorBuild;
-import de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant;
 
 
 public class LtxDocumentProvider extends SourceDocumentProvider<ILtxSourceUnit>

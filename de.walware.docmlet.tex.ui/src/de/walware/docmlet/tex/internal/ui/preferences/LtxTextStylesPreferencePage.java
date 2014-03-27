@@ -24,10 +24,10 @@ import de.walware.ecommons.text.ui.presentation.AbstractTextStylesConfigurationB
 import de.walware.ecommons.ui.ColorManager;
 
 import de.walware.docmlet.tex.core.TexCore;
+import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfiguration;
 import de.walware.docmlet.tex.ui.text.ITexTextStyles;
-import de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant;
 
 
 public class LtxTextStylesPreferencePage extends ConfigurationBlockPreferencePage<ConfigurationBlock> {

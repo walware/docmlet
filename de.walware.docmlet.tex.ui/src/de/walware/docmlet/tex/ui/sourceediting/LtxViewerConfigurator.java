@@ -27,9 +27,9 @@ import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCodeStyleSettings;
 import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
 import de.walware.docmlet.tex.ui.editors.TexEditorOptions;
-import de.walware.docmlet.tex.ui.text.LtxDocumentSetupParticipant;
 
 
 /**

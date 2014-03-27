@@ -9,7 +9,7 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.tex.core.text;
+package de.walware.docmlet.tex.core.source;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
@@ -25,9 +25,9 @@ import de.walware.ecommons.text.PartitioningConfiguration;
 public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	
 	
-	public static final int CURLY_BRACKET_TYPE = 0;
-	public static final int SQUARE_BRACKET_TYPE = 1;
-	public static final int PARATHESIS_TYPE = 2;
+	public static final int CURLY_BRACKET_TYPE= 0;
+	public static final int SQUARE_BRACKET_TYPE= 1;
+	public static final int PARATHESIS_TYPE= 2;
 	
 	
 	public static int getBracketType(final char c) {
@@ -48,18 +48,18 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	
 	public static boolean isEscaped(final IDocument document, int offset)
 			throws BadLocationException {
-		boolean escaped = false;
+		boolean escaped= false;
 		while (offset > 0 && document.getChar(--offset) == '\\') {
-			escaped = !escaped;
+			escaped= !escaped;
 		}
 		return escaped;
 	}
 	
 	public static int getSafeMathPartitionOffset(final IDocumentPartitioner partitioner, int offset) throws BadLocationException, BadPartitioningException {
-		int startOffset = offset;
+		int startOffset= offset;
 		while (offset > 0) {
-			final ITypedRegion partition = partitioner.getPartition(offset - 1);
-			final String partitionType = partition.getType();
+			final ITypedRegion partition= partitioner.getPartition(offset - 1);
+			final String partitionType= partition.getType();
 			if (partitionType == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
 					|| partitionType == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE
 					|| partitionType == ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE
@@ -67,10 +67,10 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 				return startOffset;
 			}
 			if (partitionType == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE) {
-				offset = startOffset = partition.getOffset();
+				offset= startOffset= partition.getOffset();
 				continue;
 			}
-			offset = partition.getOffset();
+			offset= partition.getOffset();
 			continue;
 		}
 		return startOffset;
@@ -84,31 +84,31 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 		
 		@Override
 		protected boolean matchesChar() {
-			switch (fChar) {
+			switch (LtxHeuristicTokenScanner.this.fChar) {
 			case '{':
-				type = CURLY_BRACKET_TYPE;
-				open = true;
+				this.type= CURLY_BRACKET_TYPE;
+				this.open= true;
 				return true;
 			case '}':
-				type = CURLY_BRACKET_TYPE;
-				open = false;
+				this.type= CURLY_BRACKET_TYPE;
+				this.open= false;
 				return true;
 			case '[':
-				type = SQUARE_BRACKET_TYPE;
-				open = true;
+				this.type= SQUARE_BRACKET_TYPE;
+				this.open= true;
 				return true;
 			case ']':
-				type = SQUARE_BRACKET_TYPE;
-				open = false;
+				this.type= SQUARE_BRACKET_TYPE;
+				this.open= false;
 				return true;
 			case '(':
-				type = PARATHESIS_TYPE;
-				open = true;
+				this.type= PARATHESIS_TYPE;
+				this.open= true;
 				return true;
 			case ')':
-				type = PARATHESIS_TYPE;
-				open = false;
-				open = false;
+				this.type= PARATHESIS_TYPE;
+				this.open= false;
+				this.open= false;
 				return true;
 			}
 			return false;
@@ -133,14 +133,14 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 				private boolean fNever;
 				@Override
 				public boolean matches(final String partitionType) {
-					if (fNever) {
+					if (this.fNever) {
 						return false;
 					}
 					if (partitionType == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE) {
 						return true;
 					}
 					if (getDefaultPartitionConstraint().matches(partitionType)) {
-						fNever = true;
+						this.fNever= true;
 					}
 					return false;
 				}
@@ -152,21 +152,21 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	
 //	@Override
 //	protected int createForwardBound(final int start) throws BadLocationException {
-//		final IPartitionConstraint matcher = getPartitionConstraint();
+//		final IPartitionConstraint matcher= getPartitionConstraint();
 //		if (matcher.matches(ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE)) {
 //			return UNBOUND;
 //		}
-//		final ITypedRegion partition = TextUtilities.getPartition(fDocument, getPartitioning(), start, false);
+//		final ITypedRegion partition= TextUtilities.getPartition(fDocument, getPartitioning(), start, false);
 //		return partition.getOffset()+partition.getLength();
 //	}
 //	
 //	@Override
 //	protected int createBackwardBound(final int start) throws BadLocationException {
-//		final IPartitionConstraint matcher = getPartitionConstraint();
+//		final IPartitionConstraint matcher= getPartitionConstraint();
 //		if (matcher.matches(ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE)) {
 //			return -1;
 //		}
-//		final ITypedRegion partition = TextUtilities.getPartition(fDocument, getPartitioning(), start, false);
+//		final ITypedRegion partition= TextUtilities.getPartition(fDocument, getPartitioning(), start, false);
 //		return partition.getOffset();
 //	}
 	
@@ -182,16 +182,16 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	 * @see #getBracketType(char)
 	 */
 	public int[] computeBracketBalance(int backwardOffset, int forwardOffset, final int[] initial, final int searchType) {
-		final int[] compute = new int[3];
-		final BracketBalanceCondition condition = new BracketBalanceCondition();
-		int breakType = -1;
+		final int[] compute= new int[3];
+		final BracketBalanceCondition condition= new BracketBalanceCondition();
+		int breakType= -1;
 		ITER_BACKWARD : while (--backwardOffset >= 0) {
-			backwardOffset = scanBackward(backwardOffset, -1, condition);
+			backwardOffset= scanBackward(backwardOffset, -1, condition);
 			if (backwardOffset != NOT_FOUND) {
 				if (condition.open) {
 					compute[condition.type]++;
 					if (condition.type != searchType && compute[condition.type] > 0) {
-						breakType = condition.type;
+						breakType= condition.type;
 						break ITER_BACKWARD;
 					}
 				}
@@ -203,15 +203,15 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 				break ITER_BACKWARD;
 			}
 		}
-		final int bound = fDocument.getLength();
-		for (int i = 0; i < compute.length; i++) {
+		final int bound= this.fDocument.getLength();
+		for (int i= 0; i < compute.length; i++) {
 			if (compute[i] < 0) {
-				compute[i] = 0;
+				compute[i]= 0;
 			}
-			compute[i] = compute[i]+initial[i];
+			compute[i]= compute[i]+initial[i];
 		}
 		ITER_FORWARD : while (forwardOffset < bound) {
-			forwardOffset = scanForward(forwardOffset, bound, condition);
+			forwardOffset= scanForward(forwardOffset, bound, condition);
 			if (forwardOffset != NOT_FOUND) {
 				if (condition.open) {
 					compute[condition.type]++;

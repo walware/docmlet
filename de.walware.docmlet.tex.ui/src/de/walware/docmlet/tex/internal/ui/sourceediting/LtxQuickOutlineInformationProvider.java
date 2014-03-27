@@ -19,7 +19,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.QuickInformationProvider;
 
 import de.walware.docmlet.tex.core.model.TexModel;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 
 
 public class LtxQuickOutlineInformationProvider extends QuickInformationProvider {

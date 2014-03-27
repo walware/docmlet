@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,7 +39,7 @@ import de.walware.docmlet.tex.core.commands.LtxCommandCategories;
 import de.walware.docmlet.tex.core.commands.LtxCommandCategories.Category;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
-import de.walware.docmlet.tex.ui.TexImages;
+import de.walware.docmlet.tex.ui.TexUIResources;
 import de.walware.docmlet.tex.ui.editors.ILtxEditor;
 
 
@@ -70,14 +69,14 @@ public class LtxSymbolsMenuContributions extends CompoundContributionItem {
 		
 		@Override
 		protected void fillMenu(final Menu menu) {
-			final ImageRegistry imageRegistry = TexImages.getImageRegistry();
+			final TexUIResources texResources= TexUIResources.INSTANCE;
 			final List<TexCommand> commands = fCategory.getCommands();
 			for (final TexCommand command : commands) {
 				final MenuItem item = new MenuItem(menu, SWT.PUSH);
 				
-				final String imageKey = TexImages.getCommandImageKey(command);
+				final String imageKey = texResources.getCommandImageId(command);
 				if (imageKey != null) {
-					item.setImage(imageRegistry.get(imageKey));
+					item.setImage(texResources.getImage(imageKey));
 				}
 				item.setText(command.getControlWord());
 				item.setData(command);

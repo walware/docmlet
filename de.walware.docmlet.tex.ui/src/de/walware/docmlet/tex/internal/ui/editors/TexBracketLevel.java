@@ -19,7 +19,7 @@ import org.eclipse.jface.text.link.LinkedPosition;
 
 import de.walware.ecommons.text.ui.BracketLevel;
 
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 
 
 public class TexBracketLevel extends BracketLevel {

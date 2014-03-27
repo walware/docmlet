@@ -32,8 +32,8 @@ import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ILtxSourceElement;
 import de.walware.docmlet.tex.core.model.TexModel;
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 
 
 public class LtxRefactoringAdapter extends RefactoringAdapter {

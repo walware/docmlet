@@ -11,9 +11,10 @@
 
 package de.walware.docmlet.tex.ui.sourceediting;
 
-import static de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner.CURLY_BRACKET_TYPE;
-import static de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner.PARATHESIS_TYPE;
-import static de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner.SQUARE_BRACKET_TYPE;
+import static de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner.CURLY_BRACKET_TYPE;
+import static de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner.PARATHESIS_TYPE;
+import static de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner.SQUARE_BRACKET_TYPE;
+
 import static de.walware.ecommons.text.ui.BracketLevel.AUTODELETE;
 
 import java.util.Map;
@@ -70,9 +71,9 @@ import de.walware.docmlet.tex.core.TexCodeStyleSettings;
 import de.walware.docmlet.tex.core.ast.LtxParser;
 import de.walware.docmlet.tex.core.ast.SourceComponent;
 import de.walware.docmlet.tex.core.parser.NowebLtxLexer;
+import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
+import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.core.sourcecode.LtxSourceIndenter;
-import de.walware.docmlet.tex.core.text.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.text.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.internal.ui.editors.HardLineWrap;
 import de.walware.docmlet.tex.internal.ui.editors.TexBracketLevel;
