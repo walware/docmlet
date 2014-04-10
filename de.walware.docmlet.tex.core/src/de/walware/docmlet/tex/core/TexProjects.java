@@ -44,7 +44,7 @@ public class TexProjects {
 			final IProgressMonitor monitor) throws CoreException {
 		final SubMonitor progress= SubMonitor.convert(monitor,
 				NLS.bind(Messages.TexProject_ConfigureTask_label, project.getName()),
-				8 + 2 );
+				2 + 8 );
 		
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
@@ -53,7 +53,6 @@ public class TexProjects {
 		
 		if (changed) {
 			project.setDescription(description, progress.newChild(8));
-			progress.worked(8);
 		}
 	}
 	
