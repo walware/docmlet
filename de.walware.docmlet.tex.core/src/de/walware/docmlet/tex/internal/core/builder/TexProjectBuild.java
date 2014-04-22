@@ -323,13 +323,15 @@ public class TexProjectBuild extends TexProjectTask
 			final Collection<TexBuildParticipant> participants= getParticipants();
 			sub.setWorkRemaining(participants.size());
 			for (final TexBuildParticipant participant : participants) {
-				try {
-					participant.ltxFinished(sub.newChild(1));
-				}
-				catch (final Exception e) {
-					this.status.add(new Status(IStatus.ERROR, TexCore.PLUGIN_ID, 0,
-							NLS.bind("An error occurred when processing LaTeX file(s) in ''{0}''.", getTexProject().getProject().getName()),
-							e ));
+				if (participant.isEnabled()) {
+					try {
+						participant.ltxFinished(sub.newChild(1));
+					}
+					catch (final Exception e) {
+						this.status.add(new Status(IStatus.ERROR, TexCore.PLUGIN_ID, 0,
+								NLS.bind("An error occurred when processing LaTeX file(s) in ''{0}''.", getTexProject().getProject().getName()),
+								e ));
+					}
 				}
 			}
 		}
