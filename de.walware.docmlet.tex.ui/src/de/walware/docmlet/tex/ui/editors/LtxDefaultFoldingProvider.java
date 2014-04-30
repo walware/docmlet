@@ -18,16 +18,16 @@ import java.util.Set;
 import org.eclipse.jface.text.AbstractDocument;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Position;
 
 import de.walware.ecommons.ltk.ISourceElement;
 import de.walware.ecommons.ltk.ISourceStructElement;
 import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
-import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingAnnotation;
-import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingProvider;
-import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.FoldingStructureComputationContext;
-import de.walware.ecommons.ltk.ui.sourceediting.FoldingEditorAddon.NodeFoldingProvider;
+import de.walware.ecommons.ltk.ui.sourceediting.folding.FoldingAnnotation;
+import de.walware.ecommons.ltk.ui.sourceediting.folding.FoldingEditorAddon.FoldingStructureComputationContext;
+import de.walware.ecommons.ltk.ui.sourceediting.folding.FoldingProvider;
+import de.walware.ecommons.ltk.ui.sourceediting.folding.NodeFoldingProvider;
+import de.walware.ecommons.ltk.ui.sourceediting.folding.SimpleFoldingPosition;
 import de.walware.ecommons.preferences.IPreferenceAccess;
 import de.walware.ecommons.preferences.PreferencesUtil;
 
@@ -98,9 +98,8 @@ public class LtxDefaultFoldingProvider implements FoldingProvider {
 				}
 				if (stopLine - startLine + 1 >= fConfig.minLines) {
 					final int offset = doc.getLineOffset(startLine);
-					fContext.addFoldingRegion(
-							new Position(offset, doc.getLineOffset(stopLine)+doc.getLineLength(stopLine) - offset),
-							new FoldingAnnotation(TYPE_SECTION, false) );
+					fContext.addFoldingRegion(new FoldingAnnotation(TYPE_SECTION, false,
+							new SimpleFoldingPosition(offset, doc.getLineOffset(stopLine) + doc.getLineLength(stopLine) - offset) ));
 				}
 			}
 			catch (final BadLocationException e) {
@@ -120,9 +119,8 @@ public class LtxDefaultFoldingProvider implements FoldingProvider {
 				}
 				if (stopLine - startLine + 1 >= fConfig.minLines) {
 					final int offset = doc.getLineOffset(startLine);
-					fContext.addFoldingRegion(
-							new Position(offset, doc.getLineOffset(stopLine)+doc.getLineLength(stopLine) - offset),
-							new FoldingAnnotation(TYPE_EMBEDDED, false) );
+					fContext.addFoldingRegion(new FoldingAnnotation(TYPE_EMBEDDED, false,
+							new SimpleFoldingPosition(offset, doc.getLineOffset(stopLine) + doc.getLineLength(stopLine) - offset) ));
 				}
 			}
 			catch (final BadLocationException e) {
