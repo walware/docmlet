@@ -19,7 +19,6 @@ import de.walware.ecommons.preferences.PreferencesUtil;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCoreAccess;
-import de.walware.docmlet.tex.core.model.TexModel;
 import de.walware.docmlet.tex.internal.core.model.LtxModelManager;
 
 
@@ -46,12 +45,12 @@ public class TexCorePlugin extends Plugin {
 	}
 	
 	
-	private boolean fStarted;
+	private boolean started;
 	
-	private LtxModelManager fTexModelManager;
+	private LtxModelManager ltxModelManager;
 	
-	private TexCoreAccess fWorkbenchAccess;
-	private TexCoreAccess fDefaultsAccess;
+	private TexCoreAccess workbenchAccess;
+	private TexCoreAccess defaultsAccess;
 	
 	
 	public TexCorePlugin() {
@@ -63,20 +62,20 @@ public class TexCorePlugin extends Plugin {
 		super.start(context);
 		gPlugin = this;
 		
-		fTexModelManager = new LtxModelManager(TexModel.LTX_TYPE_ID);
+		this.ltxModelManager = new LtxModelManager();
 		
-		fStarted = true;
+		this.started = true;
 	}
 	
 	@Override
 	public void stop(final BundleContext context) throws Exception {
 		try {
 			synchronized (this) {
-				fStarted = false;
+				this.started = false;
 			}
-			if (fTexModelManager != null) {
-				fTexModelManager.dispose();
-				fTexModelManager = null;
+			if (this.ltxModelManager != null) {
+				this.ltxModelManager.dispose();
+				this.ltxModelManager = null;
 			}
 		}
 		finally {
@@ -87,27 +86,27 @@ public class TexCorePlugin extends Plugin {
 	
 	
 	public LtxModelManager getLtxModelManager() {
-		return fTexModelManager;
+		return this.ltxModelManager;
 	}
 	
 	public synchronized ITexCoreAccess getWorkbenchAccess() {
-		if (fWorkbenchAccess == null) {
-			if (!fStarted) {
+		if (this.workbenchAccess == null) {
+			if (!this.started) {
 				throw new IllegalStateException("Plug-in is not started.");
 			}
-			fWorkbenchAccess = new TexCoreAccess(PreferencesUtil.getInstancePrefs());
+			this.workbenchAccess = new TexCoreAccess(PreferencesUtil.getInstancePrefs());
 		}
-		return fWorkbenchAccess;
+		return this.workbenchAccess;
 	}
 	
 	public synchronized ITexCoreAccess getDefaultsAccess() {
-		if (fDefaultsAccess == null) {
-			if (!fStarted) {
+		if (this.defaultsAccess == null) {
+			if (!this.started) {
 				throw new IllegalStateException("Plug-in is not started.");
 			}
-			fDefaultsAccess = new TexCoreAccess(PreferencesUtil.getDefaultPrefs());
+			this.defaultsAccess = new TexCoreAccess(PreferencesUtil.getDefaultPrefs());
 		}
-		return fDefaultsAccess;
+		return this.defaultsAccess;
 	}
 	
 }

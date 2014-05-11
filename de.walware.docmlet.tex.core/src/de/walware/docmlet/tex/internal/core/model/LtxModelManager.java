@@ -26,6 +26,7 @@ import de.walware.ecommons.ltk.core.impl.SourceUnitModelContainer;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
 import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.LtxSuModelContainer;
+import de.walware.docmlet.tex.core.model.TexModel;
 
 
 public class LtxModelManager extends AbstractModelManager implements IModelManager {
@@ -93,8 +94,8 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 	private final LtxReconciler reconciler = new LtxReconciler(this);
 	
 	
-	public LtxModelManager(final String typeId) {
-		super(typeId);
+	public LtxModelManager() {
+		super(TexModel.LTX_TYPE_ID);
 	}
 	
 	
