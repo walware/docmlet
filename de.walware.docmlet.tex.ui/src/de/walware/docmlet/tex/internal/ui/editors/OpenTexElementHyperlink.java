@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
@@ -58,8 +59,7 @@ public class OpenTexElementHyperlink implements IHyperlink {
 	
 	@Override
 	public String getHyperlinkText() {
-		return null;
-//		return NLS.bind("Open Declaration {0}", fAccess.getDisplayName());
+		return NLS.bind(Messages.Hyperlinks_OpenDeclaration_label, fAccess.getDisplayName());
 	}
 	
 	@Override
