@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 
-import de.walware.ecommons.ltk.ISourceUnit;
-import de.walware.ecommons.ltk.IWorkspaceSourceUnit;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
+import de.walware.ecommons.ltk.core.model.IWorkspaceSourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
@@ -32,7 +32,8 @@ import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.TexCommand;
-import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.internal.ui.sourceediting.LtxAssistInvocationContext;
+import de.walware.docmlet.tex.ui.TexUI;
 
 
 /**
@@ -43,8 +44,8 @@ import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 public class TexPathCompletionComputer extends PathCompletionComputor {
 	
 	
-	private IContainer fBaseResource;
-	private IFileStore fBaseFileStore;
+	private IContainer baseResource;
+	private IFileStore baseFileStore;
 	
 	
 	public TexPathCompletionComputer() {
@@ -53,23 +54,23 @@ public class TexPathCompletionComputer extends PathCompletionComputor {
 	
 	@Override
 	public String getPluginId() {
-		return TexUIPlugin.PLUGIN_ID;
+		return TexUI.PLUGIN_ID;
 	}
 	
 	@Override
 	public void sessionStarted(final ISourceEditor editor, final ContentAssist assist) {
-		fBaseResource = null;
-		fBaseFileStore = null;
+		this.baseResource= null;
+		this.baseFileStore= null;
 		{
-			final ISourceUnit su = editor.getSourceUnit();
+			final ISourceUnit su= editor.getSourceUnit();
 			if (su instanceof IWorkspaceSourceUnit) {
-				final IResource resource = ((IWorkspaceSourceUnit) su).getResource();
-				if (fBaseResource == null) {
-					fBaseResource = resource.getParent();
+				final IResource resource= ((IWorkspaceSourceUnit) su).getResource();
+				if (this.baseResource == null) {
+					this.baseResource= resource.getParent();
 				}
-				if (fBaseResource != null) {
+				if (this.baseResource != null) {
 					try {
-						fBaseFileStore = EFS.getStore(fBaseResource.getLocationURI());
+						this.baseFileStore= EFS.getStore(this.baseResource.getLocationURI());
 					}
 					catch (final CoreException e) {
 					}
@@ -86,25 +87,26 @@ public class TexPathCompletionComputer extends PathCompletionComputor {
 	}
 	
 	@Override
-	protected String getDefaultFileSeparator() {
-		return "/"; //$NON-NLS-1$
+	protected char getDefaultFileSeparator() {
+		return '/';
 	}
 	
 	@Override
 	protected IRegion getContentRange(final AssistInvocationContext context, final int mode)
 			throws BadLocationException {
 		if (context instanceof LtxAssistInvocationContext) {
-			final LtxAssistInvocationContext texContext = (LtxAssistInvocationContext) context;
-			final int argIdx = texContext.getInvocationArgIdx();
+			final LtxAssistInvocationContext texContext= (LtxAssistInvocationContext) context;
+			final int argIdx= texContext.getInvocationArgIdx();
 			if (argIdx >= 0) {
-				final TexCommand command = texContext.getInvocationControlNode().getCommand();
-				final Argument argDef = command.getArguments().get(argIdx);
-				final TexAstNode argNode = texContext.getInvocationArgNodes()[argIdx];
-				final int offset = texContext.getInvocationOffset();
+				final TexCommand command= texContext.getInvocationControlNode().getCommand();
+				final Argument argDef= command.getArguments().get(argIdx);
+				final TexAstNode argNode= texContext.getInvocationArgNodes()[argIdx];
+				final int offset= texContext.getInvocationOffset();
 				if (mode == IContentAssistComputer.SPECIFIC_MODE
 								|| (argDef.getContent() & 0xf0) == Argument.RESOURCE ) {
-					final IRegion region = TexAst.getInnerRegion(argNode);
-					if (region != null && region.getOffset() >= offset && offset <= region.getOffset()+region.getLength()) {
+					final IRegion region= TexAst.getInnerRegion(argNode);
+					if (region != null
+							&& region.getOffset() >= offset && offset <= region.getOffset() + region.getLength() ) {
 						return region;
 					}
 				}
@@ -115,16 +117,16 @@ public class TexPathCompletionComputer extends PathCompletionComputor {
 	
 	@Override
 	protected IPath getRelativeBasePath() {
-		if (fBaseResource != null) {
-			return fBaseResource.getLocation();
+		if (this.baseResource != null) {
+			return this.baseResource.getLocation();
 		}
 		return null;
 	}
 	
 	@Override
 	protected IFileStore getRelativeBaseStore() {
-		if (fBaseFileStore != null) {
-			return fBaseFileStore;
+		if (this.baseFileStore != null) {
+			return this.baseFileStore;
 		}
 		return null;
 	}

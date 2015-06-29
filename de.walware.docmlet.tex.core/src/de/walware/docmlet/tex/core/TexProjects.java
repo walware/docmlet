@@ -42,17 +42,17 @@ public class TexProjects {
 	 */
 	public static void setupTexProject(final IProject project,
 			final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress= SubMonitor.convert(monitor,
+		final SubMonitor m= SubMonitor.convert(monitor,
 				NLS.bind(Messages.TexProject_ConfigureTask_label, project.getName()),
 				2 + 8 );
 		
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
 		changed|= ProjectUtil.addNature(description, TEX_NATURE_ID);
-		progress.worked(2);
+		m.worked(2);
 		
 		if (changed) {
-			project.setDescription(description, progress.newChild(8));
+			project.setDescription(description, m.newChild(8));
 		}
 	}
 	

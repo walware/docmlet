@@ -33,7 +33,7 @@ public class TexCommand implements Comparable<TexCommand> {
 	public static final int ENV = 0x2;
 	public static final int C2_ENV_MATH_BEGIN =             ENV | 0x10;
 	public static final int C3_ENV_MATH_INLINE_BEGIN =      C2_ENV_MATH_BEGIN | 0x100;
-	public static final int C3_ENV_MATH_SEPARATE_BEGIN =    C2_ENV_MATH_BEGIN | 0x200;
+	public static final int C3_ENV_MATH_DISPLAY_BEGIN =     C2_ENV_MATH_BEGIN | 0x200;
 	public static final int C2_ENV_DOCUMENT_BEGIN =         ENV | 0x20;
 	public static final int C2_ENV_VERBATIM_BEGIN =         ENV | 0x30;
 	public static final int C2_ENV_COMMENT_BEGIN =          ENV | 0x40;

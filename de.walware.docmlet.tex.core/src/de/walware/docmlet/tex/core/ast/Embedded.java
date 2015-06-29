@@ -15,11 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
+import de.walware.ecommons.ltk.ast.IEmbeddingAstNode;
 
 import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 
 
-public class Embedded extends TexAstNode {
+public class Embedded extends TexAstNode implements IEmbeddingAstNode {
 	
 	
 	static class Inline extends Embedded {
@@ -31,22 +32,22 @@ public class Embedded extends TexAstNode {
 		
 		
 		@Override
-		public boolean isInline() {
-			return true;
+		public int getEmbedDescr() {
+			return EMBED_INLINE;
 		}
 		
 	}
 	
 	
-	final String fType;
+	private final String foreignType;
 	
-	protected IAstNode fForeignNode;
+	private IAstNode foreignNode;
 	
 	
 	Embedded(final TexAstNode parent, final int startOffset, final int stopOffset,
-			final String type) {
+			final String foreignType) {
 		super(parent, startOffset, stopOffset);
-		fType = type;
+		this.foreignType= foreignType;
 	}
 	
 	
@@ -55,21 +56,29 @@ public class Embedded extends TexAstNode {
 		return NodeType.EMBEDDED;
 	}
 	
-	public boolean isInline() {
-		return false;
+	@Override
+	public String getForeignTypeId() {
+		return this.foreignType;
+	}
+	
+	@Override
+	public int getEmbedDescr() {
+		return EMBED_CHUNK;
 	}
 	
 	@Override
 	public String getText() {
-		return fType;
+		return this.foreignType;
 	}
 	
+	@Override
 	public void setForeignNode(final IAstNode node) {
-		fForeignNode = node;
+		this.foreignNode= node;
 	}
 	
+	@Override
 	public IAstNode getForeignNode() {
-		return fForeignNode;
+		return this.foreignNode;
 	}
 	
 	@Override
@@ -95,8 +104,8 @@ public class Embedded extends TexAstNode {
 	
 	@Override
 	public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		if (fForeignNode != null) {
-			fForeignNode.accept(visitor);
+		if (this.foreignNode != null) {
+			this.foreignNode.accept(visitor);
 		}
 	}
 	

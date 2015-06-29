@@ -30,19 +30,17 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
 
-import de.walware.ecommons.ltk.IExtContentTypeManager;
 import de.walware.ecommons.ltk.IModelManager;
-import de.walware.ecommons.ltk.ISourceUnit;
+import de.walware.ecommons.ltk.ISourceUnitManager;
 import de.walware.ecommons.ltk.LTK;
-import de.walware.ecommons.ltk.core.IModelTypeDescriptor;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 
 import de.walware.docmlet.tex.core.TexBuildParticipant;
 import de.walware.docmlet.tex.core.TexCore;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
-import de.walware.docmlet.tex.core.model.ILtxWorkspaceSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexWorkspaceSourceUnit;
 import de.walware.docmlet.tex.core.model.LtxSuModelContainer;
 import de.walware.docmlet.tex.internal.core.TexCorePlugin;
-import de.walware.docmlet.tex.internal.core.TexProject;
 import de.walware.docmlet.tex.internal.core.model.LtxModelManager;
 
 
@@ -84,11 +82,12 @@ public class TexProjectBuild extends TexProjectTask
 		
 	}
 	
-	private final IExtContentTypeManager modelRegistry= LTK.getExtContentTypeManager();
+	
+	private final ISourceUnitManager suManager= LTK.getSourceUnitManager();
 	
 	private final MultiStatus status;
 	
-	private final List<ILtxWorkspaceSourceUnit> updatedLtxUnits;
+	private final List<ITexWorkspaceSourceUnit> updatedLtxUnits;
 	private final List<VirtualSourceUnit> removedLtxFiles;
 	
 	private SubMonitor visitProgress;
@@ -105,37 +104,37 @@ public class TexProjectBuild extends TexProjectTask
 		this.removedLtxFiles= new ArrayList<>();
 	}
 	
-	private void dispose(final SubMonitor progress) {
-		progress.setWorkRemaining(this.updatedLtxUnits.size());
-		for (final ILtxSourceUnit unit : this.updatedLtxUnits) {
-			unit.disconnect(progress.newChild(1));
+	private void dispose(final SubMonitor m) {
+		m.setWorkRemaining(this.updatedLtxUnits.size());
+		for (final ITexSourceUnit unit : this.updatedLtxUnits) {
+			unit.disconnect(m.newChild(1));
 		}
 	}
 	
 	
 	public void build(final int kind,
-			final SubMonitor progress) throws CoreException {
+			final SubMonitor m) throws CoreException {
 		try {
-			progress.setTaskName(NLS.bind("Preparing TeX build for ''{0}''", getTexProject().getProject().getName()));
-			progress.setWorkRemaining(10 + 20 + 80 + 10);
+			m.beginTask(NLS.bind("Preparing TeX build for ''{0}''", getTexProject().getProject().getName()),
+					10 + 20 + 80 + 10 );
 			
 			final IResourceDelta delta;
 			switch (kind) {
 			case IncrementalProjectBuilder.AUTO_BUILD:
 			case IncrementalProjectBuilder.INCREMENTAL_BUILD:
 				delta= getTexProjectBuilder().getDelta(getTexProject().getProject());
-				progress.worked(10);
+				m.worked(10);
 				break;
 			default:
 				delta= null;
 			}
 			
-			if (progress.isCanceled()) {
+			if (m.isCanceled()) {
 				throw new CoreException(Status.CANCEL_STATUS);
 			}
-			progress.setWorkRemaining(20 + 80 + 10);
+			m.setWorkRemaining(20 + 80 + 10);
 			
-			this.visitProgress= progress.newChild(20);
+			this.visitProgress= m.newChild(20);
 			if (delta != null) {
 				setBuildType(IncrementalProjectBuilder.INCREMENTAL_BUILD);
 				delta.accept(this);
@@ -146,15 +145,14 @@ public class TexProjectBuild extends TexProjectTask
 			}
 			this.visitProgress= null;
 			
-			if (progress.isCanceled()) {
+			if (m.isCanceled()) {
 				throw new CoreException(Status.CANCEL_STATUS);
 			}
-			progress.setTaskName(NLS.bind("Analyzing LaTeX file(s) of ''{0}''", getTexProject().getProject().getName()));
-			processLtxFiles(progress.newChild(80));
+			processLtxFiles(m.newChild(80, SubMonitor.SUPPRESS_NONE));
 		}
 		finally {
-			progress.setWorkRemaining(10);
-			dispose(progress.newChild(10));
+			m.setWorkRemaining(10);
+			dispose(m.newChild(10));
 			
 			if (!this.status.isOK()) {
 				TexCorePlugin.log(this.status);
@@ -205,7 +203,7 @@ public class TexProjectBuild extends TexProjectTask
 	}
 	
 	private void visitFileAdded(final IFile file, final IResourceDelta delta,
-			final SubMonitor progress) throws CoreException {
+			final SubMonitor m) throws CoreException {
 		final IContentDescription contentDescription= file.getContentDescription();
 		if (contentDescription == null) {
 			return;
@@ -214,64 +212,61 @@ public class TexProjectBuild extends TexProjectTask
 		if (contentType == null) {
 			return;
 		}
-		if (contentType.isKindOf(LTX_CONTENT_TYPE)) {
-			final IModelTypeDescriptor modelType= this.modelRegistry.getModelTypeForContentType(contentType.getId());
-			if (modelType == null) {
-				clearLtx(file, null);
-				return;
+		if (contentType.isKindOf(TexCore.LTX_CONTENT_TYPE)) {
+			final ISourceUnit unit= this.suManager.getSourceUnit(
+					LTK.PERSISTENCE_CONTEXT, file, contentType, true, m );
+			if (unit instanceof ITexWorkspaceSourceUnit) {
+				this.updatedLtxUnits.add((ITexWorkspaceSourceUnit) unit);
 			}
-			final ISourceUnit unit= LTK.getSourceUnitManager().getSourceUnit(
-					modelType.getId(), LTK.PERSISTENCE_CONTEXT, file, true, progress );
-			if (unit instanceof ILtxWorkspaceSourceUnit) {
-				this.updatedLtxUnits.add((ILtxWorkspaceSourceUnit) unit);
+			else {
+				if (unit != null) {
+					unit.disconnect(m);
+				}
+				clearLtx(file, null);
 			}
 		}
 	}
 	
 	private void visitFileRemove(final IFile file, final IResourceDelta delta,
-			final SubMonitor progress) throws CoreException {
-		final IContentDescription contentDescription= file.getContentDescription();
-		if (contentDescription == null) {
-			return;
-		}
-		final IContentType contentType= contentDescription.getContentType();
-		if (contentType == null) {
-			return;
-		}
-		if (contentType.isKindOf(LTX_CONTENT_TYPE)) {
-			final IModelTypeDescriptor modelType= this.modelRegistry.getModelTypeForContentType(contentType.getId());
-			final VirtualSourceUnit unit= new VirtualSourceUnit(file, (modelType != null) ? modelType.getId() : null);
-			this.removedLtxFiles.add(unit);
-			
-			if ((delta != null && (delta.getFlags() & IResourceDelta.MOVED_TO) != 0)) {
-				final IResource movedTo= file.getWorkspace().getRoot().findMember(delta.getMovedToPath());
-				if (movedTo instanceof IFile) {
-					final TexProject movedToProject= TexProject.getTexProject(movedTo.getProject());
-					if (modelType == null
-							|| movedToProject == null || movedToProject == getTexProject()
-							|| !getTexProjectBuilder().hasBeenBuilt(movedToProject.getProject()) ) {
-						clearLtx((IFile) movedTo, getParticipant(unit.getModelTypeId()));
-					}
-				}
-			}
-		}
+			final SubMonitor m) throws CoreException {
+		// There is no contentDescription for removed files
+//		final IContentDescription contentDescription= file.getContentDescription();
+		
+//		if (contentType.isKindOf(LTX_CONTENT_TYPE)) {
+//			final IModelTypeDescriptor modelType= this.modelRegistry.getModelTypeForContentType(contentType.getId());
+//			final VirtualSourceUnit unit= new VirtualSourceUnit(file, (modelType != null) ? modelType.getId() : null);
+//			this.removedLtxFiles.add(unit);
+//			
+//			if ((delta != null && (delta.getFlags() & IResourceDelta.MOVED_TO) != 0)) {
+//				final IResource movedTo= file.getWorkspace().getRoot().findMember(delta.getMovedToPath());
+//				if (movedTo instanceof IFile) {
+//					final TexProject movedToProject= TexProject.getTexProject(movedTo.getProject());
+//					if (modelType == null
+//							|| movedToProject == null || movedToProject == getTexProject()
+//							|| !getTexProjectBuilder().hasBeenBuilt(movedToProject.getProject()) ) {
+//						clearLtx((IFile) movedTo, getParticipant(unit.getModelTypeId()));
+//					}
+//				}
+//			}
+//		}
 	}
 	
-	private void processLtxFiles(final SubMonitor progress) throws CoreException {
-		progress.setWorkRemaining(2);
+	private void processLtxFiles(final SubMonitor m) throws CoreException {
+		m.beginTask(NLS.bind("Analyzing LaTeX file(s) of ''{0}''", getTexProject().getProject().getName()),
+				2 );
 		
-		final LtxModelManager ltxModelManager= TexCorePlugin.getDefault().getLtxModelManager();
+		final LtxModelManager ltxModelManager= TexCorePlugin.getInstance().getLtxModelManager();
 		
-		{	final SubMonitor sub= progress.newChild(1);
-			int subRemaining= this.removedLtxFiles.size() + this.updatedLtxUnits.size() * 5;
-			sub.setWorkRemaining(subRemaining);
+		{	final SubMonitor mPart= m.newChild(1);
+			int mRemaining= this.removedLtxFiles.size() + this.updatedLtxUnits.size() * 5;
+			mPart.setWorkRemaining(mRemaining);
 			for (final VirtualSourceUnit unit : this.removedLtxFiles) {
 				try {
 					final TexBuildParticipant participant= getParticipant(unit.getModelTypeId());
 					
 					// >> remove from LTX index
 					if (participant != null) {
-						participant.ltxUnitRemoved(unit.getResource(), sub.newChild(1));
+						participant.ltxUnitRemoved(unit.getResource(), mPart.newChild(1));
 					}
 				}
 				catch (final Exception e) {
@@ -279,32 +274,32 @@ public class TexProjectBuild extends TexProjectTask
 							NLS.bind("An error occurred when processing removed file ''{0}''.", unit.getResource()),
 							e ));
 				}
-				if (sub.isCanceled()) {
+				if (mPart.isCanceled()) {
 					throw new CoreException(Status.CANCEL_STATUS);
 				}
-				sub.setWorkRemaining((subRemaining-= 1));
+				mPart.setWorkRemaining((mRemaining-= 1));
 			}
 			
 			if (!this.updatedLtxUnits.isEmpty()) {
 				final LtxBuildReconciler ltxReconciler= new LtxBuildReconciler(ltxModelManager);
-				for (final ILtxWorkspaceSourceUnit unit : this.updatedLtxUnits) {
+				for (final ITexWorkspaceSourceUnit unit : this.updatedLtxUnits) {
 					try {
 						final TexBuildParticipant participant= getParticipant(unit.getModelTypeId());
 						
 						clearLtx((IFile) unit.getResource(), participant);
 						
-						final LtxSuModelContainer<ILtxSourceUnit> adapter= (LtxSuModelContainer<ILtxSourceUnit>) unit.getAdapter(LtxSuModelContainer.class);
+						final LtxSuModelContainer<ITexSourceUnit> adapter= (LtxSuModelContainer<ITexSourceUnit>) unit.getAdapter(LtxSuModelContainer.class);
 						if (adapter != null) {
-							ltxReconciler.reconcile(adapter, IModelManager.MODEL_FILE, sub.newChild(3));
+							ltxReconciler.reconcile(adapter, IModelManager.MODEL_FILE, mPart.newChild(3));
 							
-							if (sub.isCanceled()) {
+							if (mPart.isCanceled()) {
 								throw new CoreException(Status.CANCEL_STATUS);
 							}
 						}
 						
 						// >> update LTX index
 						if (participant != null && participant.isEnabled()) {
-							participant.ltxUnitUpdated(unit, sub.newChild(2));
+							participant.ltxUnitUpdated(unit, mPart.newChild(2));
 						}
 					}
 					catch (final Exception e) {
@@ -312,20 +307,20 @@ public class TexProjectBuild extends TexProjectTask
 								NLS.bind("An error occurred when processing file ''{0}''.", unit.getResource()),
 								e ));
 					}
-					if (sub.isCanceled()) {
+					if (mPart.isCanceled()) {
 						throw new CoreException(Status.CANCEL_STATUS);
 					}
-					sub.setWorkRemaining((subRemaining-= 5));
+					mPart.setWorkRemaining((mRemaining-= 5));
 				}
 			}
 		}
-		{	final SubMonitor sub= progress.newChild(1);
+		{	final SubMonitor mPart= m.newChild(1);
 			final Collection<TexBuildParticipant> participants= getParticipants();
-			sub.setWorkRemaining(participants.size());
+			mPart.setWorkRemaining(participants.size());
 			for (final TexBuildParticipant participant : participants) {
 				if (participant.isEnabled()) {
 					try {
-						participant.ltxFinished(sub.newChild(1));
+						participant.ltxFinished(mPart.newChild(1));
 					}
 					catch (final Exception e) {
 						this.status.add(new Status(IStatus.ERROR, TexCore.PLUGIN_ID, 0,

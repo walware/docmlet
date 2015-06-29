@@ -36,8 +36,7 @@ public class LtxQuickOutlineInformationProvider extends QuickInformationProvider
 //	@Override
 //	public IRegion getSubject(final ITextViewer textViewer, final int offset) {
 //		if (this.scanner == null) {
-//			this.scanner= (LtxHeuristicTokenScanner) LTK.getModelAdapter(
-//					getEditor().getModelTypeId(), LtxHeuristicTokenScanner.class );
+//			this.scanner= LtxHeuristicTokenScanner.create(getEditor().getDocumentContentInfo());
 //		}
 //		try {
 //			final IDocument document= getEditor().getViewer().getDocument();

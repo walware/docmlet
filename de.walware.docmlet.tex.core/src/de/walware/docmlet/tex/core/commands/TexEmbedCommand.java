@@ -13,6 +13,8 @@ package de.walware.docmlet.tex.core.commands;
 
 import java.util.List;
 
+import de.walware.docmlet.tex.core.parser.ICustomScanner;
+
 
 public class TexEmbedCommand extends TexCommand {
 	
@@ -28,8 +30,12 @@ public class TexEmbedCommand extends TexCommand {
 	}
 	
 	
-	public String getEmbeddedType() {
+	public String getEmbeddedType(final int argIdx) {
 		return this.embeddedType;
+	}
+	
+	public ICustomScanner getArgumentScanner(final int argIdx) {
+		return null;
 	}
 	
 }

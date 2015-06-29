@@ -38,7 +38,8 @@ import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.commands.LtxCommandCategories;
 import de.walware.docmlet.tex.core.commands.LtxCommandCategories.Category;
 import de.walware.docmlet.tex.core.commands.TexCommand;
-import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.internal.ui.sourceediting.LtxAssistInvocationContext;
+import de.walware.docmlet.tex.ui.TexUI;
 import de.walware.docmlet.tex.ui.TexUIResources;
 import de.walware.docmlet.tex.ui.editors.ILtxEditor;
 
@@ -118,7 +119,7 @@ public class LtxSymbolsMenuContributions extends CompoundContributionItem {
 					}
 				}
 				catch (final Exception e) {
-					StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUIPlugin.PLUGIN_ID,
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUI.PLUGIN_ID,
 							0, "An error occurred when inserting LaTeX symbol.", e));
 				}
 			}

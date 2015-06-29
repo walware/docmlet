@@ -13,7 +13,13 @@ package de.walware.docmlet.tex.ui.editors;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
+
 
 public interface ILtxEditor extends ISourceEditor {
+	
+	
+	@Override
+	ITexSourceUnit getSourceUnit();
 	
 }

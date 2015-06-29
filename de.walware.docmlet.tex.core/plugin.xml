@@ -44,13 +44,13 @@
    <extension
          point="de.walware.ecommons.ltk.modelTypes">
       <modelType
-            id="ltx">
+            id="Ltx">
       </modelType>
       <contentType
             contentTypeId="net.sourceforge.texlipse.contentTypes.Latex"
-            modelTypeId="ltx">
+            modelTypeId="Ltx">
       </contentType>
-      <unitType modelTypeId="ltx"
+      <unitType modelTypeId="Ltx"
             contextKey="persistence.default"
             unitFactory="de.walware.docmlet.tex.internal.core.model.LtxSourceUnitFactory">
       </unitType>
@@ -58,11 +58,10 @@
    <extension
          point="de.walware.ecommons.ltk.modelAdapters">
       <adapterFactory
-            modelTypeId="ltx"
+            modelTypeId="Ltx"
             class="de.walware.docmlet.tex.internal.core.ModelAdapterFactory">
          <adapter
-               type="de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner">
-         </adapter>
+               type="de.walware.ecommons.ltk.IModelManager"/>
       </adapterFactory>
    </extension>
    

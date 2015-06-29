@@ -24,17 +24,17 @@ public class Text extends TexAstNode {
 	
 	static class Num extends Text {
 		
-		private final String fText;
+		private final String text;
 		
 		Num(final TexAstNode parent, final int startOffset, final int stopOffset,
 				final String text) {
 			super(parent, startOffset, stopOffset);
-			fText = text;
+			this.text= text;
 		}
 		
 		@Override
 		public String getText() {
-			return fText;
+			return this.text;
 		}
 		
 	}

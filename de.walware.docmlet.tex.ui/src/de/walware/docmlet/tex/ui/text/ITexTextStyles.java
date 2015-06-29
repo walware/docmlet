@@ -11,11 +11,13 @@
 
 package de.walware.docmlet.tex.ui.text;
 
+import de.walware.docmlet.tex.ui.TexUI;
+
 
 public class ITexTextStyles {
 	
 	
-	public static final String GROUP_ID = "tex/editor.tex/ts"; //$NON-NLS-1$
+	public static final String LTX_TEXTSTYLE_CONFIG_QUALIFIER= TexUI.PLUGIN_ID + "/textstyle/Ltx"; //$NON-NLS-1$
 	
 	
 	public static final String PREFIX = "tex_ts_"; //$NON-NLS-1$

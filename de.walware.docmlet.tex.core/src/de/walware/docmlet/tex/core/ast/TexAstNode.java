@@ -13,6 +13,8 @@ package de.walware.docmlet.tex.core.ast;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
 
@@ -22,29 +24,29 @@ import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 public abstract class TexAstNode implements IAstNode {
 	
 	
-	protected static final TexAstNode[] NO_CHILDREN = new TexAstNode[0];
+	protected static final TexAstNode[] NO_CHILDREN= new TexAstNode[0];
 	
-	private static final Object[] NO_ATTACHMENT = new Object[0];
+	private static final ImList<Object> NO_ATTACHMENT= ImCollections.emptyList();
 	
 	
-	int fStatus;
+	int status;
 	
-	TexAstNode fParent;
+	TexAstNode texParent;
 	
-	int fStartOffset;
-	int fStopOffset;
+	int startOffset;
+	int stopOffset;
 	
-	private Object[] fAttachments = NO_ATTACHMENT;
+	private volatile ImList<Object> attachments= NO_ATTACHMENT;
 	
 	
 	TexAstNode() {
 	}
 	
 	TexAstNode(final TexAstNode parent, final int startOffset, final int stopOffset) {
-		fParent = parent;
+		this.texParent= parent;
 		
-		fStartOffset = startOffset;
-		fStopOffset = stopOffset;
+		this.startOffset= startOffset;
+		this.stopOffset= stopOffset;
 	}
 	
 	
@@ -52,37 +54,41 @@ public abstract class TexAstNode implements IAstNode {
 	
 	@Override
 	public final int getStatusCode() {
-		return fStatus;
+		return this.status;
+	}
+	
+	public final TexAstNode getTexParent() {
+		return this.texParent;
 	}
 	
 	@Override
-	public final TexAstNode getParent() {
-		return fParent;
+	public IAstNode getParent() {
+		return this.texParent;
 	}
 	
 	@Override
-	public final TexAstNode getRoot() {
-		TexAstNode candidate = this;
-		TexAstNode p;
-		while ((p = candidate.fParent) != null) {
-			candidate = p;
+	public final IAstNode getRoot() {
+		IAstNode candidate= this;
+		IAstNode p;
+		while ((p= candidate.getParent()) != null) {
+			candidate= p;
 		}
 		return candidate;
 	}
 	
 	@Override
 	public final int getOffset() {
-		return fStartOffset;
+		return this.startOffset;
 	}
 	
 	@Override
 	public final int getStopOffset() {
-		return fStopOffset;
+		return this.stopOffset;
 	}
 	
 	@Override
 	public final int getLength() {
-		return fStopOffset - fStartOffset;
+		return this.stopOffset - this.startOffset;
 	}
 	
 	public String getText() {
@@ -103,20 +109,19 @@ public abstract class TexAstNode implements IAstNode {
 	public abstract void acceptInTexChildren(TexAstVisitor visitor) throws InvocationTargetException;
 	
 	
-	public void addAttachment(final Object data) {
-		if (fAttachments == NO_ATTACHMENT) {
-			fAttachments = new Object[] { data };
-		}
-		else {
-			final Object[] newArray = new Object[fAttachments.length+1];
-			System.arraycopy(fAttachments, 0, newArray, 0, fAttachments.length);
-			newArray[fAttachments.length] = data;
-			fAttachments = newArray;
-		}
+	@Override
+	public synchronized void addAttachment(final Object data) {
+		this.attachments= ImCollections.addElement(this.attachments, data);
 	}
 	
-	public Object[] getAttachments() {
-		return fAttachments;
+	@Override
+	public synchronized void removeAttachment(final Object data) {
+		this.attachments= ImCollections.removeElement(this.attachments, data);
+	}
+	
+	@Override
+	public ImList<Object> getAttachments() {
+		return this.attachments;
 	}
 	
 }

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Style-Type" content="text/css"/>
+	<link rel="stylesheet" href="../book.css" charset="ISO-8859-1" type="text/css"/>
+	<title>Document Processing Tools - Actions</title>
+	<meta name="copyright" content="Copyright (c) 2015 Stephan Wahlbrink (WalWare.de) and others. All rights reserved."/>
+</head>
+<body>
+
+<h1>Actions</h1>
+
+<p>The document processing tools are set up as launch configurations of the category External Tools.
+Therefore all common actions for External Tools can be used to edit and launch the configurations.</p>
+<p>In addition, there are the following context sensitive ways to access and run the document
+processing tools for a document.</p>
+
+
+<h2>Actions for document in active editor</h2>
+
+<p>If a document editor is active, the document processing configurations suitable for the content
+type of the editor are also accessible via the main menu <span class="uisequence">Document</span>
+and the main toolbar.  It is also possible to run the currently active tool by commands and their
+keyboard shortcuts.</p>
+
+<img alt="Screenshot 'Document' menu for the RMarkdown editor" src="../images/doc_processing-menu.png"/>
+
+<p>When using these actions, the source document is always the document in the active editor, even
+if another view in the window has the focus.</p>
+
+
+<h3 id="menu">Menu</h3>
+
+<p>The Document menu offers a sub menu for each configured document processing tool with:</p>
+
+<ul>
+	<li><p><span class="uilabel">Run Tool</span> and <span class="uilabel">Process Document</span>
+		runs the tool,
+		that is all steps enabled in the tool configuration inclusive or exclusive the Preview step.</p>
+	</li>
+	<li><p>Actions to run a single step of the tool,
+		e.g. <span class="uilabel">Weave R chunks</span>,
+		<span class="uilabel">Produce Output</span> and
+		<span class="uilabel">Preview Output</span>.</p>
+	</li>
+	<li><p><span class="uilabel">Set as Active Tool</span> makes the tool configuration
+		explicitly to the active configuration for the current document content type.  The active
+		tool is used by the toolbar items and commands described below.</p>
+	</li>
+	<li><p><span class="uilabel">Edit configuration...</span> opens the configuration dialog for the
+		tool.</p></li>
+</ul>
+
+
+<h3 id="toolbar">Toolbar</h3>
+
+<p>The main toolbar provides access to the commands 'Process Document', 'Preview Output' and their
+combination 'Process Document and Preview Output' (see <a href="#commands">below</a>).</p>
+<p>The drop-down option offers the possibility to process the document using an other tool than the
+currently active.  Furthermore the selected tool configuration becomes the new active configuration
+for the current document content type.</p>
+
+
+<h3 id="commands">Commands</h3>
+
+<table class="style1">
+<thead><tr>
+	<th></th>
+	<th>Name</th>
+	<th>Description</th>
+	<th>Availability</th>
+</tr></thead>
+<tr><th colspan="4">
+		<p>This commands use always the currently active tool configuration.</p></th></tr>
+<tr>
+	<td class="icon"><img alt="Icon" src="../icons/tool/process_and_preview.png"/></td>
+	<td><span class="uilabel">Process Document and Preview Output</span></td>
+	<td><p>Runs the tool,
+		that is all steps enabled in the tool configuration</p></td>
+	<td>Main&nbsp;toolbar<br/>
+		Global command<br/>
+		<kbd>Ctrl+T, 0</kbd></td>
+</tr>
+<tr>
+	<td class="icon"><img alt="Icon" src="../icons/tool/process.png"/></td>
+	<td><span class="uilabel">Process Document</span></td>
+	<td><p>Runs all processing steps of the tool,
+		that is all steps enabled in the tool configuration except the Preview step</p></td>
+	<td>Main&nbsp;toolbar<br/>
+		Global command<br/>
+		<kbd>Ctrl+T, 9</kbd></td>
+</tr>
+<tr>
+	<td class="icon"></td>
+	<td><span class="uilabel">Run Preprocessing/Weave</span></td>
+	<td><p>Runs the Preprocessing/Weave step, e.g. weaves the R chunks in Sweave documents</p></td>
+	<td>Global command<br/>
+		<kbd>Ctrl+T, 2</kbd></td>
+</tr>
+<tr>
+	<td class="icon"></td>
+	<td><span class="uilabel">Produce Output</span></td>
+	<td><p>Runs the Produce Output step, e.g. compiles the LaTeX sources to final PDF file</p></td>
+	<td>Global command<br/>
+		<kbd>Ctrl+T, 3</kbd></td>
+</tr>
+<tr>
+	<td class="icon"><img alt="Icon" src="../icons/tool/preview.png"/></td>
+	<td><span class="uilabel">Preview Output</span></td>
+	<td><p>Opens preview for the produced output</p></td>
+	<td>Main&nbsp;toolbar<br/>
+		Global command<br/>
+		<kbd>Ctrl+T, 4</kbd></td>
+</tr>
+</table>
+
+
+<h2>Actions for selected document file</h2>
+
+
+<p>Also all common actions for External Tools use the currently selected file as source document.</p>
+
+
+<h3>Context menu</h3>
+
+<p>If a supported document file is selected in the Project Explorer or another view, the context
+menu provides a sub menu <span class="uisequence">Document</span> which offers direct access to the
+configured document processing tools suitable for the content type of the file.  It provides the
+same actions as the <span class="uisequence">Document</span> menu described <a href="menu">above</a>,
+except that the source document is the selected file.</p>
+
+
+</body>
+</html>

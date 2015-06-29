@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
 
-import de.walware.ecommons.collections.ConstArrayList;
-import de.walware.ecommons.ltk.IModelElement;
-import de.walware.ecommons.ltk.ISourceStructElement;
-import de.walware.ecommons.ltk.ISourceUnit;
+import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.ltk.LTKUtil;
+import de.walware.ecommons.ltk.core.model.IModelElement;
+import de.walware.ecommons.ltk.core.model.ISourceStructElement;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
@@ -48,10 +48,11 @@ import de.walware.docmlet.tex.core.commands.LtxCommandDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ILtxSourceElement;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.ITexLabelSet;
+import de.walware.docmlet.tex.core.model.ITexSourceElement;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.internal.ui.sourceediting.LtxAssistInvocationContext;
 
 
 public abstract class LtxElementsCompletionComputer implements IContentAssistComputer {
@@ -85,7 +86,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 		
 	}
 	
-	private static List<TexCommand> PREAMBLE_DOCU_COMMANDS = new ConstArrayList<TexCommand>(
+	private static List<TexCommand> PREAMBLE_DOCU_COMMANDS= ImCollections.newList(
 			IPreambleDefinitions.PREAMBLE_documentclass_COMMAND
 	);
 	
@@ -100,8 +101,8 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 	@Override
 	public void sessionStarted(final ISourceEditor editor, final ContentAssist assist) {
 		final ISourceUnit su = editor.getSourceUnit();
-		if (su instanceof ILtxSourceUnit) {
-			fTexCoreAccess = ((ILtxSourceUnit) su).getTexCoreAccess();
+		if (su instanceof ITexSourceUnit) {
+			fTexCoreAccess = ((ITexSourceUnit) su).getTexCoreAccess();
 		}
 	}
 	
@@ -122,14 +123,15 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 	public IStatus computeCompletionProposals(final AssistInvocationContext context, final int mode,
 			final AssistProposalCollector<IAssistCompletionProposal> proposals, final IProgressMonitor monitor) {
 		final String prefix = context.getIdentifierPrefix();
-		final ILtxModelInfo modelInfo = (ILtxModelInfo) context.getModelInfo();
+		final ILtxModelInfo modelInfo= (context.getModelInfo() instanceof ILtxModelInfo) ?
+				(ILtxModelInfo) context.getModelInfo() : null;
 		final TexCommandSet commandSet = getTexCoreAccess().getTexCommandSet();
 		
 		if (prefix.length() > 0 && prefix.charAt(0) == '\\') {
 			final int offset = context.getInvocationOffset() - prefix.length() + 1;
 			addCommands(context, prefix, (isMath()) ?
 					commandSet.getLtxMathCommandsASorted() : commandSet.getLtxTextCommandsASorted(),
-					modelInfo.getCustomCommandMap().values(),
+					(modelInfo != null) ? modelInfo.getCustomCommandMap().values() : null,
 					proposals );
 			if (modelInfo != null && !isMath()) {
 				if (modelInfo.getSourceElement() != null) {
@@ -137,7 +139,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 							.getSourceElement().getSourceChildren(null);
 					final ISourceStructElement element = LTKUtil.getCoveringSourceElement(elements, offset);
 					if (element != null
-							&& (element.getElementType() & IModelElement.MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {
+							&& (element.getElementType() & IModelElement.MASK_C2) == ITexSourceElement.C2_PREAMBLE) {
 						addCommands(context, prefix,
 								commandSet.getLtxPreambleCommandsASorted(), null,
 								proposals );
@@ -157,7 +159,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 										commandSet.getLtxMathCommandsASorted(), null, proposals );
 								break;
 							}
-							texNode = texNode.getParent();
+							texNode= texNode.getTexParent();
 						}
 					}
 				}
@@ -176,7 +178,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 					if (argIdx == 0
 							&& ((command.getType() & TexCommand.MASK_MAIN) == TexCommand.GENERICENV
 									|| (command.getType() & TexCommand.MASK_MAIN) == TexCommand.ENV )) {
-						final List<String> prefered = new ArrayList<String>();
+						final List<String> prefered = new ArrayList<>();
 						if (command == IEnvDefinitions.GENERICENV_end_COMMAND) {
 							TexAstNode node = texContext.getInvocationControlNode();
 							while (node != null) {
@@ -188,12 +190,12 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 										prefered.add(name);
 									}
 								}
-								node = node.getParent();
+								node= node.getTexParent();
 							}
 						}
 						addEnvs(context, prefix, (isMath()) ?
 								commandSet.getLtxMathEnvsASorted() : commandSet.getLtxTextEnvsASorted(),
-								modelInfo.getCustomEnvMap().values(),
+								(modelInfo != null) ? modelInfo.getCustomEnvMap().values() : null,
 								prefered, proposals );
 					}
 					else {
@@ -278,7 +280,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 			final List<String> prefered, final AssistProposalCollector<IAssistCompletionProposal> proposals) {
 		final int offset = context.getInvocationOffset() - prefix.length();
 		final int length = prefix.length();
-		final List<String> addedPrefered = new ArrayList<String>(prefered.size());
+		final List<String> addedPrefered = new ArrayList<>(prefered.size());
 		for (final TexCommand env : envs) {
 			if (prefix.length() == 0 || env.getControlWord().regionMatches(true, 0, prefix, 0, length)) {
 				final int idx = prefered.indexOf(env.getControlWord());

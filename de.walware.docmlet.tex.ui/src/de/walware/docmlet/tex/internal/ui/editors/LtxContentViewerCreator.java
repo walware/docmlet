@@ -17,19 +17,22 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 import de.walware.ecommons.ltk.ui.compare.CompareTextViewer;
-import de.walware.ecommons.ui.SharedUIResources;
 
-import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfiguration;
-import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfigurator;
+import de.walware.docmlet.tex.ui.sourceediting.LtxSourceViewerConfiguration;
+import de.walware.docmlet.tex.ui.sourceediting.LtxSourceViewerConfigurator;
 
 
 public class LtxContentViewerCreator implements IViewerCreator {
 	
 	
+	public LtxContentViewerCreator() {
+	}
+	
+	
 	@Override
 	public Viewer createViewer(final Composite parent, final CompareConfiguration config) {
-		final LtxViewerConfigurator viewerConfigurator = new LtxViewerConfigurator(null,
-				new LtxViewerConfiguration(null, SharedUIResources.getColors() ));
+		final LtxSourceViewerConfigurator viewerConfigurator=
+				new LtxSourceViewerConfigurator(null, new LtxSourceViewerConfiguration());
 		return new CompareTextViewer(parent, config, viewerConfigurator);
 	}
 	

@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.walware.docmlet.tex.core.model.ILtxWorkspaceSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexWorkspaceSourceUnit;
 import de.walware.docmlet.tex.internal.core.builder.TexBuildParticipantInternal;
 
 
@@ -57,7 +57,7 @@ public class TexBuildParticipant extends TexBuildParticipantInternal {
 	 * @param unit the added/changed source unit
 	 * @param monitor SubMonitor-recommended
 	 */
-	public void ltxUnitUpdated(final ILtxWorkspaceSourceUnit unit,
+	public void ltxUnitUpdated(final ITexWorkspaceSourceUnit unit,
 			final IProgressMonitor monitor) throws CoreException {
 		// update index
 	}

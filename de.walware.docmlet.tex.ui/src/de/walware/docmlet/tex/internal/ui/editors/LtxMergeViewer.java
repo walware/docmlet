@@ -18,11 +18,10 @@ import org.eclipse.swt.widgets.Composite;
 
 import de.walware.ecommons.ltk.ui.compare.CompareMergeTextViewer;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
-import de.walware.ecommons.ui.SharedUIResources;
 
 import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
-import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfiguration;
-import de.walware.docmlet.tex.ui.sourceediting.LtxViewerConfigurator;
+import de.walware.docmlet.tex.ui.sourceediting.LtxSourceViewerConfiguration;
+import de.walware.docmlet.tex.ui.sourceediting.LtxSourceViewerConfigurator;
 
 
 public class LtxMergeViewer extends CompareMergeTextViewer {
@@ -39,8 +38,7 @@ public class LtxMergeViewer extends CompareMergeTextViewer {
 	
 	@Override
 	protected SourceEditorViewerConfigurator createConfigurator(final SourceViewer sourceViewer) {
-		return new LtxViewerConfigurator(null,
-				new LtxViewerConfiguration(null, SharedUIResources.getColors() ));
+		return new LtxSourceViewerConfigurator(null, new LtxSourceViewerConfiguration());
 	}
 	
 }

@@ -18,21 +18,21 @@ import java.util.List;
 import org.eclipse.jface.text.IRegion;
 
 import de.walware.ecommons.ltk.IElementName;
-import de.walware.ecommons.ltk.IModelElement;
-import de.walware.ecommons.ltk.ISourceStructElement;
-import de.walware.ecommons.ltk.ISourceUnit;
-import de.walware.ecommons.ltk.ISourceUnitModelInfo;
 import de.walware.ecommons.ltk.ast.IAstNode;
+import de.walware.ecommons.ltk.core.model.IEmbeddedForeignElement;
+import de.walware.ecommons.ltk.core.model.IModelElement;
+import de.walware.ecommons.ltk.core.model.ISourceStructElement;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
+import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 
 import de.walware.docmlet.tex.core.ast.Embedded;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
-import de.walware.docmlet.tex.core.model.IEmbeddedForeignElement;
-import de.walware.docmlet.tex.core.model.ILtxSourceElement;
+import de.walware.docmlet.tex.core.model.ITexSourceElement;
 import de.walware.docmlet.tex.core.model.TexElementName;
 import de.walware.docmlet.tex.core.model.TexModel;
 
 
-public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
+public abstract class LtxSourceElement implements ITexSourceElement, IRegion {
 	
 	
 	private static final List<LtxSourceElement> NO_TEXSOURCE_CHILDREN = Collections.emptyList();
@@ -71,7 +71,7 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		
 		
 		List<LtxSourceElement> fChildren = NO_TEXSOURCE_CHILDREN;
-		IRegion fNameRegion;
+		IRegion nameRegion;
 		
 		private final TexAstNode fAstNode;
 		
@@ -84,7 +84,7 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		
 		@Override
 		public IRegion getNameSourceRange() {
-			return fNameRegion;
+			return nameRegion;
 		}
 		
 		@Override
@@ -190,11 +190,6 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		
 		
 		@Override
-		public String getId() {
-			return fName.getSegmentName();
-		}
-		
-		@Override
 		public ISourceUnit getSourceUnit() {
 			return fParent.getSourceUnit();
 		}
@@ -243,7 +238,16 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		
 		@Override
 		public String getId() {
-			return "noweb:"+fExternType; //$NON-NLS-1$
+			final String name= getElementName().getDisplayName();
+			final StringBuilder sb= new StringBuilder(name.length() + 32);
+			sb.append(Integer.toHexString(getElementType() & MASK_C2));
+			sb.append("<noweb:");
+			sb.append(fExternType);
+			sb.append(">:");
+			sb.append(name);
+			sb.append('#');
+			sb.append(this.fOccurrenceCount);
+			return sb.toString();
 		}
 		
 		@Override
@@ -272,7 +276,7 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 		}
 		
 		@Override
-		public ILtxSourceElement getModelParent() {
+		public ITexSourceElement getModelParent() {
 			return fParent;
 		}
 		
@@ -351,11 +355,11 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 	
 	
 	private final int fType;
-	TexElementName fName;
-	int fOccurrenceCount;
+	protected TexElementName fName;
+	protected int fOccurrenceCount;
 	
-	int fOffset;
-	int fLength;
+	protected int fOffset;
+	protected int fLength;
 	
 	
 	protected LtxSourceElement(final int type) {
@@ -371,6 +375,18 @@ public abstract class LtxSourceElement implements ILtxSourceElement, IRegion {
 	@Override
 	public final int getElementType() {
 		return fType;
+	}
+	
+	@Override
+	public String getId() {
+		final String name= getElementName().getDisplayName();
+		final StringBuilder sb= new StringBuilder(name.length() + 16);
+		sb.append(Integer.toHexString(this.fType & MASK_C2));
+		sb.append(':');
+		sb.append(name);
+		sb.append('#');
+		sb.append(this.fOccurrenceCount);
+		return sb.toString();
 	}
 	
 	@Override

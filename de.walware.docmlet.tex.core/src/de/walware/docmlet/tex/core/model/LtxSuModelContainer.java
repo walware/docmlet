@@ -15,7 +15,7 @@ import de.walware.ecommons.ltk.IModelManager;
 import de.walware.ecommons.ltk.core.impl.SourceUnitModelContainer;
 
 
-public class LtxSuModelContainer<U extends ILtxSourceUnit>
+public class LtxSuModelContainer<U extends ITexSourceUnit>
 		extends SourceUnitModelContainer<U, ILtxModelInfo> {
 	
 	
@@ -36,7 +36,7 @@ public class LtxSuModelContainer<U extends ILtxSourceUnit>
 	
 	@Override
 	protected IModelManager getModelManager() {
-		return TexModel.getModelManager();
+		return TexModel.getLtxModelManager();
 	}
 	
 }

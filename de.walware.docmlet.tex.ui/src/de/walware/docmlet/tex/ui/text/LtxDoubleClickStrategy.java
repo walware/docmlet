@@ -41,7 +41,7 @@ public class LtxDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 	
 	public LtxDoubleClickStrategy(final LtxHeuristicTokenScanner scanner) {
 		super();
-		fPartitioning = scanner.getPartitioningConfig().getPartitioning();
+		fPartitioning = scanner.getDocumentPartitioning();
 		fPairMatcher = new LtxBracketPairMatcher(scanner);
 		fScanner = scanner;
 	}
@@ -61,8 +61,7 @@ public class LtxDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			String type = partition.getType();
 			
 			// Bracket-Pair-Matching in Code-Partitions
-			if (type == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
-					|| type == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE) {
+			if (type == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE) {
 				final IRegion region = fPairMatcher.match(document, offset);
 				if (region != null && region.getLength() >= 2) {
 					textViewer.setSelectedRange(region.getOffset() + 1, region.getLength() - 2);
@@ -110,7 +109,6 @@ public class LtxDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 				}
 			}
 			if (type == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
-					|| type == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE
 					|| type == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE ) {
 				IRegion region = fPairMatcher.match(document, offset);
 				if (region != null && region.getLength() >= 2) {

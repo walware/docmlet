@@ -1,0 +1,55 @@
+/*=============================================================================#
+ # Copyright (c) 2014-2015 Stephan Wahlbrink (WalWare.de) and others.
+ # All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ # 
+ # Contributors:
+ #     Stephan Wahlbrink - initial API and implementation
+ #=============================================================================*/
+
+package de.walware.docmlet.wikitext.core.source.extdoc;
+
+import de.walware.ecommons.ltk.ast.IEmbeddingAstNode;
+
+import de.walware.docmlet.tex.core.model.TexModel;
+
+import de.walware.eutils.yaml.core.model.YamlModel;
+
+import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
+
+
+public interface IExtdocMarkupLanguage extends IMarkupLanguage {
+	
+	
+	String EMBEDDED_YAML= YamlModel.YAML_TYPE_ID;
+	
+	int EMBEDDED_YAML_METADATA_FLAG=                        0x000000_1_0;
+	int EMBEDDED_YAML_METADATA_CHUNK_DESCR=                 IEmbeddingAstNode.EMBED_CHUNK | EMBEDDED_YAML_METADATA_FLAG;
+	
+	
+	String EMBEDDED_LTX= TexModel.LTX_TYPE_ID;
+	
+	int EMBEDDED_TEX_MATH_FLAG=                             0x000000_2_0;
+	int EMBEDDED_TEX_MATH_DOLLARS_INLINE_DESCR=             IEmbeddingAstNode.EMBED_INLINE | EMBEDDED_TEX_MATH_FLAG |
+	                                                        0x0000_01_0_0;
+	int EMBEDDED_TEX_MATH_DOLLARS_DISPLAY_DESCR=            IEmbeddingAstNode.EMBED_INLINE | EMBEDDED_TEX_MATH_FLAG |
+	                                                        0x0000_02_0_0;
+	int EMBEDDED_TEX_MATH_SBACKSLASH_INLINE_DESCR=          IEmbeddingAstNode.EMBED_INLINE | EMBEDDED_TEX_MATH_FLAG |
+	                                                        0x0000_03_0_0;
+	int EMBEDDED_TEX_MATH_SBACKSLASH_DISPLAY_DESCR=         IEmbeddingAstNode.EMBED_INLINE | EMBEDDED_TEX_MATH_FLAG |
+	                                                        0x0000_04_0_0;
+	
+	
+	@Override
+	IExtdocMarkupLanguage clone();
+	@Override
+	IExtdocMarkupLanguage clone(String scopeKey);
+	
+	void setTemplateMode(boolean enable);
+	boolean getTemplateMode();
+	
+	void setBlocksOnly(boolean blocksOnly, boolean enableInlineWeaves);
+	
+}

@@ -15,7 +15,7 @@ package de.walware.docmlet.tex.core.ast;
 abstract class ContainerNode extends TexAstNode {
 	
 	
-	TexAstNode[] fChildren = NO_CHILDREN;
+	TexAstNode[] children= NO_CHILDREN;
 	
 	
 	ContainerNode() {

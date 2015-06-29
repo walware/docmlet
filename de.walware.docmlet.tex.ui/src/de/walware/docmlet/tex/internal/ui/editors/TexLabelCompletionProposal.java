@@ -21,13 +21,12 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
-import de.walware.ecommons.ltk.LTK;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.CompletionProposalWithOverwrite;
 
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
-import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.ui.TexUI;
 
 
 public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
@@ -58,8 +57,7 @@ public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
 		
 		public LtxHeuristicTokenScanner getScanner() {
 			if (fScanner == null) {
-				fScanner = (LtxHeuristicTokenScanner) LTK.getModelAdapter(
-						fContext.getEditor().getModelTypeId(), LtxHeuristicTokenScanner.class );
+				fScanner= LtxHeuristicTokenScanner.create(fContext.getEditor().getDocumentContentInfo());
 			}
 			return fScanner;
 		}
@@ -88,7 +86,7 @@ public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
 	
 	@Override
 	protected String getPluginId() {
-		return TexUIPlugin.PLUGIN_ID;
+		return TexUI.PLUGIN_ID;
 	}
 	
 	@Override

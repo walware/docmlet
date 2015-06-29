@@ -11,22 +11,39 @@
 
 package de.walware.docmlet.tex.core;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
+
 import de.walware.docmlet.tex.internal.core.TexCorePlugin;
 
 
 public class TexCore {
 	
-	public static final String PLUGIN_ID = "de.walware.docmlet.tex.core"; //$NON-NLS-1$
+	public static final String PLUGIN_ID= "de.walware.docmlet.tex.core"; //$NON-NLS-1$
 	
-	public static final String LTX_CONTENT_ID = "net.sourceforge.texlipse.contentTypes.Latex"; //$NON-NLS-1$
+	
+	public static final String LTX_CONTENT_ID= "net.sourceforge.texlipse.contentTypes.Latex"; //$NON-NLS-1$
+	
+	public static final IContentType LTX_CONTENT_TYPE;
+	
+	/**
+	 * Content type id for LaTeX documents
+	 */
+	public static final String LTX_CONTENT_ID_NG= "de.walware.docmlet.tex.contentTypes.Ltx"; //$NON-NLS-1$
+	
+	static {
+		final IContentTypeManager contentTypeManager= Platform.getContentTypeManager();
+		LTX_CONTENT_TYPE= contentTypeManager.getContentType(LTX_CONTENT_ID);
+	}
 	
 	
 	public static ITexCoreAccess getWorkbenchAccess() {
-		return TexCorePlugin.getDefault().getWorkbenchAccess();
+		return TexCorePlugin.getInstance().getWorkbenchAccess();
 	}
 	
 	public static ITexCoreAccess getDefaultsAccess() {
-		return null;
+		return TexCorePlugin.getInstance().getDefaultsAccess();
 	}
 	
 }

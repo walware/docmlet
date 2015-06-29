@@ -13,7 +13,7 @@ package de.walware.docmlet.tex.core.model;
 
 import java.util.Map;
 
-import de.walware.ecommons.ltk.ISourceUnitModelInfo;
+import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 
 import de.walware.docmlet.tex.core.commands.TexCommand;
 

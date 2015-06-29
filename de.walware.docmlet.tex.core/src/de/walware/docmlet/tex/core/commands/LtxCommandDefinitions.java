@@ -11,12 +11,12 @@
 
 package de.walware.docmlet.tex.core.commands;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
 
 
 public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefinitions,
@@ -27,10 +27,10 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 	
 	
 	private static Map<String, TexCommand> gWordCommandMap;
-	private static ConstArrayList<TexCommand> gAllCommands;
+	private static ImList<TexCommand> gAllCommands;
 	
 	private static Map<String, TexCommand> gWordEnvMap;
-	private static ConstArrayList<TexCommand> gAllEnvs;
+	private static ImList<TexCommand> gAllEnvs;
 	
 	
 	static final void add(final Map<String, TexCommand> map, final TexCommand command) {
@@ -47,9 +47,7 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 				commands[i] = command;
 			}
 		}
-		return (i == commands.length) ?
-				new ConstArrayList<>(commands) :
-				new ConstArrayList<>(Arrays.copyOfRange(commands, 0, i));
+		return ImCollections.newList(commands, 0, i);
 	}
 	
 	static {
@@ -113,7 +111,7 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 			add(map, ENV_Vmatrix_BEGIN);
 			
 			gWordEnvMap = map;
-			gAllEnvs = new ConstArrayList<>(map.values());
+			gAllEnvs= ImCollections.toList(map.values());
 		}
 		{	
 			final LinkedHashMap<String, TexCommand> map = new LinkedHashMap<>();
@@ -603,7 +601,7 @@ public class LtxCommandDefinitions implements IEnvDefinitions, IPreambleDefiniti
 			add(map, BIB_bibliographystyle_COMMAND);
 			
 			gWordCommandMap = map;
-			gAllCommands = new ConstArrayList<>(gWordCommandMap.values());
+			gAllCommands= ImCollections.toList(gWordCommandMap.values());
 			
 //			System.out.println(gAllEnvs.size());
 //			System.out.println(gAllCommands.size());

@@ -18,111 +18,111 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_COUNTER_R
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_REFLABEL_DEF;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_REFLABEL_REF;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
 
 
 public interface IRefDefinitions {
 	
 	
 	TexCommand LABEL_label_COMMAND= new TexCommand(C3_LABEL_REFLABEL_DEF,
-			"label", false, new ConstArrayList<>( //$NON-NLS-1$
+			"label", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("marker", Argument.REQUIRED, Argument.LABEL_REFLABEL_DEF)
-			), "Marks the current element/line with the given label");
+			), "Marks the current element/line with the given label" );
 	TexCommand LABEL_ref_COMMAND= new TexCommand(C3_LABEL_REFLABEL_REF,
-			"ref", false, new ConstArrayList<>( //$NON-NLS-1$
+			"ref", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("marker", Argument.REQUIRED, Argument.LABEL_REFLABEL_REF)
-			), "Prints a Reference (number) to the given label");
+			), "Prints a Reference (number) to the given label" );
 	TexCommand LABEL_pageref_COMMAND= new TexCommand(C3_LABEL_REFLABEL_REF,
-			"pageref", false, new ConstArrayList<>( //$NON-NLS-1$
+			"pageref", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("marker", Argument.REQUIRED, Argument.LABEL_REFLABEL_REF)
-			), "Prints a Page Reference (page number) to the given label");
+			), "Prints a Page Reference (page number) to the given label" );
 	
 	TexCommand LABEL_eqref_COMMAND= new TexCommand(C3_LABEL_REFLABEL_REF,
-			"eqref", false, new ConstArrayList<>( //$NON-NLS-1$
+			"eqref", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("marker", Argument.REQUIRED, Argument.LABEL_REFLABEL_REF)
-			), "Prints a Reference (number) to the given equation label");
+			), "Prints a Reference (number) to the given equation label" );
 	
 	
 	TexCommand LABEL_newcounter_COMMAND= new TexCommand(C3_LABEL_COUNTER_DEF,
-			"newcounter", false, new ConstArrayList<>( //$NON-NLS-1$
+			"newcounter", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_DEF),
 					new Argument("superordinated counter", Argument.OPTIONAL, Argument.LABEL_COUNTER_REF)
-			), "Defines a new counter");
+			), "Defines a new counter" );
 	
 	TexCommand LABEL_setcounter_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"setcounter", false, new ConstArrayList<>( //$NON-NLS-1$
+			"setcounter", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_SET),
 					new Argument("value", Argument.REQUIRED, Argument.NONE)
-			), "Sets the counter to the given value");
+			), "Sets the counter to the given value" );
 	
 	TexCommand LABEL_addtocounter_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"addtocounter", false, new ConstArrayList<>( //$NON-NLS-1$
+			"addtocounter", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_SET),
 					new Argument("value", Argument.REQUIRED, Argument.NONE)
-			), "Increments the counter by the given value");
+			), "Increments the counter by the given value" );
 	
 	TexCommand LABEL_stepcounter_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"stepcounter", false, new ConstArrayList<>( //$NON-NLS-1$
+			"stepcounter", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_SET)
-			), "Increments the counter by one");
+			), "Increments the counter by one" );
 	
 	TexCommand LABEL_Alph_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"Alph", false, new ConstArrayList<>( //$NON-NLS-1$
+			"Alph", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Prints the current value of the counter in alphabetic uppercase letters (A, B, C,...)");
+			), "Prints the current value of the counter in alphabetic uppercase letters (A, B, C,...)" );
 	
 	TexCommand LABEL_alph_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"alph", false, new ConstArrayList<>( //$NON-NLS-1$
+			"alph", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Prints the current value of the counter in alphabetic lowercase letters (a, b, c,...)");
+			), "Prints the current value of the counter in alphabetic lowercase letters (a, b, c,...)" );
 	
 	TexCommand LABEL_Roman_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"Roman", false, new ConstArrayList<>( //$NON-NLS-1$
+			"Roman", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Prints the current value of the counter in uppercase roman numbers (I, II, III,...)");
+			), "Prints the current value of the counter in uppercase roman numbers (I, II, III,...)" );
 	
 	TexCommand LABEL_roman_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"roman", false, new ConstArrayList<>( //$NON-NLS-1$
+			"roman", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Prints the current value of the counter in lowercase roman numbers (i, ii, iii,...)");
+			), "Prints the current value of the counter in lowercase roman numbers (i, ii, iii,...)" );
 	
 	TexCommand LABEL_arabic_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"arabic", false, new ConstArrayList<>( //$NON-NLS-1$
+			"arabic", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Prints the current value of the counter in arabic numbers (1, 2, 3,...)");
+			), "Prints the current value of the counter in arabic numbers (1, 2, 3,...)" );
 	
 	TexCommand LABEL_value_COMMAND= new TexCommand(C3_LABEL_COUNTER_REF,
-			"value", false, new ConstArrayList<>( //$NON-NLS-1$
+			"value", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("counter", Argument.REQUIRED, Argument.LABEL_COUNTER_REF)
-			), "Returns the current value of the counter as number");
+			), "Returns the current value of the counter as number" );
 	
 	
 	TexCommand BIB_bibitem_COMMAND= new TexCommand(TexCommand.C2_BIB_DEF,
-			"bibitem", false, new ConstArrayList<>( //$NON-NLS-1$
+			"bibitem", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("label to print", Argument.OPTIONAL, Argument.NONE),
 					new Argument("key", Argument.REQUIRED, Argument.LABEL_BIB_DEF)
-			), "Adds an entry to the bibliography");
+			), "Adds an entry to the bibliography" );
 	
 	TexCommand BIB_cite_COMMAND= new TexCommand(C2_BIB_REF,
-			"cite", false, new ConstArrayList<>( //$NON-NLS-1$
+			"cite", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("annotation", Argument.OPTIONAL, Argument.NONE),
 					new Argument("key", Argument.REQUIRED, Argument.LABEL_BIB_REF)
-			), "Prints a literature reference to the given bibliography entry");
+			), "Prints a literature reference to the given bibliography entry" );
 	
 	TexCommand BIB_nocite_COMMAND= new TexCommand(C2_BIB_REF,
-			"nocite", false, new ConstArrayList<>( //$NON-NLS-1$
+			"nocite", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("key", Argument.REQUIRED, Argument.LABEL_BIB_REF)
-			), "Ensures that the given literature reference appears in the bibliography of the document");
+			), "Ensures that the given literature reference appears in the bibliography of the document" );
 	
 	TexCommand BIB_bibliography_COMMAND= new TexCommand(C2_BIB_INCLUDE,
-			"bibliography", false, new ConstArrayList<>( //$NON-NLS-1$
+			"bibliography", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("files", Argument.REQUIRED, Argument.RESOURCE_LIST)
-			), "Includes the given bibliography(s)");
+			), "Includes the given bibliography(s)" );
 	
 	TexCommand BIB_bibliographystyle_COMMAND= new TexCommand(TexCommand.BIB,
-			"bibliographystyle", false, new ConstArrayList<>( //$NON-NLS-1$
+			"bibliographystyle", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("style", Argument.REQUIRED, Argument.NONE)
-			), "Includes the given bibliography(s)");
+			), "Includes the given bibliography(s)" );
 	
 	
 }

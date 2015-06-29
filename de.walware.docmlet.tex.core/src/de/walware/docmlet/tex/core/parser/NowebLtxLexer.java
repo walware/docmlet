@@ -11,8 +11,7 @@
 
 package de.walware.docmlet.tex.core.parser;
 
-import de.walware.ecommons.text.IStringCache;
-import de.walware.ecommons.text.SourceParseInput;
+import de.walware.ecommons.text.core.input.TextParserInput;
 
 
 public class NowebLtxLexer extends LtxLexer {
@@ -22,11 +21,7 @@ public class NowebLtxLexer extends LtxLexer {
 	
 	
 	public NowebLtxLexer() {
-		super((IStringCache) null);
-	}
-	
-	public NowebLtxLexer(final IStringCache stringCache) {
-		super(stringCache);
+		super();
 	}
 	
 	
@@ -36,43 +31,46 @@ public class NowebLtxLexer extends LtxLexer {
 	
 	
 	@Override
-	protected void handleNewLine(final int offset, int num) {
-		super.handleNewLine(offset, num);
+	protected void handleNewLine(final int offset, int n) {
+		super.handleNewLine(offset, n);
+		
+		final TextParserInput in= getInput();
 		if (this.nowebType != null
-				&& this.input.get(++num) == '<' && this.input.get(++num) == '<') {
+				&& in.get(n++) == '<' && in.get(n++) == '<') {
 			setEmbeddedBegin();
 		}
 	}
 	
 	@Override
 	protected void searchEmbedded() {
-		int num = 2;
+		final TextParserInput in= getInput();
+		int n= 2;
 		CHUNK_CONTENT: while (true) {
-			switch (this.input.get(++num)) {
-			case SourceParseInput.EOF:
-				setEmbeddedEnd(num-1, this.nowebType);
+			switch (in.get(n++)) {
+			case TextParserInput.EOF:
+				setEmbeddedEnd(n - 1, this.nowebType);
 				return;
 			case '\r':
-				if (this.input.get(num+1) == '\n') {
-					num++;
+				if (in.get(n) == '\n') {
+					n++;
 				}
 				//$FALL-THROUGH$
 			case '\n':
-				super.handleNewLine(this.input.getIndex() + this.input.getLength(num), num);
-				if (this.input.get(num+1) == '@') {
-					num++;
+				super.handleNewLine(in.getIndex() + in.getLengthInSource(n), n);
+				if (in.get(n) == '@') {
+					n++;
 					CHUNK_END: while (true) {
-						switch (this.input.get(++num)) {
-						case SourceParseInput.EOF:
-							setEmbeddedEnd(num-1, this.nowebType);
+						switch (in.get(n++)) {
+						case TextParserInput.EOF:
+							setEmbeddedEnd(n - 1, this.nowebType);
 							return;
 						case '\r':
-							if (this.input.get(num+1) == '\n') {
-								num++;
+							if (in.get(n) == '\n') {
+								n++;
 							}
 							//$FALL-THROUGH$
 						case '\n':
-							setEmbeddedEnd(num, this.nowebType);
+							setEmbeddedEnd(n, this.nowebType);
 							return;
 						default:
 							continue CHUNK_END;

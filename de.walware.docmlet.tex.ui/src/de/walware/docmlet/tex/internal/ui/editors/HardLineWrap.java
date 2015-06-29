@@ -23,7 +23,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.ui.TexUI;
 
 
 /**
@@ -340,7 +340,7 @@ class TexEditorTools {
 	
 	
 	static void log(final String message, final Throwable e) {
-		StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUIPlugin.PLUGIN_ID,
+		StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUI.PLUGIN_ID,
 				message, e ));
 	}
 	

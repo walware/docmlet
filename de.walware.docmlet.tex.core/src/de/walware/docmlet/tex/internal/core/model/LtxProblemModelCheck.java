@@ -19,15 +19,15 @@ import java.util.List;
 import de.walware.ecommons.MessageBuilder;
 import de.walware.ecommons.ltk.IProblem;
 import de.walware.ecommons.ltk.IProblemRequestor;
-import de.walware.ecommons.ltk.ISourceUnit;
-import de.walware.ecommons.ltk.SourceContent;
+import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.core.impl.Problem;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.text.ILineInformation;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
 import de.walware.docmlet.tex.core.model.ITexLabelSet;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.core.model.TexModel;
 
@@ -50,7 +50,7 @@ public class LtxProblemModelCheck {
 	private final int fLevelRefUndefined = IProblem.SEVERITY_WARNING;
 	
 	
-	public void run(final ILtxSourceUnit su, final SourceContent content,
+	public void run(final ITexSourceUnit su, final SourceContent content,
 			final ILtxModelInfo model, final IProblemRequestor requestor) {
 		try {
 			fCurrentUnit = su;

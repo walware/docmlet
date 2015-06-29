@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Style-Type" content="text/css"/>
+	<link rel="stylesheet" href="../book.css" charset="ISO-8859-1" type="text/css"/>
+	<title>Document Processing Tools - Configuration</title>
+	<meta name="copyright" content="Copyright (c) 2015 Stephan Wahlbrink (WalWare.de) and others. All rights reserved."/>
+</head>
+<body>
+
+<h1>Configuration</h1>
+
+<p>The document processing tools are set up as launch configurations of the category External Tools.
+There are different configuration types for different document types.  For example there is a
+configuration type for Sweave (LaTeX+R) and another type for Wikitext+R documents.
+The options available for each type may vary slightly.</p>
+
+<img alt="Screenshot 'External Tools' Configuration Dialog" src="../images/doc_processing-config_dialog.png"/>
+
+<p>A tool configuration is usually an assembly of processing steps, for example 'Preprocessing' and
+'Produce Output' and a Preview step.  Each step can be configured to execute an operation.
+When running the configuration, the enabled step operations are run successively.</p>
+
+
+<h2>Main Tab</h2>
+
+<p>The <span class="uilabel">working directory</span> specifies the local working directory for
+the tool configuration.  Among others that directory is used in the steps:</p>
+<ul>
+	<li>to resolve relative resource path definitions, and</li>
+	<li>as working directory for all operations (if not specified otherwise).</li>
+</ul>
+
+
+<h2>Step Tabs</h2>
+
+<p>When <span class="uilabel">enable in complete run</span> is checked, the step is executed when
+running the complete configuration.  The option is ignored when a single step is executed by the
+appropriate action.</p>
+
+
+</body>
+</html>

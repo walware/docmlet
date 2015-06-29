@@ -13,15 +13,14 @@ package de.walware.docmlet.tex.internal.core;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 
-import de.walware.docmlet.tex.core.source.ITexDocumentConstants;
-import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
+import de.walware.ecommons.ltk.IModelManager;
 
 
 public class ModelAdapterFactory implements IAdapterFactory {
 	
 	
 	private static final Class<?>[] ADAPTERS = new Class<?>[] {
-		LtxHeuristicTokenScanner.class,
+		IModelManager.class,
 	};
 	
 	
@@ -36,8 +35,8 @@ public class ModelAdapterFactory implements IAdapterFactory {
 	
 	@Override
 	public Object getAdapter(final Object adaptableObject, final Class adapterType) {
-		if (LtxHeuristicTokenScanner.class.equals(adapterType)) {
-			return new LtxHeuristicTokenScanner(ITexDocumentConstants.LTX_PARTITIONING_CONFIG);
+		if (adapterType == IModelManager.class) {
+			return TexCorePlugin.getInstance().getLtxModelManager();
 		}
 		return null;
 	}

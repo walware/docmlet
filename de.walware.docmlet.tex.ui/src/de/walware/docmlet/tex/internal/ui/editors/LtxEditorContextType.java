@@ -11,20 +11,28 @@
 
 package de.walware.docmlet.tex.internal.ui.editors;
 
+import de.walware.ecommons.ltk.ui.templates.IWaTemplateContextTypeExtension1;
 import de.walware.ecommons.ltk.ui.templates.SourceEditorContextType;
 
 
-public class LtxEditorContextType extends SourceEditorContextType {
+public class LtxEditorContextType extends SourceEditorContextType
+		implements IWaTemplateContextTypeExtension1 {
 	
 	
-	public static final String LTX_DEFAULT_CONTEXT_TYPE_ID = "de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"; //$NON-NLS-1$
+/*[ Context Types ]============================================================*/
 	
-	public static final String LTX_MATH_CONTEXT_TYPE_ID = "de.walware.docmlet.tex.templates.LtxEditorMathContextType"; //$NON-NLS-1$
+	public static final String LTX_DEFAULT_CONTEXT_TYPE_ID= "de.walware.docmlet.tex.templates.LtxEditorDefaultContextType"; //$NON-NLS-1$
+	
+	public static final String LTX_MATH_CONTEXT_TYPE_ID= "de.walware.docmlet.tex.templates.LtxEditorMathContextType"; //$NON-NLS-1$
 	
 	
 	public LtxEditorContextType() {
 		super();
-		
+	}
+	
+	
+	@Override
+	public void init() {
 		addCommonVariables();
 		addEditorVariables();
 	}

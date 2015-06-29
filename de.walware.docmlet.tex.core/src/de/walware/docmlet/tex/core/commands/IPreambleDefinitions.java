@@ -17,85 +17,85 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C2_PREAMBLE_MISC;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_PREAMBLE_CONTROLDEF_COMMAND;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_PREAMBLE_CONTROLDEF_ENV;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
 
 
 public interface IPreambleDefinitions {
 	
 	
 	TexCommand PREAMBLE_documentclass_COMMAND= new TexCommand(C2_PREAMBLE_DOCDEF,
-			"documentclass", false, new ConstArrayList<>( //$NON-NLS-1$
+			"documentclass", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("options", Argument.OPTIONAL, Argument.NONE),
 					new Argument("class", Argument.REQUIRED, Argument.NONE)
-			), "Sets the class of the document");
+			), "Sets the class of the document" );
 	TexCommand PREAMBLE_usepackage_COMMAND= new TexCommand(C2_PREAMBLE_DOCDEF,
-			"usepackage", false, new ConstArrayList<>( //$NON-NLS-1$
+			"usepackage", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("options", Argument.OPTIONAL, Argument.NONE),
 					new Argument("package name", Argument.REQUIRED, Argument.NONE)
-			), "Loads given package into use");
+			), "Loads given package into use" );
 	
 	TexCommand PREAMBLE_title_COMMAND= new TexCommand(C2_PREAMBLE_DOCDEF,
-			"title", false, new ConstArrayList<>( //$NON-NLS-1$
+			"title", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("title", Argument.REQUIRED, Argument.TITLE)
-			), "Sets the title of the document");
+			), "Sets the title of the document" );
 	TexCommand PREAMBLE_author_COMMAND= new TexCommand(C2_PREAMBLE_DOCDEF,
-			"author", false, new ConstArrayList<>( //$NON-NLS-1$
+			"author", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("author", Argument.REQUIRED, Argument.TITLE)
-			), "Sets the author of the document");
+			), "Sets the author of the document" );
 	TexCommand PREAMBLE_date_COMMAND= new TexCommand(C2_PREAMBLE_DOCDEF,
-			"date", false, new ConstArrayList<>( //$NON-NLS-1$
+			"date", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("date", Argument.REQUIRED, Argument.TITLE)
-			), "Sets the date of the document");
+			), "Sets the date of the document" );
 	
 	TexCommand PREAMBLE_newcommand_COMMAND= new TexCommand(C3_PREAMBLE_CONTROLDEF_COMMAND,
-			"newcommand", true, new ConstArrayList<>( //$NON-NLS-1$
+			"newcommand", true, ImCollections.newList( //$NON-NLS-1$
 					new Argument("command", Argument.REQUIRED, Argument.CONTROLWORD),
 					new Argument("number of arguments", Argument.OPTIONAL, Argument.NUM),
 					new Argument("default for 1st argument", Argument.OPTIONAL, Argument.NONE),
 					new Argument("definition", Argument.REQUIRED, Argument.NONE)
-			), "Defines a new command");
+			), "Defines a new command" );
 	TexCommand PREAMBLE_renewcommand_COMMAND= new TexCommand(C3_PREAMBLE_CONTROLDEF_COMMAND,
-			"renewcommand", true, new ConstArrayList<>( //$NON-NLS-1$
+			"renewcommand", true, ImCollections.newList( //$NON-NLS-1$
 					new Argument("command", Argument.REQUIRED, Argument.CONTROLWORD),
 					new Argument("number of arguments", Argument.OPTIONAL, Argument.NUM),
 					new Argument("default for 1st argument", Argument.OPTIONAL, Argument.NONE),
 					new Argument("definition", Argument.REQUIRED, Argument.NONE)
-			), "Redefines a command");
+			), "Redefines a command" );
 	TexCommand PREAMBLE_providecommand_COMMAND= new TexCommand(C3_PREAMBLE_CONTROLDEF_COMMAND,
-			"providecommand", true, new ConstArrayList<>( //$NON-NLS-1$
+			"providecommand", true, ImCollections.newList( //$NON-NLS-1$
 					new Argument("command", Argument.REQUIRED, Argument.CONTROLWORD),
 					new Argument("number of arguments", Argument.OPTIONAL, Argument.NUM),
 					new Argument("default for 1st argument", Argument.OPTIONAL, Argument.NONE),
 					new Argument("definition", Argument.REQUIRED, Argument.NONE)
-					), "Defines a new command if not yet exists");
+					), "Defines a new command if not yet exists" );
 	TexCommand PREAMBLE_newenvironment_COMMAND= new TexCommand(C3_PREAMBLE_CONTROLDEF_ENV,
-			"newenvironment", true, new ConstArrayList<>( //$NON-NLS-1$
+			"newenvironment", true, ImCollections.newList( //$NON-NLS-1$
 					new Argument("environment name", Argument.REQUIRED, Argument.CONTROLWORD),
 					new Argument("number of arguments", Argument.OPTIONAL, Argument.NUM),
 					new Argument("default for 1st argument", Argument.OPTIONAL, Argument.NONE),
 					new Argument("definition for begin", Argument.REQUIRED, Argument.NONE),
 					new Argument("definition for end", Argument.REQUIRED, Argument.NONE)
-			), "Defines a new environment");
+			), "Defines a new environment" );
 	TexCommand PREAMBLE_renewenvironment_COMMAND= new TexCommand(C3_PREAMBLE_CONTROLDEF_ENV,
-			"renewenvironment", true, new ConstArrayList<>( //$NON-NLS-1$
+			"renewenvironment", true, ImCollections.newList( //$NON-NLS-1$
 					new Argument("environment name", Argument.REQUIRED, Argument.CONTROLWORD),
 					new Argument("number of arguments", Argument.OPTIONAL, Argument.NUM),
 					new Argument("default for 1st argument", Argument.OPTIONAL, Argument.NONE),
 					new Argument("definition for begin", Argument.REQUIRED, Argument.NONE),
 					new Argument("definition for end", Argument.REQUIRED, Argument.NONE)
-			), "Redefines a environment");
+			), "Redefines a environment" );
 	TexCommand PREAMBLE_ensuremath_COMMAND= new TexCommand(C2_PREAMBLE_CONTROLDEF,
-			"ensuremath", false, new ConstArrayList<>( //$NON-NLS-1$
+			"ensuremath", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("definition", Argument.REQUIRED, Argument.NONE)
-			), "Ensures math-mode for given definition");
+			), "Ensures math-mode for given definition" );
 	
 	TexCommand PREAMBLE_insertonly_COMMAND= new TexCommand(C2_PREAMBLE_MISC,
-			"insertonly", false, new ConstArrayList<>( //$NON-NLS-1$
+			"insertonly", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("file list", Argument.REQUIRED, Argument.RESOURCE_LIST)
-			), "Specifies which files will be included by \\include");
+			), "Specifies which files will be included by \\include" );
 	TexCommand PREAMBLE_hyphenation_COMMAND= new TexCommand(C2_PREAMBLE_MISC,
-			"hyphenation", false, new ConstArrayList<>( //$NON-NLS-1$
+			"hyphenation", false, ImCollections.newList( //$NON-NLS-1$
 					new Argument("word list", Argument.REQUIRED, Argument.NONE)
-			), "Defines hyphenation for given words");
+			), "Defines hyphenation for given words" );
 	
 }

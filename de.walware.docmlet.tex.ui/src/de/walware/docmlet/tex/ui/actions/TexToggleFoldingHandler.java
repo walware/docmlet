@@ -15,17 +15,17 @@ import org.eclipse.ui.editors.text.IFoldingCommandIds;
 
 import de.walware.ecommons.ui.actions.TogglePreferenceEnablementHandler;
 
-import de.walware.docmlet.tex.ui.editors.TexEditorOptions;
+import de.walware.docmlet.tex.ui.sourceediting.TexEditingSettings;
 
 
 /**
- * Toggles Enablement of Code Folding.
+ * Toggles enablement of code folding in Tex editors.
  */
 public class TexToggleFoldingHandler extends TogglePreferenceEnablementHandler {
 	
 	
 	public TexToggleFoldingHandler() {
-		super(TexEditorOptions.FOLDING_ENABLED_PREF, IFoldingCommandIds.FOLDING_TOGGLE);
+		super(TexEditingSettings.FOLDING_ENABLED_PREF, IFoldingCommandIds.FOLDING_TOGGLE);
 	}
 	
 }

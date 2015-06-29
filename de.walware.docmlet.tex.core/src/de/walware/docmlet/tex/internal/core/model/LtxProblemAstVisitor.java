@@ -28,9 +28,9 @@ import java.util.List;
 import de.walware.ecommons.MessageBuilder;
 import de.walware.ecommons.ltk.IProblem;
 import de.walware.ecommons.ltk.IProblemRequestor;
-import de.walware.ecommons.ltk.ISourceUnit;
-import de.walware.ecommons.ltk.SourceContent;
+import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.core.impl.Problem;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.text.ILineInformation;
 
 import de.walware.docmlet.tex.core.ast.Comment;
@@ -46,7 +46,7 @@ import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.ast.TexAstVisitor;
 import de.walware.docmlet.tex.core.ast.Text;
 import de.walware.docmlet.tex.core.ast.Verbatim;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
 
 
@@ -66,7 +66,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 	private final List<IProblem> fProblemBuffer = new ArrayList<>(BUFFER_SIZE);
 	
 	
-	public void run(final ILtxSourceUnit su, final SourceContent content,
+	public void run(final ITexSourceUnit su, final SourceContent content,
 			final TexAstNode node, final IProblemRequestor requestor) {
 		try {
 			fCurrentUnit = su;
@@ -117,12 +117,32 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 	@Override
 	public void visit(final Environment node) throws InvocationTargetException {
 		final int code = (node.getStatusCode() & MASK_12);
-		if (code == STATUS2_ENV_NOT_CLOSED) {
+		switch (code) {
+		case STATUS2_ENV_NOT_CLOSED: {
 			final TexAstNode beginNode = node.getBeginNode();
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					fMessageBuilder.bind(ProblemMessages.Ast_Env_NotClosed_message,
 							limit(node.getText(), ENV_LABEL_LIMIT) ),
 					beginNode.getOffset(), beginNode.getStopOffset() );
+			break; }
+		case STATUS2_MATH_NOT_CLOSED: {
+			final TexAstNode beginNode = node.getBeginNode();
+			String c= node.getText();
+			if (c == "[") { //$NON-NLS-1$
+				c= "\\]"; //$NON-NLS-1$
+			}
+			else if (c == "(") { //$NON-NLS-1$
+				c= "\\)"; //$NON-NLS-1$
+			}
+			else {
+				c= null;
+			}
+			if (c != null) {
+				addProblem(IProblem.SEVERITY_ERROR, code,
+						fMessageBuilder.bind(ProblemMessages.Ast_Math_NotClosed_message, c),
+						beginNode.getOffset(), beginNode.getStopOffset() );
+			}
+			break; }
 		}
 		
 		node.acceptInTexChildren(this);
@@ -170,7 +190,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					fMessageBuilder.bind(ProblemMessages.Ast_Math_NotClosed_message,
 							node.getText() ),
-					node.getStopOffset()-1, node.getStopOffset() );
+					node.getOffset(), node.getOffset() + node.getText().length() );
 			break;
 		}
 		node.acceptInTexChildren(this);
@@ -212,7 +232,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 	
 	
 	protected final String limit(final String label, final int limit) {
-		if (label.length() > limit) {
+		if (label != null && label.length() > limit) {
 			return label.substring(0, limit) + '…';
 		}
 		return label;

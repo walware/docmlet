@@ -18,8 +18,8 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
 
 import de.walware.ecommons.text.BasicHeuristicTokenScanner;
-import de.walware.ecommons.text.IPartitionConstraint;
-import de.walware.ecommons.text.PartitioningConfiguration;
+import de.walware.ecommons.text.core.IPartitionConstraint;
+import de.walware.ecommons.text.core.sections.IDocContentSections;
 
 
 public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
@@ -61,7 +61,6 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 			final ITypedRegion partition= partitioner.getPartition(offset - 1);
 			final String partitionType= partition.getType();
 			if (partitionType == ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE
-					|| partitionType == ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE
 					|| partitionType == ITexDocumentConstants.LTX_COMMENT_CONTENT_TYPE
 					|| partitionType == ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE) {
 				return startOffset;
@@ -117,12 +116,15 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	};
 	
 	
-	public LtxHeuristicTokenScanner() {
-		super(ITexDocumentConstants.LTX_PARTITIONING_CONFIG);
+	public static LtxHeuristicTokenScanner create(final IDocContentSections documentContentInfo) {
+		return (documentContentInfo.getPrimaryType() == ITexDocumentConstants.LTX_PARTITIONING) ?
+				new LtxHeuristicTokenScanner(documentContentInfo) :
+				new LtxChunkHeuristicTokenScanner(documentContentInfo);
 	}
 	
-	public LtxHeuristicTokenScanner(final PartitioningConfiguration partitioning) {
-		super(partitioning);
+	
+	protected LtxHeuristicTokenScanner(final IDocContentSections documentContentInfo) {
+		super(documentContentInfo, ITexDocumentConstants.LTX_DEFAULT_CONTENT_CONSTRAINT);
 	}
 	
 	

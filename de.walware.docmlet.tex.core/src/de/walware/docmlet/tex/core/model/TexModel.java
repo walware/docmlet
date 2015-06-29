@@ -19,11 +19,11 @@ import de.walware.docmlet.tex.internal.core.TexCorePlugin;
 public class TexModel {
 	
 	
-	public static final String LTX_TYPE_ID = "ltx"; //$NON-NLS-1$
+	public static final String LTX_TYPE_ID = "Ltx"; //$NON-NLS-1$
 	
 	
-	public static IModelManager getModelManager() {
-		return TexCorePlugin.getDefault().getLtxModelManager();
+	public static IModelManager getLtxModelManager() {
+		return TexCorePlugin.getInstance().getLtxModelManager();
 	}
 	
 }

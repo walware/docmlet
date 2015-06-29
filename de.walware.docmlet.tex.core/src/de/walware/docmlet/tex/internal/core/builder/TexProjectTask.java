@@ -17,28 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
-
 import de.walware.ecommons.ltk.LTK;
 
 import de.walware.docmlet.tex.core.TexBuildParticipant;
-import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.internal.core.TexProject;
 
 
 public abstract class TexProjectTask {
 	
 	
-	protected static final IContentType LTX_CONTENT_TYPE;
-	
 	private static final TexBuildParticipant NO_PARTICIPANT= new TexBuildParticipant();
-	
-	static {
-		final IContentTypeManager contentTypeManager= Platform.getContentTypeManager();
-		LTX_CONTENT_TYPE= contentTypeManager.getContentType(TexCore.LTX_CONTENT_ID);
-	}
 	
 	
 	private final Map<String, TexBuildParticipant> participants= new HashMap<>();

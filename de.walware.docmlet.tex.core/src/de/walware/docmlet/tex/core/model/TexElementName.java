@@ -17,28 +17,29 @@ import de.walware.ecommons.ltk.IElementName;
 public abstract class TexElementName implements IElementName {
 	
 	
-	public static final int RESOURCE =                      0x0f;
-	public static final int TITLE =                         0x11;
-	public static final int ENV =                           0x81;
-	public static final int LABEL =                         0x92;
+	public static final byte RESOURCE=                      0x01;
+	
+	public static final byte TITLE=                         0x11;
+	public static final byte ENV=                           0x31;
+	public static final byte LABEL=                         0x42;
 	
 	
 	private static class Default extends TexElementName {
 		
 		
-		protected final int fType;
-		protected final String fSegment;
+		protected final int type;
+		protected final String segment;
 		
 		
 		private Default(final int type, final String name) {
-			fType = type;
-			fSegment = name;
+			this.type= type;
+			this.segment= name;
 		}
 		
 		
 		@Override
 		public int getType() {
-			return fType;
+			return this.type;
 		}
 		
 		@Override
@@ -48,12 +49,12 @@ public abstract class TexElementName implements IElementName {
 		
 		@Override
 		public String getSegmentName() {
-			return fSegment;
+			return this.segment;
 		}
 		
 		@Override
 		public String getDisplayName() {
-			return fSegment;
+			return this.segment;
 		}
 		
 	}
@@ -70,8 +71,8 @@ public abstract class TexElementName implements IElementName {
 	
 	@Override
 	public int hashCode() {
-		final String name = getSegmentName();
-		final IElementName next = getNextSegment();
+		final String name= getSegmentName();
+		final IElementName next= getNextSegment();
 		if (next != null) {
 			return getType() * ((name != null) ? name.hashCode() : 1) * (next.hashCode()+7);
 		}
@@ -85,9 +86,9 @@ public abstract class TexElementName implements IElementName {
 		if (!(obj instanceof TexElementName)) {
 			return false;
 		}
-		final IElementName other = (TexElementName) obj;
-		final String thisName = getSegmentName();
-		final String otherName = other.getSegmentName();
+		final TexElementName other= (TexElementName) obj;
+		final String thisName= getSegmentName();
+		final String otherName= other.getSegmentName();
 		return ((getType() == other.getType())
 				&& ((thisName != null) ? 
 						(thisName == otherName || (otherName != null && thisName.hashCode() == otherName.hashCode() && thisName.equals(otherName)) ) : 

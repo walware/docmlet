@@ -13,23 +13,23 @@ package de.walware.docmlet.tex.internal.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.walware.ecommons.IDisposable;
 import de.walware.ecommons.ltk.AstInfo;
-import de.walware.ecommons.ltk.IModelElement;
 import de.walware.ecommons.ltk.IModelElementDelta;
 import de.walware.ecommons.ltk.IModelManager;
-import de.walware.ecommons.ltk.ISourceUnit;
-import de.walware.ecommons.ltk.ISourceUnitModelInfo;
 import de.walware.ecommons.ltk.core.impl.AbstractModelEventJob;
 import de.walware.ecommons.ltk.core.impl.AbstractModelManager;
 import de.walware.ecommons.ltk.core.impl.SourceUnitModelContainer;
+import de.walware.ecommons.ltk.core.model.IModelElement;
+import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.LtxSuModelContainer;
 import de.walware.docmlet.tex.core.model.TexModel;
 
 
-public class LtxModelManager extends AbstractModelManager implements IModelManager {
+public class LtxModelManager extends AbstractModelManager implements IModelManager, IDisposable {
 	
 	
 	private static class ModelDelta implements IModelElementDelta {
@@ -70,7 +70,7 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 		
 	}
 	
-	protected static class EventJob extends AbstractModelEventJob<ILtxSourceUnit, ILtxModelInfo> {
+	protected static class EventJob extends AbstractModelEventJob<ITexSourceUnit, ILtxModelInfo> {
 		
 		public EventJob(final LtxModelManager manager) {
 			super(manager);
@@ -99,6 +99,7 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 	}
 	
 	
+	@Override
 	public void dispose() {
 		this.eventJob.dispose();
 	}
@@ -113,14 +114,6 @@ public class LtxModelManager extends AbstractModelManager implements IModelManag
 			final int level, final IProgressMonitor monitor) {
 		if (adapter instanceof LtxSuModelContainer) {
 			this.reconciler.reconcile((LtxSuModelContainer<?>) adapter, level, monitor);
-		}
-	}
-	
-	@Override
-	protected void reconcile(final ISourceUnit su, final int level, final IProgressMonitor monitor) {
-		final LtxSuModelContainer<?> adapter = (LtxSuModelContainer<?>) su.getAdapter(LtxSuModelContainer.class);
-		if (adapter != null) {
-			this.reconciler.reconcile(adapter, level, monitor);
 		}
 	}
 	

@@ -23,23 +23,20 @@ public class LtxBracketPairMatcher extends PairMatcher {
 	
 	public static final char[][] BRACKETS= { {'{', '}'}, {'(', ')'}, {'[', ']'} };
 	
+	private static final String[] CONTENT_TYPES= new String[] {
+		ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE,
+		ITexDocumentConstants.LTX_MATH_CONTENT_TYPE,
+		ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE,
+	};
 	
-	public LtxBracketPairMatcher() {
-		this(new LtxHeuristicTokenScanner());
-	}
 	
 	public LtxBracketPairMatcher(final LtxHeuristicTokenScanner scanner) {
-		this(scanner, scanner.getPartitioningConfig().getPartitioning());
+		this(scanner, scanner.getDocumentPartitioning());
 	}
 	
 	public LtxBracketPairMatcher(final ITokenScanner scanner,
 			final String partitioning) {
-		super(BRACKETS, partitioning, new String[] {
-				ITexDocumentConstants.LTX_DEFAULT_CONTENT_TYPE,
-				ITexDocumentConstants.LTX_DEFAULT_EXPL_CONTENT_TYPE,
-				ITexDocumentConstants.LTX_MATH_CONTENT_TYPE,
-				ITexDocumentConstants.LTX_VERBATIM_CONTENT_TYPE,
-		}, scanner, '\\');
+		super(BRACKETS, partitioning, CONTENT_TYPES, scanner, '\\');
 	}
 	
 }

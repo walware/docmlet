@@ -31,7 +31,8 @@ public class LtxEditorTemplatesCompletionComputer extends TemplatesCompletionCom
 	
 	
 	public LtxEditorTemplatesCompletionComputer() {
-		super(TexUIPlugin.getDefault().getTexEditorTemplateStore(), TexUIPlugin.getDefault().getTexEditorTemplateContextTypeRegistry());
+		super(TexUIPlugin.getInstance().getLtxEditorTemplateStore(),
+				TexUIPlugin.getInstance().getLtxEditorTemplateContextTypeRegistry() );
 	}
 	
 	
@@ -64,7 +65,8 @@ public class LtxEditorTemplatesCompletionComputer extends TemplatesCompletionCom
 		try {
 			final ISourceEditor editor = context.getEditor();
 			final AbstractDocument document = (AbstractDocument) context.getSourceViewer().getDocument();
-			final ITypedRegion partition = document.getPartition(editor.getPartitioning().getPartitioning(), region.getOffset(), true);
+			final ITypedRegion partition = document.getPartition(
+					editor.getDocumentContentInfo().getPartitioning(), region.getOffset(), true );
 			if (partition.getType() == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE) {
 				return getTypeRegistry().getContextType(LtxEditorContextType.LTX_MATH_CONTEXT_TYPE_ID);
 			}

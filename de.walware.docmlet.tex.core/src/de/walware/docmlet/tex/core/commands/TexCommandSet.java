@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.preferences.IPreferenceAccess;
 import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.Preference.StringSetPref;
@@ -47,7 +47,7 @@ public class TexCommandSet {
 	public static final Preference<Set<String>> MATH_ENVS_INCLUDE_PREF = new StringSetPref(
 			QUALIFIER, "LtxCommands.MathEnvs.include"); //$NON-NLS-1$
 	
-	public static final String GROUP_ID = "ltx/ltx.commands"; //$NON-NLS-1$
+	public static final String GROUP_ID = "Ltx/Ltx.commands"; //$NON-NLS-1$
 	
 	private static final Map<String, TexCommand> LTX_INTERN_ENVS = new IdentityHashMap<>();
 	
@@ -98,8 +98,7 @@ public class TexCommandSet {
 					filteredCommands[j++] = command;
 				}
 			}
-			fAllCommands = new ConstArrayList<>((j == filteredCommands.length) ?
-					filteredCommands : Arrays.copyOfRange(filteredCommands, 0, j) );
+			fAllCommands= ImCollections.newList(filteredCommands, 0, j);
 			
 			sortedCommands = Arrays.copyOfRange(filteredCommands, 0, j);
 			Arrays.sort(sortedCommands);
@@ -120,8 +119,7 @@ public class TexCommandSet {
 				}
 			}
 			fTextCommandMap = Collections.unmodifiableMap(set);
-			fTextCommandListASorted = new ConstArrayList<>((j == commands.length) ?
-					commands : Arrays.copyOfRange(commands, 0, j) );
+			fTextCommandListASorted= ImCollections.newList(commands, 0, j);
 		}
 		{	final TexCommand[] commands = new TexCommand[textEnvs.size()];
 			final Map<String, TexCommand> set = new IdentityHashMap<>(textEnvs.size());
@@ -134,8 +132,7 @@ public class TexCommandSet {
 				}
 			}
 			fTextEnvMap = Collections.unmodifiableMap(set);
-			fTextEnvListASorted = new ConstArrayList<>((j == commands.length) ?
-					commands : Arrays.copyOfRange(commands, 0, j) );
+			fTextEnvListASorted= ImCollections.newList(commands, 0, j);
 		}
 		{	final TexCommand[] commands = new TexCommand[preamble.size()];
 			final Map<String, TexCommand> set = new IdentityHashMap<>(preamble.size());
@@ -148,8 +145,7 @@ public class TexCommandSet {
 				}
 			}
 			fPreambleCommandMap = Collections.unmodifiableMap(set);
-			fPreambleCommandListASorted = new ConstArrayList<>((j == commands.length) ?
-					commands : Arrays.copyOfRange(commands, 0, j) );
+			fPreambleCommandListASorted= ImCollections.newList(commands, 0, j);
 		}
 		{	final TexCommand[] commands = new TexCommand[mathCommands.size()];
 			final Map<String, TexCommand> set = new IdentityHashMap<>(mathCommands.size());
@@ -162,8 +158,7 @@ public class TexCommandSet {
 				}
 			}
 			fMathCommandMap = Collections.unmodifiableMap(set);
-			fMathCommandListASorted = new ConstArrayList<>((j == commands.length) ?
-					commands : Arrays.copyOfRange(commands, 0, j) );
+			fMathCommandListASorted= ImCollections.newList(commands, 0, j);
 		}
 		{	final TexCommand[] commands = new TexCommand[mathEnvs.size()];
 			final Map<String, TexCommand> set = new IdentityHashMap<>(mathEnvs.size());
@@ -176,8 +171,7 @@ public class TexCommandSet {
 				}
 			}
 			fMathEnvMap = Collections.unmodifiableMap(set);
-			fMathEnvListASorted = new ConstArrayList<>((j == commands.length) ?
-					commands : Arrays.copyOfRange(commands, 0, j) );
+			fMathEnvListASorted= ImCollections.newList(commands, 0, j);
 		}
 		
 		fInternEnvMap = LTX_INTERN_ENVS;

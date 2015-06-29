@@ -20,6 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 public class LtxMergeViewerCreator implements IViewerCreator {
 	
 	
+	public LtxMergeViewerCreator() {
+	}
+	
+	
 	@Override
 	public Viewer createViewer(final Composite parent, final CompareConfiguration config) {
 		return new LtxMergeViewer(parent, config);

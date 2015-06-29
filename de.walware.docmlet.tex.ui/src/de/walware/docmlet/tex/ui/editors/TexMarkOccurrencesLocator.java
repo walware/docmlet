@@ -22,8 +22,8 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.swt.graphics.Point;
 
-import de.walware.ecommons.ltk.ISourceUnitModelInfo;
 import de.walware.ecommons.ltk.ast.AstSelection;
+import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 import de.walware.ecommons.ltk.ui.sourceediting.AbstractMarkOccurrencesProvider.RunData;
 import de.walware.ecommons.text.ui.presentation.ITextPresentationConstants;
 
@@ -49,10 +49,10 @@ public class TexMarkOccurrencesLocator {
 			return false;
 		}
 		do {
-			final Object[] attachments = node.getAttachments();
-			for (int i = 0; i < attachments.length; i++) {
-				if (attachments[i] instanceof TexLabelAccess) {
-					final TexLabelAccess access = (TexLabelAccess) attachments[i];
+			final List<Object> attachments = node.getAttachments();
+			for (int i = 0; i < attachments.size(); i++) {
+				if (attachments.get(i) instanceof TexLabelAccess) {
+					final TexLabelAccess access = (TexLabelAccess) attachments.get(i);
 					final Map<Annotation, Position> annotations = checkDefault(run, access);
 					
 					if (annotations != null) {
@@ -61,7 +61,7 @@ public class TexMarkOccurrencesLocator {
 					}
 				}
 			}
-			node = node.getParent();
+			node= node.getTexParent();
 		} while (node != null);
 		
 		return false;
@@ -75,7 +75,7 @@ public class TexMarkOccurrencesLocator {
 			}
 			if (run.accept(new Point(nameNode.getOffset(), nameNode.getStopOffset()))) {
 				final List<? extends TexLabelAccess> accessList = access.getAllInUnit();
-				final Map<Annotation, Position> annotations = new LinkedHashMap<Annotation, Position>(accessList.size());
+				final Map<Annotation, Position> annotations = new LinkedHashMap<>(accessList.size());
 				for (final TexLabelAccess item : accessList) {
 					final String message = run.doc.get(item.getNode().getOffset(), item.getNode().getLength());
 					annotations.put(

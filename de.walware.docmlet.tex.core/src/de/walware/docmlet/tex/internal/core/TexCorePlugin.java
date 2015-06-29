@@ -11,13 +11,20 @@
 
 package de.walware.docmlet.tex.internal.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
+import de.walware.ecommons.ICommonStatusConstants;
+import de.walware.ecommons.IDisposable;
 import de.walware.ecommons.preferences.PreferencesUtil;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
+import de.walware.docmlet.tex.core.TexCore;
 import de.walware.docmlet.tex.core.TexCoreAccess;
 import de.walware.docmlet.tex.internal.core.model.LtxModelManager;
 
@@ -26,19 +33,19 @@ public class TexCorePlugin extends Plugin {
 	
 	
 	/** The shared instance */
-	private static TexCorePlugin gPlugin;
+	private static TexCorePlugin instance;
 	
 	/**
 	 * Returns the shared plug-in instance
 	 *
 	 * @return the shared instance
 	 */
-	public static TexCorePlugin getDefault() {
-		return gPlugin;
+	public static TexCorePlugin getInstance() {
+		return instance;
 	}
 	
 	public static final void log(final IStatus status) {
-		final Plugin plugin = getDefault();
+		final Plugin plugin = getInstance();
 		if (plugin != null) {
 			plugin.getLog().log(status);
 		}
@@ -47,10 +54,12 @@ public class TexCorePlugin extends Plugin {
 	
 	private boolean started;
 	
+	private List<IDisposable> disposables;
+	
 	private LtxModelManager ltxModelManager;
 	
-	private TexCoreAccess workbenchAccess;
-	private TexCoreAccess defaultsAccess;
+	private volatile TexCoreAccess workbenchAccess;
+	private volatile TexCoreAccess defaultsAccess;
 	
 	
 	public TexCorePlugin() {
@@ -60,53 +69,83 @@ public class TexCorePlugin extends Plugin {
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
-		gPlugin = this;
+		instance = this;
 		
-		this.ltxModelManager = new LtxModelManager();
+		this.disposables= new ArrayList<>();
 		
-		this.started = true;
+		this.ltxModelManager= new LtxModelManager();
+		this.disposables.add(ltxModelManager);
+		
+		synchronized (this) {
+			this.started= true;
+		}
 	}
 	
 	@Override
 	public void stop(final BundleContext context) throws Exception {
 		try {
 			synchronized (this) {
-				this.started = false;
+				this.started= false;
+				
+				this.ltxModelManager= null;
 			}
-			if (this.ltxModelManager != null) {
-				this.ltxModelManager.dispose();
-				this.ltxModelManager = null;
+			
+			for (final IDisposable listener : this.disposables) {
+				try {
+					listener.dispose();
+				}
+				catch (final Throwable e) {
+					getLog().log(new Status(IStatus.ERROR, TexCore.PLUGIN_ID, ICommonStatusConstants.INTERNAL_PLUGGED_IN,
+							"Error occured while disposing a module.", e )); 
+				}
 			}
+			this.disposables= null;
 		}
 		finally {
-			gPlugin = null;
+			instance= null;
 			super.stop(context);
 		}
 	}
 	
 	
+	private void checkStarted() {
+		if (!this.started) {
+			throw new IllegalStateException("Plug-in is not started.");
+		}
+	}
+	
 	public LtxModelManager getLtxModelManager() {
 		return this.ltxModelManager;
 	}
 	
-	public synchronized ITexCoreAccess getWorkbenchAccess() {
-		if (this.workbenchAccess == null) {
-			if (!this.started) {
-				throw new IllegalStateException("Plug-in is not started.");
+	public ITexCoreAccess getWorkbenchAccess() {
+		ITexCoreAccess access= this.workbenchAccess;
+		if (access == null) {
+			synchronized (this) {
+				access= this.workbenchAccess;
+				if (access == null) {
+					checkStarted();
+					access= this.workbenchAccess= new TexCoreAccess(
+							PreferencesUtil.getInstancePrefs() );
+				}
 			}
-			this.workbenchAccess = new TexCoreAccess(PreferencesUtil.getInstancePrefs());
 		}
-		return this.workbenchAccess;
+		return access;
 	}
 	
-	public synchronized ITexCoreAccess getDefaultsAccess() {
-		if (this.defaultsAccess == null) {
-			if (!this.started) {
-				throw new IllegalStateException("Plug-in is not started.");
+	public ITexCoreAccess getDefaultsAccess() {
+		ITexCoreAccess access= this.defaultsAccess;
+		if (access == null) {
+			synchronized (this) {
+				access= this.defaultsAccess;
+				if (access == null) {
+					checkStarted();
+					access= this.defaultsAccess= new TexCoreAccess(
+							PreferencesUtil.getDefaultPrefs() );
+				}
 			}
-			this.defaultsAccess = new TexCoreAccess(PreferencesUtil.getDefaultPrefs());
 		}
-		return this.defaultsAccess;
+		return access;
 	}
 	
 }

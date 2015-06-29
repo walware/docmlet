@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ #=============================================================================#
+ # Copyright (c) 2008-2015 Stephan Wahlbrink (WalWare.de) and others.
+ # All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ #=============================================================================#
+-->
+
+<contexts>
+	<context id="DocProcessingActionsRunConfig">
+		<description>Runs the document processing tool, that is runs all steps enabled in the tool configuration inclusive the Preview step.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsRunConfigProcess">
+		<description>Runs the processing steps of the document processing tool, that is runs all steps enabled in the tool configuration except the Preview step.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsRunConfigStep">
+		<description>Runs the given processing step of the document processing tool.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsRunConfigPreview">
+		<description>Runs the Preview steps of the document processing tool.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsActivateConfig">
+		<description>Makes the document processing tool configuration to the active configuration for the current document content type.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsEditConfig">
+		<description>Opens the configuration dialog for the document processing tool.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+		<topic href="reference/doc_processing-config.xhtml" label="Document Processing Tools - Configuration"/>
+	</context>
+	
+	<context id="DocProcessingActionsRunActiveConfig">
+		<description>Runs the active document processing tool, that is runs all steps enabled in the tool configuration inclusive the Preview step.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsRunActiveConfigProcess">
+		<description>Runs the processing steps of the active document processing tool, that is runs all steps enabled in the tool configuration exclusive the Preview step.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	<context id="DocProcessingActionsRunActiveConfigPreview">
+		<description>Runs the Preview steps of the active document processing tool.</description>
+		<topic href="reference/doc_processing-actions.xhtml" label="Document Processing Tools - Actions"/>
+		<topic href="reference/doc_processing.xhtml" label="Document Processing Tools"/>
+	</context>
+	
+</contexts>

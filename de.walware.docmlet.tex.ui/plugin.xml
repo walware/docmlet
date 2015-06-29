@@ -15,6 +15,10 @@
 
 <plugin>
    
+   <extension-point id="de.walware.docmlet.tex.docTemplates"
+         name="TeX Document Templates"
+         schema="schema/docTemplates.exsd"/>
+   
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
@@ -24,7 +28,7 @@
    
    <extension
          point="de.walware.ecommons.ltk.modelTypes">
-      <unitType modelTypeId="ltx"
+      <unitType modelTypeId="Ltx"
             contextKey="editor.default"
             unitFactory="de.walware.docmlet.tex.internal.ui.LtxEditorWorkingCopyFactory">
       </unitType>
@@ -111,10 +115,10 @@
             categoryId="templates"
             class="de.walware.docmlet.tex.internal.ui.editors.LtxEditorTemplatesCompletionComputer">
          <partition
-               partitionType="ltx.default">
+               partitionType="Ltx.Default">
          </partition>
          <partition
-               partitionType="ltx.math">
+               partitionType="Ltx.Math">
          </partition>
       </computer>
       <computer
@@ -123,7 +127,7 @@
             categoryId="tex-elements"
             class="de.walware.docmlet.tex.internal.ui.editors.LtxElementsCompletionComputer$Default">
          <partition
-               partitionType="ltx.default">
+               partitionType="Ltx.Default">
          </partition>
       </computer>
       <computer
@@ -132,7 +136,7 @@
             categoryId="tex-elements"
             class="de.walware.docmlet.tex.internal.ui.editors.LtxElementsCompletionComputer$Math">
          <partition
-               partitionType="ltx.math">
+               partitionType="Ltx.Math">
          </partition>
       </computer>
       <computer
@@ -141,7 +145,7 @@
             categoryId="paths"
             class="de.walware.docmlet.tex.internal.ui.editors.TexPathCompletionComputer">
          <partition
-               partitionType="ltx.default">
+               partitionType="Ltx.Default">
          </partition>
       </computer>
    </extension>
@@ -168,7 +172,7 @@
       </include>
    </extension>
    
-      <extension
+   <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
       <target
             id="de.walware.docmlet.tex.editorHyperlinks.TexEditorTarget"
@@ -198,57 +202,19 @@
 
    <extension
          point="org.eclipse.ui.commands">
-      <category
-            id="de.walware.docmlet.base.commands.EditDocsCategory"
-            name="%commandsCategory_EditDocs_name"
-            description="%commandsCategory_EditDocs_description">
-      </category>
       <command
             id="de.walware.docmlet.tex.commands.ProcessTexDefault"
             categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
             name="%commands_ProcessTex_name"
             description="%commands_ProcessTex_description">
       </command>
-      <command
-            id="de.walware.docmlet.base.commands.ProcessDocDefault"
-            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
-            name="%commands_ProcessDocument_name"
-            description="%commands_ProcessDocument_description">
-      </command>
-      <command
-            id="de.walware.docmlet.base.commands.PreviewDocDefault"
-            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
-            name="%commands_PreviewDocument_name"
-            description="%commands_PreviewDocument_description">
-      </command>
-      <command
-            id="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
-            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
-            name="%commands_ProcessAndPreview_name"
-            description="%commands_ProcessAndPreview_description">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
-            icon="icons/tool_16/process.png">
-      </image>
-      <image
-            commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
-            icon="icons/tool_16/preview.png">
-      </image>
-      <image
-            commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
-            icon="icons/tool_16/process_and_preview.png">
-      </image>
    </extension>
    
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             commandId="org.eclipse.jdt.ui.edit.text.java.toggleMarkOccurrences"
-            class="de.walware.docmlet.tex.internal.ui.editors.TexToggleMarkOccurrencesHandler">
+            class="de.walware.docmlet.tex.ui.actions.TexToggleMarkOccurrencesHandler">
          <activeWhen>
             <with
                   variable="activeEditorId">
@@ -290,24 +256,6 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+T 3">
       </key>
-      <key
-            commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
-            contextId="de.walware.docmlet.tex.contexts.TexEditor"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+T 4">
-      </key>
-      <key
-            commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
-            contextId="de.walware.docmlet.tex.contexts.TexEditor"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+T 9">
-      </key>
-      <key
-            commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
-            contextId="de.walware.docmlet.tex.contexts.TexEditor"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+T 0">
-      </key>
    </extension>
    
    <extension
@@ -339,36 +287,20 @@
             </visibleWhen>
          </menu>
       </menuContribution>
-      <menuContribution
-            locationURI="menu:navigate?after=open.ext">
-         <command
-               commandId="org.eclipse.ui.edit.text.open.hyperlink"
-               mnemonic="%menus_Navigate_OpenHyperlink_mnemonic"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with variable="activePartId">
-                  <equals
-                        value="de.walware.docmlet.tex.ui.editors.ILtxEditor">
-                  </equals>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
    </extension>
    
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             id="de.walware.docmlet.tex.preferencePages.Tex"
-            class="de.walware.docmlet.tex.internal.ui.preferences.TexBasePreferencePage"
+            class="de.walware.docmlet.tex.internal.ui.config.TexBasePreferencePage"
             name="%preferencePages_Tex_name">
       </page>
       <page
             id="de.walware.docmlet.tex.preferencePages.TexCodeStyle"
             category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_TexCodeStyle_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.TexCodeStylePreferencePage">
+            class="de.walware.docmlet.tex.internal.ui.config.TexCodeStylePreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceFormatting"/>
       </page>
@@ -376,14 +308,21 @@
             id="de.walware.docmlet.tex.preferencePages.LtxCommand"
             category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxCommands_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.LtxCommandsPreferencePage">
+            class="de.walware.docmlet.tex.internal.ui.config.LtxCommandsPreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.DocTemplates"
+            category="de.walware.docmlet.tex.preferencePages.Tex"
+            name="%preferencePages_TexDocTemplates_name"
+            class="de.walware.docmlet.tex.internal.ui.config.DocTemplatesPreferencePage">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceTemplates"/>
       </page>
       <page
             id="de.walware.docmlet.tex.preferencePages.TexEditor"
             category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_TexEditor_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.TexEditorPreferencePage">
+            class="de.walware.docmlet.tex.internal.ui.config.TexEditorPreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
          <keywordReference id="de.walware.ecommons.ltk.keywords.AutoBracket"/>
@@ -394,25 +333,25 @@
             id="de.walware.docmlet.tex.preferencePages.LtxTextStyles"
             category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxTextStyles_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.LtxTextStylesPreferencePage">
+            class="de.walware.docmlet.tex.internal.ui.config.LtxTextStylesPreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
+      </page>
+      <page
+            id="de.walware.docmlet.tex.preferencePages.LtxEditorContentAssist"
+            category="de.walware.docmlet.tex.preferencePages.TexEditor"
+            name="%preferencePages_TexEditorContentAssist_name"
+            class="de.walware.docmlet.tex.internal.ui.config.LtxContentAssistConfigurationPage">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
       </page>
       <page
             id="de.walware.docmlet.tex.preferencePages.LtxEditorTemplates"
             category="de.walware.docmlet.tex.preferencePages.Tex"
             name="%preferencePages_LtxEditorTemplates_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.LtxEditorTemplatesPreferencePage">
+            class="de.walware.docmlet.tex.internal.ui.config.LtxEditorTemplatesPreferencePage">
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
          <keywordReference id="de.walware.ecommons.ltk.keywords.SourceTemplates"/>
-      </page>
-      <page
-            id="de.walware.docmlet.tex.preferencePages.LtxEditorAdvancedContentAssist"
-            category="de.walware.docmlet.tex.preferencePages.Tex"
-            name="%preferencePages_TexEditorAdvancedContentAssist_name"
-            class="de.walware.docmlet.tex.internal.ui.preferences.LtxAdvancedContentAssistConfigurationPage">
-         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
-         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
       </page>
    </extension>
    
@@ -424,8 +363,7 @@
       </viewer>
       <contentTypeBinding
             contentViewerId="de.walware.docmlet.tex.compare.LtxViewer"
-            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex">
-      </contentTypeBinding>
+            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex"/>
    </extension>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
@@ -435,8 +373,7 @@
       </viewer>
       <contentTypeBinding
             contentMergeViewerId="de.walware.docmlet.tex.compare.LtxMergeViewer"
-            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex">
-      </contentTypeBinding>
+            contentTypeId="net.sourceforge.texlipse.contentTypes.Latex"/>
    </extension>
    
    <extension
@@ -456,24 +393,6 @@
          super="org.eclipse.ui.workbench.texteditor.info"
          markerSeverity="0">
       </type>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.themes">
-      <colorDefinition
-            id="de.walware.docmlet.themes.SectionColor"
-            isEditable="false"
-            label=""
-            value="159,151,47">
-      </colorDefinition>
-      
-      <theme
-            id="org.eclipse.ui.ide.systemDefault">
-         <colorOverride
-               id="de.walware.docmlet.themes.SectionColor"
-               value="COLOR_LIST_FOREGROUND">
-         </colorOverride>
-      </theme>
    </extension>
    
 </plugin>

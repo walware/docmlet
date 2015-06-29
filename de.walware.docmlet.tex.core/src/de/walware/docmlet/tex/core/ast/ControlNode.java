@@ -35,11 +35,6 @@ public abstract class ControlNode extends TexAstNode {
 		
 		
 		@Override
-		public TexCommand getCommand() {
-			return null;
-		}
-		
-		@Override
 		public boolean hasChildren() {
 			return false;
 		}
@@ -72,9 +67,7 @@ public abstract class ControlNode extends TexAstNode {
 	static final class Word extends ControlNode {
 		
 		
-		TexAstNode[] fArguments = NO_CHILDREN;
-		
-		TexCommand fCommand;
+		TexAstNode[] arguments= NO_CHILDREN;
 		
 		
 		Word(final String word) {
@@ -83,29 +76,24 @@ public abstract class ControlNode extends TexAstNode {
 		
 		
 		@Override
-		public TexCommand getCommand() {
-			return fCommand;
-		}
-		
-		@Override
 		public boolean hasChildren() {
-			return (fArguments.length > 0);
+			return (this.arguments.length > 0);
 		}
 		
 		@Override
 		public int getChildCount() {
-			return fArguments.length;
+			return this.arguments.length;
 		}
 		
 		@Override
 		public TexAstNode getChild(final int index) {
-			return fArguments[index];
+			return this.arguments[index];
 		}
 		
 		@Override
 		public int getChildIndex(final IAstNode element) {
-			for (int i = 0; i < fArguments.length; i++) {
-				if (fArguments[i] == element) {
+			for (int i= 0; i < this.arguments.length; i++) {
+				if (this.arguments[i] == element) {
 					return i;
 				}
 			}
@@ -114,14 +102,14 @@ public abstract class ControlNode extends TexAstNode {
 		
 		@Override
 		public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
-			for (final TexAstNode child : fArguments) {
+			for (final TexAstNode child : this.arguments) {
 				visitor.visit(child);
 			}
 		}
 		
 		@Override
 		public void acceptInTexChildren(final TexAstVisitor visitor) throws InvocationTargetException {
-			for (final TexAstNode child : fArguments) {
+			for (final TexAstNode child : this.arguments) {
 				child.acceptInTex(visitor);
 			}
 		}
@@ -131,9 +119,11 @@ public abstract class ControlNode extends TexAstNode {
 	
 	private final String fWord;
 	
+	TexCommand fCommand;
+	
 	
 	private ControlNode(final String word) {
-		fWord = word;
+		this.fWord= word;
 	}
 	
 	
@@ -145,10 +135,13 @@ public abstract class ControlNode extends TexAstNode {
 	
 	@Override
 	public final String getText() {
-		return fWord;
+		return this.fWord;
 	}
 	
-	public abstract TexCommand getCommand();
+	public final TexCommand getCommand() {
+		return this.fCommand;
+	}
+	
 	
 	@Override
 	public final void acceptInTex(final TexAstVisitor visitor) throws InvocationTargetException {

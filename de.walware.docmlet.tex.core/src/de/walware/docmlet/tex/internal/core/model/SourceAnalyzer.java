@@ -11,9 +11,9 @@
 
 package de.walware.docmlet.tex.internal.core.model;
 
-import static de.walware.docmlet.tex.core.model.ILtxSourceElement.C2_SECTIONING;
-import static de.walware.ecommons.ltk.IModelElement.MASK_C1;
-import static de.walware.ecommons.ltk.IModelElement.MASK_C2;
+import static de.walware.docmlet.tex.core.model.ITexSourceElement.C2_SECTIONING;
+import static de.walware.ecommons.ltk.core.model.IModelElement.MASK_C1;
+import static de.walware.ecommons.ltk.core.model.IModelElement.MASK_C2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.AstInfo;
-import de.walware.ecommons.ltk.ISourceStructElement;
 
 import de.walware.docmlet.tex.core.ast.ControlNode;
 import de.walware.docmlet.tex.core.ast.Embedded;
@@ -38,9 +38,9 @@ import de.walware.docmlet.tex.core.ast.Text;
 import de.walware.docmlet.tex.core.commands.IPreambleDefinitions;
 import de.walware.docmlet.tex.core.commands.LtxPrintCommand;
 import de.walware.docmlet.tex.core.commands.TexCommand;
-import de.walware.docmlet.tex.core.model.EmbeddedReconcileItem;
-import de.walware.docmlet.tex.core.model.ILtxSourceElement;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.EmbeddingReconcileItem;
+import de.walware.docmlet.tex.core.model.ITexSourceElement;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexElementName;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.internal.core.model.LtxSourceElement.EmbeddedRef;
@@ -63,7 +63,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 	private final Map<String, Integer> structNamesCounter= new HashMap<>();
 	
 	private Map<String, RefLabelAccess.Shared> labels= new HashMap<>();
-	private final List<EmbeddedReconcileItem> embeddedItems= new ArrayList<>();
+	private final List<EmbeddingReconcileItem> embeddedItems= new ArrayList<>();
 	
 	private int minSectionLevel;
 	private int maxSectionLevel;
@@ -86,7 +86,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 		this.maxSectionLevel= Integer.MIN_VALUE;
 	}
 	
-	public LtxSourceModelInfo createModel(final ILtxSourceUnit su, final String input,
+	public LtxSourceUnitModelInfo createModel(final ITexSourceUnit su, final String input,
 			final AstInfo ast,
 			Map<String, TexCommand> customCommands, Map<String, TexCommand> customEnvs) {
 		clear();
@@ -94,8 +94,8 @@ public class SourceAnalyzer extends TexAstVisitor {
 		if (!(ast.root instanceof TexAstNode)) {
 			return null;
 		}
-		final ISourceStructElement root= this.currentElement= new LtxSourceElement.SourceContainer(
-				ILtxSourceElement.C2_SOURCE_FILE, su, (TexAstNode) ast.root);
+		final ITexSourceElement root= this.currentElement= new LtxSourceElement.SourceContainer(
+				ITexSourceElement.C2_SOURCE_FILE, su, (TexAstNode) ast.root);
 		try {
 			((TexAstNode) ast.root).acceptInTex(this);
 			
@@ -128,7 +128,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 			else {
 				customEnvs= Collections.emptyMap();
 			}
-			final LtxSourceModelInfo model= new LtxSourceModelInfo(ast, root,
+			final LtxSourceUnitModelInfo model= new LtxSourceUnitModelInfo(ast, root,
 					this.minSectionLevel, this.maxSectionLevel, labels, customCommands, customEnvs );
 			return model;
 		}
@@ -137,10 +137,18 @@ public class SourceAnalyzer extends TexAstVisitor {
 		}
 	}
 	
-	public List<EmbeddedReconcileItem> getEmbeddedItems() {
+	public List<EmbeddingReconcileItem> getEmbeddedItems() {
 		return this.embeddedItems;
 	}
 	
+	
+	private void initElement(final LtxSourceElement.Container element) {
+		if (this.currentElement.fChildren.isEmpty()) {
+			this.currentElement.fChildren= new ArrayList<>();
+		}
+		this.currentElement.fChildren.add(element);
+		this.currentElement= element;
+	}
 	
 	private void exitContainer(final int stop, final boolean forward) {
 		this.currentElement.fLength= ((forward) ?
@@ -203,6 +211,32 @@ public class SourceAnalyzer extends TexAstVisitor {
 		return offset;
 	}
 	
+	private void finishTitleText() {
+		{	boolean wasWhitespace= false;
+			int idx= 0;
+			while (idx < this.titleBuilder.length()) {
+				if (this.titleBuilder.charAt(idx) == ' ') {
+					if (wasWhitespace) {
+						this.titleBuilder.deleteCharAt(idx);
+					}
+					else {
+						wasWhitespace= true;
+						idx++;
+					}
+				}
+				else {
+					wasWhitespace= false;
+					idx++;
+				}
+			}
+		}
+		this.titleElement.fName= TexElementName.create(TexElementName.TITLE, this.titleBuilder.toString());
+		this.titleBuilder.setLength(0);
+		this.titleElement= null;
+		this.titleDoBuild= false;
+	}
+	
+	
 	@Override
 	public void visit(final SourceComponent node) throws InvocationTargetException {
 		this.currentElement.fOffset= node.getOffset();
@@ -210,10 +244,10 @@ public class SourceAnalyzer extends TexAstVisitor {
 		if (this.titleElement != null) {
 			finishTitleText();
 		}
-		while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+		while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
 			exitContainer(node.getStopOffset(), true);
 		}
-		exitContainer(node.getStopOffset() - this.currentElement.fOffset, true);
+		exitContainer(node.getStopOffset(), true);
 	}
 	
 	@Override
@@ -224,7 +258,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 			if (this.titleElement != null) {
 				finishTitleText();
 			}
-			while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+			while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
 				exitContainer(node.getOffset(), false);
 			}
 		}
@@ -235,7 +269,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 			if (this.titleElement != null) {
 				finishTitleText();
 			}
-			while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+			while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
 				exitContainer((node.getEndNode() != null) ?
 						node.getEndNode().getOffset() : node.getStopOffset(), false );
 			}
@@ -254,7 +288,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 					access= new EnvLabelAccess[1];
 					access[0]= new EnvLabelAccess(node.getBeginNode(), endLabel);
 				}
-				final ConstArrayList<TexLabelAccess> list= new ConstArrayList<TexLabelAccess>(access);
+				final ImList<TexLabelAccess> list= ImCollections.<TexLabelAccess>newList(access);
 				for (int i= 0; i < access.length; i++) {
 					access[i].fAll= list;
 					access[i].getNode().addAttachment(access[i]);
@@ -273,20 +307,20 @@ public class SourceAnalyzer extends TexAstVisitor {
 					if (this.titleElement != null) {
 						finishTitleText();
 					}
-					while ((this.currentElement.getElementType() & MASK_C1) != ILtxSourceElement.C1_SOURCE) {
+					while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
 						exitContainer(node.getOffset(), false);
 					}
 					initElement(new LtxSourceElement.StructContainer(
-							ILtxSourceElement.C2_PREAMBLE, this.currentElement, node ));
+							ITexSourceElement.C2_PREAMBLE, this.currentElement, node ));
 					this.currentElement.fName= TexElementName.create(TexElementName.TITLE, "Preamble");
 				}
 				break;
 			case TexCommand.SECTIONING:
-				if ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_PREAMBLE) {
+				if ((this.currentElement.getElementType() & MASK_C2) == ITexSourceElement.C2_PREAMBLE) {
 					exitContainer(node.getOffset(), false);
 				}
-				if ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
-						|| (this.currentElement.getElementType() & MASK_C1) == ILtxSourceElement.C1_SOURCE ) {
+				if ((this.currentElement.getElementType() & MASK_C2) == ITexSourceElement.C2_SECTIONING
+						|| (this.currentElement.getElementType() & MASK_C1) == ITexSourceElement.C1_SOURCE ) {
 					final int level= (command.getType() & 0xf0) >> 4;
 					if (level > 5) {
 						break COMMAND;
@@ -296,12 +330,12 @@ public class SourceAnalyzer extends TexAstVisitor {
 						break COMMAND;
 					}
 					
-					while ((this.currentElement.getElementType() & MASK_C2) == ILtxSourceElement.C2_SECTIONING
+					while ((this.currentElement.getElementType() & MASK_C2) == ITexSourceElement.C2_SECTIONING
 							&& (this.currentElement.getElementType() & 0xf) >= level) {
 						exitContainer(node.getOffset(), false);
 					}
 					initElement(new LtxSourceElement.StructContainer(
-							ILtxSourceElement.C2_SECTIONING | level, this.currentElement, node ));
+							ITexSourceElement.C2_SECTIONING | level, this.currentElement, node ));
 					
 					this.minSectionLevel= Math.min(this.minSectionLevel, level);
 					this.maxSectionLevel= Math.max(this.maxSectionLevel, level);
@@ -311,7 +345,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 						this.titleElement= this.currentElement;
 						this.titleDoBuild= true;
 						final TexAstNode titleNode= node.getChild(0);
-						this.titleElement.fNameRegion= TexAst.getInnerRegion(titleNode);
+						this.titleElement.nameRegion= TexAst.getInnerRegion(titleNode);
 						node.getChild(0).acceptInTex(this);
 						if (this.titleElement != null) {
 							finishTitleText();
@@ -383,14 +417,6 @@ public class SourceAnalyzer extends TexAstVisitor {
 		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 	}
 	
-	private void initElement(final LtxSourceElement.Container element) {
-		if (this.currentElement.fChildren.isEmpty()) {
-			this.currentElement.fChildren= new ArrayList<>();
-		}
-		this.currentElement.fChildren.add(element);
-		this.currentElement= element;
-	}
-	
 	@Override
 	public void visit(final Text node) throws InvocationTargetException {
 		if (this.titleDoBuild) {
@@ -405,14 +431,14 @@ public class SourceAnalyzer extends TexAstVisitor {
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
-		if (node.isInline()) {
+		if ((node.getEmbedDescr() & 0xf) == Embedded.EMBED_INLINE) {
 			if (this.titleDoBuild) {
 				this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
 				if (this.titleBuilder.length() >= 100) {
 					finishTitleText();
 				}
 			}
-			this.embeddedItems.add(new EmbeddedReconcileItem(node, null));
+			this.embeddedItems.add(new EmbeddingReconcileItem(node, null));
 		}
 		else {
 			if (this.titleElement != null) {
@@ -427,8 +453,9 @@ public class SourceAnalyzer extends TexAstVisitor {
 			element.fLength= node.getLength();
 			element.fName= TexElementName.create(0, ""); //$NON-NLS-1$
 			this.currentElement.fChildren.add(element);
-			this.embeddedItems.add(new EmbeddedReconcileItem(node, element));
+			this.embeddedItems.add(new EmbeddingReconcileItem(node, element));
 		}
+		
 		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
 	}
 	
@@ -447,31 +474,6 @@ public class SourceAnalyzer extends TexAstVisitor {
 			}
 		}
 		return null;
-	}
-	
-	private void finishTitleText() {
-		{	boolean wasWhitespace= false;
-			int idx= 0;
-			while (idx < this.titleBuilder.length()) {
-				if (this.titleBuilder.charAt(idx) == ' ') {
-					if (wasWhitespace) {
-						this.titleBuilder.deleteCharAt(idx);
-					}
-					else {
-						wasWhitespace= true;
-						idx++;
-					}
-				}
-				else {
-					wasWhitespace= false;
-					idx++;
-				}
-			}
-		}
-		this.titleElement.fName= TexElementName.create(TexElementName.TITLE, this.titleBuilder.toString());
-		this.titleBuilder.setLength(0);
-		this.titleElement= null;
-		this.titleDoBuild= false;
 	}
 	
 }

@@ -46,10 +46,10 @@ public class TexQuickRenameComputer implements IQuickAssistComputer {
 		if (node.getNodeType() == TexAst.NodeType.LABEL) {
 			TexAstNode candidate = node;
 			SEARCH_ACCESS : while (candidate != null) {
-				final Object[] attachments = candidate.getAttachments();
-				for (int i = 0; i < attachments.length; i++) {
-					if (attachments[i] instanceof TexLabelAccess) {
-						TexLabelAccess access = (TexLabelAccess) attachments[i]; 
+				final List<Object> attachments= candidate.getAttachments();
+				for (final Object attachment : attachments) {
+					if (attachment instanceof TexLabelAccess) {
+						TexLabelAccess access = (TexLabelAccess) attachment; 
 						SUB: while (access != null) {
 							if (access.getSegmentName() == null) {
 								break SUB;
@@ -63,7 +63,7 @@ public class TexQuickRenameComputer implements IQuickAssistComputer {
 						}
 					}
 				}
-				candidate = candidate.getParent();
+				candidate= candidate.getTexParent();
 			}
 		}
 		return Status.OK_STATUS;

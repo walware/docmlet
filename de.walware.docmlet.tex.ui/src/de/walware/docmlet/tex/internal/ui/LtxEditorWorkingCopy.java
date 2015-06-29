@@ -11,18 +11,18 @@
 
 package de.walware.docmlet.tex.internal.ui;
 
-import de.walware.ecommons.ltk.IWorkspaceSourceUnit;
+import de.walware.ecommons.ltk.core.model.IWorkspaceSourceUnit;
 import de.walware.ecommons.ltk.ui.GenericEditorWorkspaceSourceUnitWorkingCopy2;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
-import de.walware.docmlet.tex.core.model.ILtxWorkspaceSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexWorkspaceSourceUnit;
 import de.walware.docmlet.tex.core.model.LtxSuModelContainer;
 
 
 public final class LtxEditorWorkingCopy
-		extends GenericEditorWorkspaceSourceUnitWorkingCopy2<LtxSuModelContainer<ILtxSourceUnit>>
-		implements ILtxWorkspaceSourceUnit {
+		extends GenericEditorWorkspaceSourceUnitWorkingCopy2<LtxSuModelContainer<ITexSourceUnit>>
+		implements ITexWorkspaceSourceUnit {
 	
 	
 	public LtxEditorWorkingCopy(final IWorkspaceSourceUnit from) {
@@ -30,14 +30,14 @@ public final class LtxEditorWorkingCopy
 	}
 	
 	@Override
-	protected LtxSuModelContainer<ILtxSourceUnit> createModelContainer() {
-		return new LtxSuModelContainer<ILtxSourceUnit>(this);
+	protected LtxSuModelContainer<ITexSourceUnit> createModelContainer() {
+		return new LtxSuModelContainer<ITexSourceUnit>(this);
 	}
 	
 	
 	@Override
 	public ITexCoreAccess getTexCoreAccess() {
-		return ((ILtxSourceUnit) getUnderlyingUnit()).getTexCoreAccess();
+		return ((ITexSourceUnit) getUnderlyingUnit()).getTexCoreAccess();
 	}
 	
 }

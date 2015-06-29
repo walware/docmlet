@@ -36,7 +36,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-import de.walware.ecommons.ltk.LTK;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.CompletionProposalWithOverwrite;
 import de.walware.ecommons.ui.util.UIAccess;
@@ -45,7 +44,7 @@ import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.IEnvDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
-import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.ui.TexUI;
 import de.walware.docmlet.tex.ui.TexUIResources;
 
 
@@ -187,8 +186,7 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 		
 		public LtxHeuristicTokenScanner getScanner() {
 			if (fScanner == null) {
-				fScanner = (LtxHeuristicTokenScanner) LTK.getModelAdapter(
-						fContext.getEditor().getModelTypeId(), LtxHeuristicTokenScanner.class );
+				fScanner= LtxHeuristicTokenScanner.create(fContext.getEditor().getDocumentContentInfo());
 			}
 			return fScanner;
 		}
@@ -237,7 +235,7 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 	
 	@Override
 	protected String getPluginId() {
-		return TexUIPlugin.PLUGIN_ID;
+		return TexUI.PLUGIN_ID;
 	}
 	
 	@Override
@@ -488,7 +486,7 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 		model.forceInstall();
 		
 		final TexBracketLevel level = new TexBracketLevel(data.getDocument(),
-				context.getEditor().getPartitioning().getPartitioning(), linked,
+				context.getEditor().getDocumentContentInfo().getPartitioning(), linked,
 				TexBracketLevel.AUTODELETE );
 		
 		/* create UI */

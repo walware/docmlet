@@ -14,7 +14,7 @@ package de.walware.docmlet.tex.internal.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.walware.ecommons.collections.CollectionUtils;
+import de.walware.ecommons.collections.ImCollections;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.TexElementName;
@@ -43,7 +43,7 @@ public class RefLabelAccess extends TexLabelAccess {
 		
 		
 		public void finish() {
-			fAll = CollectionUtils.asConstList(fAll);
+			fAll= ImCollections.toList(fAll);
 		}
 		
 		public List<TexLabelAccess> getAll() {

@@ -35,6 +35,7 @@ import de.walware.ecommons.ui.util.UIAccess;
 import de.walware.ecommons.workbench.ui.WorkbenchUIUtil;
 
 import de.walware.docmlet.tex.core.TexProjects;
+import de.walware.docmlet.tex.ui.TexUI;
 
 
 public class ConvertToTexProjectHandler extends AbstractHandler {
@@ -70,20 +71,20 @@ public class ConvertToTexProjectHandler extends AbstractHandler {
 			@Override
 			protected void execute(final IProgressMonitor monitor) throws CoreException,
 					InvocationTargetException, InterruptedException {
-				final SubMonitor progress= SubMonitor.convert(monitor,
+				final SubMonitor m= SubMonitor.convert(monitor,
 						TexUIMessages.TexProject_ConvertTask_label,
 						100 );
 				try {
-					final SubMonitor loop= progress.newChild(100).setWorkRemaining(projects.size());
+					final SubMonitor mProjects= m.newChild(100).setWorkRemaining(projects.size());
 					for (final IProject project : projects) {
-						if (progress.isCanceled()) {
+						if (m.isCanceled()) {
 							throw new InterruptedException();
 						}
-						TexProjects.setupTexProject(project, loop.newChild(1));
+						TexProjects.setupTexProject(project, mProjects.newChild(1));
 					}
 				}
 				finally {
-					progress.done();
+					m.done();
 				}
 			}
 			
@@ -92,7 +93,7 @@ public class ConvertToTexProjectHandler extends AbstractHandler {
 			UIAccess.getActiveWorkbenchWindow(true).run(true, true, op);
 		}
 		catch (final InvocationTargetException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUIPlugin.PLUGIN_ID,
+			StatusManager.getManager().handle(new Status(IStatus.ERROR, TexUI.PLUGIN_ID,
 					TexUIMessages.TexProject_ConvertTask_error_message, e.getTargetException() ));
 		}
 		catch (final InterruptedException e) {

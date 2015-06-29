@@ -22,14 +22,16 @@ import de.walware.ecommons.ltk.WorkingContext;
 import de.walware.ecommons.ltk.core.impl.GenericUriSourceUnit;
 import de.walware.ecommons.ltk.core.impl.IWorkingBuffer;
 import de.walware.ecommons.ltk.ui.FileBufferWorkingBuffer;
+import de.walware.ecommons.text.core.sections.IDocContentSections;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCore;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
+import de.walware.docmlet.tex.core.source.LtxDocumentContentInfo;
 
 
-public final class LtxEditorUriSourceUnit extends GenericUriSourceUnit implements ILtxSourceUnit {
+public final class LtxEditorUriSourceUnit extends GenericUriSourceUnit implements ITexSourceUnit {
 	
 	
 	public LtxEditorUriSourceUnit(final String id, final IFileStore store) {
@@ -43,8 +45,8 @@ public final class LtxEditorUriSourceUnit extends GenericUriSourceUnit implement
 	}
 	
 	@Override
-	public String getContentTypeId() {
-		return TexCore.LTX_CONTENT_ID;
+	public IDocContentSections getDocumentContentInfo() {
+		return LtxDocumentContentInfo.INSTANCE;
 	}
 	
 	@Override
@@ -60,7 +62,7 @@ public final class LtxEditorUriSourceUnit extends GenericUriSourceUnit implement
 	
 	
 	@Override
-	protected IWorkingBuffer createWorkingBuffer(final SubMonitor progress) {
+	protected IWorkingBuffer createWorkingBuffer(final SubMonitor m) {
 		return new FileBufferWorkingBuffer(this);
 	}
 	

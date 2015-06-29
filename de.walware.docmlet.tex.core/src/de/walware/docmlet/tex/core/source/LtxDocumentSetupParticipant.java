@@ -11,8 +11,10 @@
 
 package de.walware.docmlet.tex.core.source;
 
-import de.walware.ecommons.text.Partitioner;
+import org.eclipse.jface.text.IDocumentPartitioner;
+
 import de.walware.ecommons.text.PartitionerDocumentSetupParticipant;
+import de.walware.ecommons.text.core.treepartitioner.TreePartitioner;
 
 
 /**
@@ -21,15 +23,19 @@ import de.walware.ecommons.text.PartitionerDocumentSetupParticipant;
 public class LtxDocumentSetupParticipant extends PartitionerDocumentSetupParticipant {
 	
 	
-	private final boolean fTemplateMode;
+	private static final String[] CONTENT_TYPES= ITexDocumentConstants.LTX_CONTENT_TYPES.toArray(
+			new String[ITexDocumentConstants.LTX_CONTENT_TYPES.size()] );
+	
+	
+	private final boolean templateMode;
 	
 	
 	public LtxDocumentSetupParticipant() {
-		fTemplateMode = false;
+		this.templateMode = false;
 	}
 	
 	public LtxDocumentSetupParticipant(final boolean enableTemplateMode) {
-		fTemplateMode = enableTemplateMode;
+		this.templateMode = enableTemplateMode;
 	}
 	
 	
@@ -39,19 +45,8 @@ public class LtxDocumentSetupParticipant extends PartitionerDocumentSetupPartici
 	}
 	
 	@Override
-	protected Partitioner createDocumentPartitioner() {
-		return new Partitioner(
-				new LtxFastPartitionScanner(ITexDocumentConstants.LTX_PARTITIONING, fTemplateMode),
-				ITexDocumentConstants.LTX_PARTITION_TYPES) {
-			@Override
-			protected String getPrefereOpenType(final String open, final String opening) {
-				if ((open == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE || open == ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE)
-						|| (opening == ITexDocumentConstants.LTX_MATH_CONTENT_TYPE || opening == ITexDocumentConstants.LTX_MATHCOMMENT_CONTENT_TYPE) ) {
-					return ITexDocumentConstants.LTX_MATH_CONTENT_TYPE;
-				}
-				return super.getPrefereOpenType(open, opening);
-			}
-		};
+	protected IDocumentPartitioner createDocumentPartitioner() {
+		return new TreePartitioner(new LtxPartitionNodeScanner(this.templateMode), CONTENT_TYPES);
 	}
 	
 }

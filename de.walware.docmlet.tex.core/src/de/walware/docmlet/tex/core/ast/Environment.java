@@ -22,14 +22,66 @@ import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 /**
  * \begin{name} ... \end{name}
  */
-public final class Environment extends ContainerNode {
+public abstract class Environment extends ContainerNode {
 	
 	
-	ControlNode fBegin;
-	TexAstNode fEnd;
+	static final class MathLatexShorthand extends Environment{
+		
+		
+		MathLatexShorthand(final TexAstNode parent, final ControlNode beginNode) {
+			super(parent, beginNode);
+		}
+		
+		
+		@Override
+		public String getText() {
+			return this.beginNode.getText();
+		}
+		
+		@Override
+		void setMissingEnd() {
+			this.status= ITexAstStatusConstants.STATUS2_MATH_NOT_CLOSED;
+			this.endNode= new Dummy();
+			this.endNode.texParent= this;
+			this.endNode.startOffset= this.endNode.stopOffset= this.stopOffset= getChild(this.children.length).stopOffset;
+		}
+		
+	}
+	
+	static final class Word extends Environment {
+		
+		Word(final TexAstNode parent, final ControlNode beginNode) {
+			super(parent, beginNode);
+		}
+		
+		
+		@Override
+		public String getText() {
+			if (this.beginNode.hasChildren()) {
+				return this.beginNode.getChild(0).getChild(0).getText();
+			}
+			return null;
+		}
+		
+		@Override
+		void setMissingEnd() {
+			this.status= ITexAstStatusConstants.STATUS2_ENV_NOT_CLOSED;
+			this.endNode= new Dummy();
+			this.endNode.texParent= this;
+			this.endNode.startOffset= this.endNode.stopOffset= this.stopOffset= getChild(this.children.length).stopOffset;
+		}
+		
+	}
 	
 	
-	Environment() {
+	final ControlNode beginNode;
+	TexAstNode endNode;
+	
+	
+	Environment(final TexAstNode parent, final ControlNode beginNode) {
+		this.texParent= parent;
+		this.beginNode= beginNode;
+		this.startOffset= beginNode.startOffset;
 	}
 	
 	
@@ -40,20 +92,13 @@ public final class Environment extends ContainerNode {
 	
 	
 	public ControlNode getBeginNode() {
-		return fBegin;
+		return this.beginNode;
 	}
 	
 	public TexAstNode getEndNode() {
-		return fEnd;
+		return this.endNode;
 	}
 	
-	@Override
-	public String getText() {
-		if (fBegin.hasChildren()) {
-			return fBegin.getChild(0).getChild(0).getText();
-		}
-		return null;
-	}
 	
 	
 	@Override
@@ -63,46 +108,46 @@ public final class Environment extends ContainerNode {
 	
 	@Override
 	public int getChildCount() {
-		return fChildren.length + 2;
+		return this.children.length + 2;
 	}
 	
 	@Override
 	public TexAstNode getChild(final int index) {
 		if (index == 0) {
-			return fBegin;
+			return this.beginNode;
 		}
-		if (index <= fChildren.length) {
-			return fChildren[index-1];
+		if (index <= this.children.length) {
+			return this.children[index-1];
 		}
-		if (index == fChildren.length+1) {
-			return fEnd;
+		if (index == this.children.length+1) {
+			return this.endNode;
 		}
 		throw new IndexOutOfBoundsException();
 	}
 	
 	@Override
 	public int getChildIndex(final IAstNode element) {
-		if (fBegin == element) {
+		if (this.beginNode == element) {
 			return 0;
 		}
-		for (int i = 0; i < fChildren.length; i++) {
-			if (fChildren[i] == element) {
+		for (int i= 0; i < this.children.length; i++) {
+			if (this.children[i] == element) {
 				return i+1;
 			}
 		}
-		if (fEnd == element) {
-			return fChildren.length+1;
+		if (this.endNode == element) {
+			return this.children.length+1;
 		}
 		return -1;
 	}
 	
 	@Override
 	public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		visitor.visit(fBegin);
-		for (final TexAstNode child : fChildren) {
+		visitor.visit(this.beginNode);
+		for (final TexAstNode child : this.children) {
 			visitor.visit(child);
 		}
-		visitor.visit(fEnd);
+		visitor.visit(this.endNode);
 	}
 	
 	@Override
@@ -112,26 +157,18 @@ public final class Environment extends ContainerNode {
 	
 	@Override
 	public void acceptInTexChildren(final TexAstVisitor visitor) throws InvocationTargetException {
-		fBegin.acceptInTex(visitor);
-		for (final TexAstNode child : fChildren) {
+		this.beginNode.acceptInTex(visitor);
+		for (final TexAstNode child : this.children) {
 			child.acceptInTex(visitor);
 		}
-		fEnd.acceptInTex(visitor);
+		this.endNode.acceptInTex(visitor);
 	}
 	
 	
 	@Override
 	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		fEnd = endNode;
-		fStopOffset = endNode.fStopOffset;
-	}
-	
-	@Override
-	void setMissingEnd() {
-		fStatus = ITexAstStatusConstants.STATUS2_ENV_NOT_CLOSED;
-		fEnd = new Dummy();
-		fEnd.fParent = this;
-		fEnd.fStartOffset = fEnd.fStopOffset = fStopOffset = getChild(fChildren.length).fStopOffset;
+		this.endNode= endNode;
+		this.stopOffset= endNode.stopOffset;
 	}
 	
 }

@@ -63,23 +63,23 @@ public class Math extends ContainerNode {
 	
 	@Override
 	public final boolean hasChildren() {
-		return (fChildren.length == 0);
+		return (this.children.length > 0);
 	}
 	
 	@Override
 	public final int getChildCount() {
-		return fChildren.length;
+		return this.children.length;
 	}
 	
 	@Override
 	public final TexAstNode getChild(final int index) {
-		return fChildren[index];
+		return this.children[index];
 	}
 	
 	@Override
 	public final int getChildIndex(final IAstNode element) {
-		for (int i = 0; i < fChildren.length; i++) {
-			if (fChildren[i] == element) {
+		for (int i= 0; i < this.children.length; i++) {
+			if (this.children[i] == element) {
 				return i;
 			}
 		}
@@ -88,7 +88,7 @@ public class Math extends ContainerNode {
 	
 	@Override
 	public final void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		for (final TexAstNode child : fChildren) {
+		for (final TexAstNode child : this.children) {
 			visitor.visit(child);
 		}
 	}
@@ -100,7 +100,7 @@ public class Math extends ContainerNode {
 	
 	@Override
 	public final void acceptInTexChildren(final TexAstVisitor visitor) throws InvocationTargetException {
-		for (final TexAstNode child : fChildren) {
+		for (final TexAstNode child : this.children) {
 			child.acceptInTex(visitor);
 		}
 	}
@@ -108,14 +108,14 @@ public class Math extends ContainerNode {
 	
 	@Override
 	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		fStopOffset = stopOffset;
+		this.stopOffset= stopOffset;
 	}
 	
 	@Override
 	void setMissingEnd() {
-		fStatus = STATUS2_MATH_NOT_CLOSED;
-		if (fChildren.length > 0) {
-			fStopOffset = fChildren[fChildren.length-1].fStopOffset;
+		this.status= STATUS2_MATH_NOT_CLOSED;
+		if (this.children.length > 0) {
+			this.stopOffset= this.children[this.children.length-1].stopOffset;
 		}
 	}
 	

@@ -22,7 +22,15 @@ import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 public final class SourceComponent extends ContainerNode {
 	
 	
+	private IAstNode parent;
+	
+	
 	public SourceComponent() {
+	}
+	
+	public SourceComponent(final IAstNode parent, final int startOffset, final int stopOffset) {
+		super(null, startOffset, stopOffset);
+		this.parent= parent;
 	}
 	
 	
@@ -31,25 +39,31 @@ public final class SourceComponent extends ContainerNode {
 		return NodeType.SOURCELINES;
 	}
 	
+	
+	@Override
+	public IAstNode getParent() {
+		return this.parent;
+	}
+	
 	@Override
 	public final boolean hasChildren() {
-		return (fChildren.length == 0);
+		return (this.children.length > 0);
 	}
 	
 	@Override
 	public final int getChildCount() {
-		return fChildren.length;
+		return this.children.length;
 	}
 	
 	@Override
 	public final TexAstNode getChild(final int index) {
-		return fChildren[index];
+		return this.children[index];
 	}
 	
 	@Override
 	public final int getChildIndex(final IAstNode element) {
-		for (int i = 0; i < fChildren.length; i++) {
-			if (fChildren[i] == element) {
+		for (int i= 0; i < this.children.length; i++) {
+			if (this.children[i] == element) {
 				return i;
 			}
 		}
@@ -58,7 +72,7 @@ public final class SourceComponent extends ContainerNode {
 	
 	@Override
 	public final void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		for (final TexAstNode child : fChildren) {
+		for (final TexAstNode child : this.children) {
 			visitor.visit(child);
 		}
 	}
@@ -70,7 +84,7 @@ public final class SourceComponent extends ContainerNode {
 	
 	@Override
 	public final void acceptInTexChildren(final TexAstVisitor visitor) throws InvocationTargetException {
-		for (final TexAstNode child : fChildren) {
+		for (final TexAstNode child : this.children) {
 			child.acceptInTex(visitor);
 		}
 	}
@@ -78,13 +92,13 @@ public final class SourceComponent extends ContainerNode {
 	
 	@Override
 	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		fStopOffset = stopOffset;
+		this.stopOffset= stopOffset;
 	}
 	
 	@Override
 	void setMissingEnd() {
-		if (fChildren.length > 0) {
-			fStopOffset = fChildren[fChildren.length-1].fStopOffset;
+		if (this.children.length > 0) {
+			this.stopOffset= this.children[this.children.length-1].stopOffset;
 		}
 	}
 	

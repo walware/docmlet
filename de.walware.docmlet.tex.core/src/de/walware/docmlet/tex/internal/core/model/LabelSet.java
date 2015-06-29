@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
 
 import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
@@ -26,27 +26,27 @@ import de.walware.docmlet.tex.internal.core.model.RefLabelAccess.Shared;
 public class LabelSet implements ITexLabelSet {
 	
 	
-	private final List<String> fLabelsSorted;
-	private final Map<String, RefLabelAccess.Shared> fMap;
+	private final List<String> labelsSorted;
+	private final Map<String, RefLabelAccess.Shared> map;
 	
 	
 	public LabelSet(final Map<String, RefLabelAccess.Shared> map) {
-		final Set<String> labelSet = map.keySet();
-		final String[] labelArray = labelSet.toArray(new String[labelSet.size()]);
+		final Set<String> labelSet= map.keySet();
+		final String[] labelArray= labelSet.toArray(new String[labelSet.size()]);
 		Arrays.sort(labelArray);
-		fLabelsSorted = new ConstArrayList<>(labelArray);
-		fMap = map;
+		this.labelsSorted= ImCollections.newList(labelArray);
+		this.map= map;
 	}
 	
 	
 	@Override
 	public List<String> getAccessLabels() {
-		return fLabelsSorted;
+		return this.labelsSorted;
 	}
 	
 	@Override
 	public List<TexLabelAccess> getAllAccessOf(final String label) {
-		final Shared shared = fMap.get(label);
+		final Shared shared= this.map.get(label);
 		return (shared != null) ? shared.getAll() : null;
 	}
 	

@@ -57,15 +57,15 @@ public class TexAst {
 	 * @return array with the resolved arguments (items can be <code>null</code>)
 	 */
 	public static TexAstNode[] resolveArguments(final ControlNode node) {
-		final List<Argument> arguments = node.getCommand().getArguments();
-		final TexAstNode[] resolved = new TexAstNode[arguments.size()];
-		int idxArgs = 0, idxValues = 0;
+		final List<Argument> arguments= node.getCommand().getArguments();
+		final TexAstNode[] resolved= new TexAstNode[arguments.size()];
+		int idxArgs= 0, idxValues= 0;
 		while (idxArgs < resolved.length && idxValues < node.getChildCount()) {
-			final TexAstNode child = node.getChild(idxValues);
+			final TexAstNode child= node.getChild(idxValues);
 			if ((arguments.get(idxArgs).getType() & Argument.OPTIONAL) != 0) {
 				if (child.getText() == "[") { //$NON-NLS-1$
 					idxValues++;
-					resolved[idxArgs++] = child;
+					resolved[idxArgs++]= child;
 					continue;
 				}
 				else {
@@ -80,7 +80,7 @@ public class TexAst {
 				}
 				else {
 					idxValues++;
-					resolved[idxArgs++] = child;
+					resolved[idxArgs++]= child;
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public class TexAst {
 	 * @return the index in the array if found, otherwise -1
 	 */
 	public static int getIndexAt(final TexAstNode[] nodes, final int offset) {
-		for (int i = 0; i < nodes.length; i++) {
+		for (int i= 0; i < nodes.length; i++) {
 			if (nodes[i] != null) {
 				if (offset < nodes[i].getOffset()) {
 					return -1;
@@ -124,9 +124,9 @@ public class TexAst {
 	}
 	
 	public static Environment getDocumentNode(final TexAstNode node) {
-		final int count = node.getChildCount();
-		for (int i = 0; i < count; i++) {
-			final TexAstNode child = node.getChild(i);
+		final int count= node.getChildCount();
+		for (int i= 0; i < count; i++) {
+			final TexAstNode child= node.getChild(i);
 			if (child.getNodeType() == NodeType.ENVIRONMENT
 					&& ((Environment) node).getBeginNode().getCommand() == IEnvDefinitions.ENV_document_BEGIN) {
 				return (Environment) child;

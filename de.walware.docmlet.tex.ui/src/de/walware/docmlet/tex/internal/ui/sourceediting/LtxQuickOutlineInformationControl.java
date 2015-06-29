@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SearchPattern;
 
-import de.walware.ecommons.ltk.IModelElement.Filter;
+import de.walware.ecommons.ltk.core.model.IModelElement.Filter;
 import de.walware.ecommons.ltk.ui.sourceediting.QuickOutlineInformationControl;
 import de.walware.ecommons.ltk.ui.sourceediting.actions.OpenDeclaration;
 import de.walware.ecommons.ui.content.ITextElementFilter;

@@ -14,7 +14,7 @@ package de.walware.docmlet.tex.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.walware.ecommons.collections.ConstArrayList;
+import de.walware.ecommons.collections.ImCollections;
 
 import de.walware.docmlet.tex.internal.core.Messages;
 
@@ -115,10 +115,10 @@ public class LtxCommandCategories {
 		final List<Category> categories = new ArrayList<>(lists.length);
 		for (int i = 0; i < lists.length; i++) {
 			if (lists[i] != null) {
-				categories.add(new Category(cats[i], new ConstArrayList<>(lists[i])));
+				categories.add(new Category(cats[i], ImCollections.toList(lists[i])));
 			}
 		}
-		fCategories = new ConstArrayList<>(categories);
+		fCategories= ImCollections.toList(categories);
 	}
 	
 	

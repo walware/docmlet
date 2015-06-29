@@ -22,16 +22,16 @@ import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 public final class Label extends TexAstNode {
 	
 	
-	private final String fLabel;
+	private final String label;
 	
 	
 	Label(final ContainerNode parent, final int startOffset, final int stopOffset,
 			final String label) {
-		fParent = parent;
-		fStartOffset = startOffset;
-		fStopOffset = stopOffset;
+		this.texParent= parent;
+		this.startOffset= startOffset;
+		this.stopOffset= stopOffset;
 		
-		fLabel = label;
+		this.label= label;
 	}
 	
 	
@@ -42,7 +42,7 @@ public final class Label extends TexAstNode {
 	
 	@Override
 	public String getText() {
-		return fLabel;
+		return this.label;
 	}
 	
 	

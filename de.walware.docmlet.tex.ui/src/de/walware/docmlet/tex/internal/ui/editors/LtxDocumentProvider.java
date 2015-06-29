@@ -20,8 +20,8 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 
 import de.walware.ecommons.IDisposable;
 import de.walware.ecommons.ltk.IProblem;
-import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.LTK;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceAnnotationModel;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceDocumentProvider;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceProblemAnnotation;
@@ -30,13 +30,13 @@ import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.preferences.SettingsChangeNotifier;
 import de.walware.ecommons.preferences.SettingsChangeNotifier.ChangeListener;
 
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
 import de.walware.docmlet.tex.core.source.LtxDocumentSetupParticipant;
-import de.walware.docmlet.tex.ui.editors.LtxEditorBuild;
+import de.walware.docmlet.tex.ui.editors.TexEditorBuild;
 
 
-public class LtxDocumentProvider extends SourceDocumentProvider<ILtxSourceUnit>
+public class LtxDocumentProvider extends SourceDocumentProvider<ITexSourceUnit>
 		implements IDisposable {
 	
 	
@@ -56,13 +56,13 @@ public class LtxDocumentProvider extends SourceDocumentProvider<ILtxSourceUnit>
 			if (problem.getCategoryId() == TexModel.LTX_TYPE_ID) {
 				switch (problem.getSeverity()) {
 				case IProblem.SEVERITY_ERROR:
-					return new SourceProblemAnnotation(LtxEditorBuild.ERROR_ANNOTATION_TYPE, problem,
+					return new SourceProblemAnnotation(TexEditorBuild.ERROR_ANNOTATION_TYPE, problem,
 							SourceProblemAnnotation.ERROR_CONFIG );
 				case IProblem.SEVERITY_WARNING:
-					return new SourceProblemAnnotation(LtxEditorBuild.WARNING_ANNOTATION_TYPE, problem,
+					return new SourceProblemAnnotation(TexEditorBuild.WARNING_ANNOTATION_TYPE, problem,
 							SourceProblemAnnotation.WARNING_CONFIG );
 				default:
-					return new SourceProblemAnnotation(LtxEditorBuild.INFO_ANNOTATION_TYPE, problem,
+					return new SourceProblemAnnotation(TexEditorBuild.INFO_ANNOTATION_TYPE, problem,
 							SourceProblemAnnotation.INFO_CONFIG );
 				}
 			}
@@ -83,14 +83,14 @@ public class LtxDocumentProvider extends SourceDocumentProvider<ILtxSourceUnit>
 		fEditorPrefListener = new SettingsChangeNotifier.ChangeListener() {
 			@Override
 			public void settingsChanged(final Set<String> groupIds) {
-				if (groupIds.contains(LtxEditorBuild.GROUP_ID)) {
+				if (groupIds.contains(TexEditorBuild.GROUP_ID)) {
 					updateEditorPrefs();
 				}
 			}
 		};
 		PreferencesUtil.getSettingsChangeNotifier().addChangeListener(fEditorPrefListener);
 		final IPreferenceAccess access = PreferencesUtil.getInstancePrefs();
-		fHandleTemporaryProblems = access.getPreferenceValue(LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF);
+		fHandleTemporaryProblems = access.getPreferenceValue(TexEditorBuild.PROBLEMCHECKING_ENABLED_PREF);
 	}
 	
 	
@@ -104,11 +104,11 @@ public class LtxDocumentProvider extends SourceDocumentProvider<ILtxSourceUnit>
 	
 	private void updateEditorPrefs() {
 		final IPreferenceAccess access = PreferencesUtil.getInstancePrefs();
-		final boolean newHandleTemporaryProblems = access.getPreferenceValue(LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF);
+		final boolean newHandleTemporaryProblems = access.getPreferenceValue(TexEditorBuild.PROBLEMCHECKING_ENABLED_PREF);
 		if (fHandleTemporaryProblems != newHandleTemporaryProblems) {
 			fHandleTemporaryProblems = newHandleTemporaryProblems;
 			if (fHandleTemporaryProblems) {
-				TexModel.getModelManager().refresh(LTK.EDITOR_CONTEXT);
+				TexModel.getLtxModelManager().refresh(LTK.EDITOR_CONTEXT);
 			}
 			else {
 				final List<? extends ISourceUnit> sus = LTK.getSourceUnitManager().getOpenSourceUnits(

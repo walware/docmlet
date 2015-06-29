@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Style-Type" content="text/css"/>
+	<link rel="stylesheet" href="../book.css" charset="ISO-8859-1" type="text/css"/>
+	<title>Document Processing Tools - Configuration - Variables</title>
+	<meta name="copyright" content="Copyright (c) 2015 Stephan Wahlbrink (WalWare.de) and others. All rights reserved."/>
+</head>
+<body>
+
+<h2>Configuration - Variables</h2>
+
+<p>The following special variables are available in document processing steps:</p>
+
+<table class="style1">
+<thead><tr>
+	<th>Name</th>
+	<th>Description</th>
+</tr></thead>
+<tr>
+	<td><b>source_file_path</b></td>
+	<td>Returns the workspace relative path of the source document file</td>
+</tr><tr>
+	<td><b>resource_path</b></td>
+	<td>Returns the workspace relative path of the input file of the current step, if no argument is specified</td>
+</tr><tr>
+	<td><b>out_file_path</b></td>
+	<td>Returns the workspace relative path of the output file of the current step</td>
+</tr><tr>
+	<td><b>out_file_ext</b></td>
+	<td>Returns the file name extension of the output file, defined by the format, of the current step</td>
+</tr></table>
+
+<p>Beside 'resource_path', also the other common resource variables
+('resource_name', 'resource_loc', 'resource_enc',
+'container_name', 'container_path', 'container_loc',
+'project_name', 'project_path', 'project_loc')
+refer to the input file of the current step, if no argument is specified:</p>
+<table class="style1">
+<thead><tr>
+	<th>Expression</th>
+	<th>Description</th>
+</tr></thead>
+<tr>
+	<td>${container_loc}</td>
+	<td>Returns absolute file system path of the container of the input file</td>
+</tr><tr>
+	<td>${resource_enc}</td>
+	<td>Returns the encoding of the input file</td>
+</tr></table>
+
+<h4>Combining Variables</h4>
+<p>The variables 'source_file_path' and 'out_file_path' resolves, like other variables ending with
+'_path', to the workspace relative path.  It is possible to wrap this variables inside other 
+variables like 'resource_loc', 'resource_name', 'container_loc' or 'project_loc':</p>
+<table class="style1">
+<thead><tr>
+	<th>Expression</th>
+	<th>Description</th>
+</tr></thead>
+<tr>
+	<td>${resource_loc:${source_file_path}}</td>
+	<td>Returns the absolute file system path of the source document file</td>
+</tr><tr>
+	<td>${resource_name:${source_file_path}}</td>
+	<td>Returns the file name of the source document file</td>
+</tr><tr>
+	<td>${resource_loc:${out_file_path}}</td>
+	<td>Returns the absolute file system path of the output file of the current step</td>
+</tr><tr>
+	<td>${container_loc:${out_file_path}}</td>
+	<td>Returns the absolute file system path of the output container of the current step</td>
+</tr></table>
+
+
+<h2 id="related">&mdash;</h2>
+<h3>Related topics</h3>
+<ul class="NavList">
+<li><a href="PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-exttools.htm">External Tools: table with resource variables</a></li>
+</ul>
+
+
+</body>
+</html>

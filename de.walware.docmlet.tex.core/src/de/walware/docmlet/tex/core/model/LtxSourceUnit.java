@@ -14,12 +14,14 @@ package de.walware.docmlet.tex.core.model;
 import org.eclipse.core.resources.IFile;
 
 import de.walware.ecommons.ltk.core.impl.GenericResourceSourceUnit;
+import de.walware.ecommons.text.core.sections.IDocContentSections;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCore;
+import de.walware.docmlet.tex.core.source.LtxDocumentContentInfo;
 
 
-public class LtxSourceUnit extends GenericResourceSourceUnit implements ILtxSourceUnit {
+public class LtxSourceUnit extends GenericResourceSourceUnit implements ITexSourceUnit {
 	
 	
 	public LtxSourceUnit(final String id, final IFile file) {
@@ -33,8 +35,8 @@ public class LtxSourceUnit extends GenericResourceSourceUnit implements ILtxSour
 	}
 	
 	@Override
-	public String getContentTypeId() {
-		return TexCore.LTX_CONTENT_ID;
+	public IDocContentSections getDocumentContentInfo() {
+		return LtxDocumentContentInfo.INSTANCE;
 	}
 	
 	

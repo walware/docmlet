@@ -61,12 +61,12 @@ public class TexProjectBuilder extends IncrementalProjectBuilder {
 	@Override
 	protected IProject[] build(final int kind, final Map<String, String> args,
 			final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress= SubMonitor.convert(monitor, 5 + 100);
+		final SubMonitor m= SubMonitor.convert(monitor, 5 + 100);
 		try {
-			check(progress.newChild(5));
+			check(m.newChild(5, SubMonitor.SUPPRESS_NONE));
 			
 			final TexProjectBuild texProjectBuild= new TexProjectBuild(this);
-			texProjectBuild.build(kind, progress.newChild(100));
+			texProjectBuild.build(kind, m.newChild(100, SubMonitor.SUPPRESS_NONE));
 			
 			return null;
 		}
@@ -77,18 +77,18 @@ public class TexProjectBuilder extends IncrementalProjectBuilder {
 			throw e;
 		}
 		finally {
-			progress.done();
+			m.done();
 		}
 	}
 	
 	@Override
 	protected void clean(final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress= SubMonitor.convert(monitor, 5 + 100);
+		final SubMonitor m= SubMonitor.convert(monitor, 5 + 100);
 		try {
-			check(progress.newChild(5));
+			check(m.newChild(5, SubMonitor.SUPPRESS_NONE));
 			
 			final TexProjectClean texProjectBuild= new TexProjectClean(this);
-			texProjectBuild.clean(progress.newChild(100));
+			texProjectBuild.clean(m.newChild(100, SubMonitor.SUPPRESS_NONE));
 		}
 		catch (final CoreException e) {
 			if (e.getStatus().getSeverity() == IStatus.CANCEL) {
@@ -97,7 +97,7 @@ public class TexProjectBuilder extends IncrementalProjectBuilder {
 			throw e;
 		}
 		finally {
-			progress.done();
+			m.done();
 		}
 	}
 	

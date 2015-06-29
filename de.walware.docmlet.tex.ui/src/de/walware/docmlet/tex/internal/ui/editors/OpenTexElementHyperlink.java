@@ -21,29 +21,29 @@ import org.eclipse.swt.widgets.Display;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 
 
 public class OpenTexElementHyperlink implements IHyperlink {
 	
 	
-	private final ISourceEditor fEditor;
-	private final IRegion fRegion;
+	private final ISourceEditor editor;
+	private final IRegion region;
 	
-	private final ILtxSourceUnit fSu;
-	private final TexLabelAccess fAccess;
+	private final ITexSourceUnit su;
+	private final TexLabelAccess access;
 	
 	
-	public OpenTexElementHyperlink(final ISourceEditor editor, final ILtxSourceUnit su,
+	public OpenTexElementHyperlink(final ISourceEditor editor, final ITexSourceUnit su,
 			final TexLabelAccess access) {
 		assert (su != null);
 		assert (access != null);
 		
-		fEditor = editor;
-		fRegion = TexLabelAccess.getTextRegion(access.getNameNode());
-		fSu = su;
-		fAccess = access;
+		this.editor= editor;
+		this.region= TexLabelAccess.getTextRegion(access.getNameNode());
+		this.su= su;
+		this.access= access;
 	}
 	
 	
@@ -54,22 +54,22 @@ public class OpenTexElementHyperlink implements IHyperlink {
 	
 	@Override
 	public IRegion getHyperlinkRegion() {
-		return fRegion;
+		return this.region;
 	}
 	
 	@Override
 	public String getHyperlinkText() {
-		return NLS.bind(Messages.Hyperlinks_OpenDeclaration_label, fAccess.getDisplayName());
+		return NLS.bind(Messages.Hyperlinks_OpenDeclaration_label, this.access.getDisplayName());
 	}
 	
 	@Override
 	public void open() {
 //		try {
-			final List<? extends TexLabelAccess> all = fAccess.getAllInUnit();
+			final List<? extends TexLabelAccess> all= this.access.getAllInUnit();
 			for (final TexLabelAccess cand : all) {
 				if (cand.isWriteAccess()) {
-					final TexAstNode node = cand.getNode();
-					fEditor.selectAndReveal(node.getOffset(), node.getLength());
+					final TexAstNode node= cand.getNode();
+					this.editor.selectAndReveal(node.getOffset(), node.getLength());
 					return;
 				}
 			}

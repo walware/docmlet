@@ -18,16 +18,16 @@ import org.eclipse.jface.text.IRegion;
 
 import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.IModelManager;
-import de.walware.ecommons.ltk.ISourceUnit;
 import de.walware.ecommons.ltk.ast.AstSelection;
 import de.walware.ecommons.ltk.ast.IAstNode;
+import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.actions.AbstractOpenDeclarationHandler;
 
 import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.core.model.TexModel;
 
@@ -48,7 +48,7 @@ public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
 //		try {
 //			final IDocument document = editor.getViewer().getDocument();
 			final ISourceUnit su = editor.getSourceUnit();
-			if (su instanceof ILtxSourceUnit) {
+			if (su instanceof ITexSourceUnit) {
 				final ILtxModelInfo info = (ILtxModelInfo) su.getModelInfo(TexModel.LTX_TYPE_ID, IModelManager.MODEL_FILE, new NullProgressMonitor());
 				if (info != null) {
 					final AstInfo astInfo = info.getAst();
@@ -61,16 +61,16 @@ public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
 						if (node.getNodeType() == TexAst.NodeType.LABEL) {
 							TexAstNode current = node;
 							do {
-								final Object[] attachments = current.getAttachments();
-								for (int i = 0; i < attachments.length; i++) {
-									if (attachments[i] instanceof TexLabelAccess) {
-										final TexLabelAccess access = (TexLabelAccess) attachments[i];
+								final List<Object> attachments= current.getAttachments();
+								for (final Object attachment : attachments) {
+									if (attachment instanceof TexLabelAccess) {
+										final TexLabelAccess access = (TexLabelAccess) attachment;
 										if (access.getNameNode() == node) {
 											return access;
 										}
 									}
 								}
-								current = current.getParent();
+								current= current.getTexParent();
 							} while (current != null);
 						}
 					}

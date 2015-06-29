@@ -22,7 +22,7 @@ public class TexProjectClean extends TexProjectTask {
 	}
 	
 	
-	public void clean(final SubMonitor progress) {
+	public void clean(final SubMonitor m) {
 	}
 	
 }

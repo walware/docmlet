@@ -13,12 +13,11 @@ package de.walware.docmlet.tex.ui.text;
 
 import java.util.Map;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IToken;
 
 import de.walware.ecommons.collections.IntArrayMap;
-import de.walware.ecommons.text.CharArrayString;
-import de.walware.ecommons.ui.ColorManager;
+import de.walware.ecommons.string.CharArrayString;
+import de.walware.ecommons.text.ui.settings.TextStyleManager;
 
 import de.walware.docmlet.tex.core.parser.LtxLexer;
 
@@ -26,8 +25,8 @@ import de.walware.docmlet.tex.core.parser.LtxLexer;
 public class LtxMathTextStyleScanner extends LtxDefaultTextStyleScanner {
 	
 	
-	public LtxMathTextStyleScanner(final ColorManager colorManager, final IPreferenceStore preferenceStore) {
-		super(colorManager, preferenceStore);
+	public LtxMathTextStyleScanner(final TextStyleManager textStyles) {
+		super(textStyles);
 	}
 	
 	

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ #=============================================================================#
+ # Copyright (c) 2007-2015 Stephan Wahlbrink (WalWare.de) and others.
+ # All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ # 
+ # Contributors:
+ #     Stephan Wahlbrink - initial API and implementation
+ #=============================================================================#
+-->
+
+<plugin>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commandsCategory_EditDocs_name"
+            description="%commandsCategory_EditDocs_description">
+      </category>
+      <command
+            id="de.walware.docmlet.base.commands.ConfigureMarkup"
+            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commands_ConfigureMarkup_name"
+            description="%commands_ConfigureMarkup_description">
+      </command>
+   </extension>
+   
+<!-- Editor -->
+   <extension
+         point="org.eclipse.ui.themes">
+      <colorDefinition
+            id="de.walware.docmlet.themes.SectionColor"
+            isEditable="false"
+            label=""
+            value="159,151,47">
+      </colorDefinition>
+      
+      <theme
+            id="org.eclipse.ui.ide.systemDefault">
+         <colorOverride
+               id="de.walware.docmlet.themes.SectionColor"
+               value="COLOR_LIST_FOREGROUND">
+         </colorOverride>
+      </theme>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="de.walware.docmlet.base.expressions.isEditorActive.DocEditor">
+         <with
+               variable="activeEditor">
+            <instanceof
+                  value="de.walware.docmlet.base.ui.sourceediting.IDocEditor">
+            </instanceof>
+         </with>
+      </definition>
+   </extension>
+   
+<!-- Markup Help -->
+   <extension-point id="de.walware.docmlet.base.markupHelp"
+         name="Markup Help"
+         schema="schema/markupHelp.exsd"/>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            id="de.walware.docmlet.base.views.MarkupHelp"
+            name="Markup Cheat Sheet"
+            icon="icons/view_16/markup_help.png"
+            class="de.walware.docmlet.base.internal.ui.markuphelp.MarkupHelpView"
+            restorable="true">
+      </view>
+   </extension>
+   
+<!-- Document Processing -->
+   <extension-point id="de.walware.docmlet.base.docProcessing"
+         name="Processing of Markup Language Documents"
+         schema="schema/docProcessing.exsd"/>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="de.walware.docmlet.base.commands.ProcessDocDefault"
+            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commands_ProcessDocument_name"
+            description="%commands_ProcessDocument_description"
+            helpContextId="de.walware.docmlet.doc.user.DocProcessingActionsRunActiveConfigProcess">
+      </command>
+      <command
+            id="de.walware.docmlet.base.commands.PreviewDocDefault"
+            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commands_PreviewDocument_name"
+            description="%commands_PreviewDocument_description"
+            helpContextId="de.walware.docmlet.doc.user.DocProcessingActionsRunActiveConfigPreview">
+      </command>
+      <command
+            id="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
+            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commands_ProcessAndPreview_name"
+            description="%commands_ProcessAndPreview_description"
+            helpContextId="de.walware.docmlet.doc.user.DocProcessingActionsRunActiveConfig">
+      </command>
+      <command
+            id="de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"
+            categoryId="de.walware.docmlet.base.commands.EditDocsCategory"
+            name="%commands_ToggleRunOnSave_name"
+            description="%commands_ToggleRunOnSave_description"
+            helpContextId="de.walware.docmlet.doc.user.DocProcessingActionsRunActiveConfigPreview">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
+            icon="icons/tool_16/process.png">
+      </image>
+      <image
+            commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
+            icon="icons/tool_16/preview.png">
+      </image>
+      <image
+            commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
+            icon="icons/tool_16/process_and_preview.png">
+      </image>
+      <image
+            commandId="de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"
+            icon="icons/tool_16/run_on_save.png">
+      </image>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="de.walware.docmlet.base.contexts.DocEditor"
+            parentId="org.eclipse.ui.contexts.window"
+            name="%contexts_DocEditing_name">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
+            contextId="de.walware.docmlet.base.contexts.DocEditor"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+T 4">
+      </key>
+      <key
+            commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
+            contextId="de.walware.docmlet.base.contexts.DocEditor"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+T 9">
+      </key>
+      <key
+            commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
+            contextId="de.walware.docmlet.base.contexts.DocEditor"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+T 0">
+      </key>
+      <key
+            commandId="de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"
+            contextId="de.walware.docmlet.base.contexts.DocEditor"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+T S">
+      </key>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
+            class="de.walware.docmlet.base.ui.processing.actions.RunActiveConfigWorkbenchHandler">
+         <activeWhen>
+            <reference
+                  definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
+            class="de.walware.docmlet.base.ui.processing.actions.RunActiveConfigWorkbenchHandler">
+         <activeWhen>
+            <reference
+                  definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
+            class="de.walware.docmlet.base.ui.processing.actions.RunActiveConfigWorkbenchHandler">
+         <activeWhen>
+            <reference
+                  definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"
+            class="de.walware.docmlet.base.internal.ui.processing.ToggleRunOnSaveWorkbenchHandler">
+         <activeWhen>
+            <reference
+                  definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+         </activeWhen>
+      </handler>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?before=window">
+         <menu
+               id="de.walware.docmlet.base.menus.MainDoc"
+               label="%menus_Document_name"
+               mnemonic="%menus_Document_mnemonic">
+            <separator
+                  name="processing">
+            </separator>
+            <separator
+                  name="additions"
+                  visible="true">
+            </separator>
+            <visibleWhen>
+               <reference
+                     definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+            </visibleWhen>
+         </menu>
+      </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?before=org.eclipse.ui.workbench.navigate">
+         <toolbar
+               id="de.walware.docmlet.base.menus.DocTools"
+               label="%toolbars_DocProcessing_label">
+            <separator
+                  name="processing"
+                  visible="false">
+            </separator>
+            <command
+                  id="de.walware.docmlet.base.menus.ProcessDoc"
+                  commandId="de.walware.docmlet.base.commands.ProcessDocDefault"
+                  style="pulldown">
+               <visibleWhen>
+                  <reference
+                        definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+               </visibleWhen>
+            </command>
+            <command
+                  id="de.walware.statet.redocs.menus.PreviewDoc"
+                  commandId="de.walware.docmlet.base.commands.PreviewDocDefault"
+                  style="push">
+               <visibleWhen>
+                  <reference
+                        definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+               </visibleWhen>
+            </command>
+            <command
+                  id="de.walware.statet.redocs.menus.ProcessAndPreview"
+                  commandId="de.walware.docmlet.base.commands.ProcessAndPreviewDefault"
+                  style="push">
+               <visibleWhen>
+                  <reference
+                        definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"
+                  style="toggle">
+               <visibleWhen>
+                  <reference
+                        definitionId="de.walware.docmlet.base.expressions.isEditorActive.DocEditor"/>
+               </visibleWhen>
+            </command>
+            <separator
+                  name="additions"
+                  visible="false">
+            </separator>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:de.walware.docmlet.base.menus.ProcessDoc">
+         <dynamic
+               id="de.walware.docmlet.base.menus.ProcessDocItems">
+            <class
+                  class="de.walware.docmlet.base.ui.processing.actions.RunConfigsDropdownContribution">
+               <parameter
+                     name="launchFlags"
+                     value="processing_steps"/>
+            </class>
+         </dynamic>
+         <separator
+               name="additions"
+               visible="true">
+         </separator>
+      </menuContribution>
+   </extension>
+   
+</plugin>

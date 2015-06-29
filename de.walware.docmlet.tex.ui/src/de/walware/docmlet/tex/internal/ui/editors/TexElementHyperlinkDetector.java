@@ -21,7 +21,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 
-import de.walware.docmlet.tex.core.model.ILtxSourceUnit;
+import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.ui.sourceediting.LtxOpenDeclarationHandler;
 
@@ -42,7 +42,7 @@ public class TexElementHyperlinkDetector extends AbstractHyperlinkDetector {
 			final TexLabelAccess access = LtxOpenDeclarationHandler.searchAccess(editor, region);
 			if (access != null) {
 				hyperlinks.add(new OpenTexElementHyperlink(editor,
-						(ILtxSourceUnit) editor.getSourceUnit(), access));
+						(ITexSourceUnit) editor.getSourceUnit(), access));
 			}
 		}
 		if (!hyperlinks.isEmpty()) {

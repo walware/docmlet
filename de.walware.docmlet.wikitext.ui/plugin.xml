@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ #=============================================================================#
+ # Copyright (c) 2007-2015 Stephan Wahlbrink (WalWare.de) and others.
+ # All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ # 
+ # Contributors:
+ #     Stephan Wahlbrink - initial API and implementation
+ #=============================================================================#
+-->
+
+<plugin>
+   
+   <extension-point id="de.walware.docmlet.wikitext.docTemplates"
+         name="Wikitext Document Templates"
+         schema="schema/docTemplates.exsd"/>
+   
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.walware.docmlet.wikitext.internal.ui.WikitextUIPreferenceInitializer">
+      </initializer>
+   </extension>
+   
+   <!--extension
+         point="org.eclipse.ui.editors">
+      <editor
+            id="de.walware.docmlet.wikitext.editors.Wikitext"
+            name="%editors_Wikitext_name"
+            class="de.walware.docmlet.wikitext.internal.ui.editors.WikitextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="false">
+         <contentTypeBinding
+               contentTypeId="">
+         </contentTypeBinding>
+      </editor>
+   </extension-->
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="de.walware.docmlet.wikitext.contexts.WikitextEditor"
+            parentId="de.walware.ecommons.text.contexts.TextEditor"
+            name="%contexts_WikitextEditing_name">
+      </context>
+   </extension>
+   
+   <extension
+         point="de.walware.ecommons.ltk.advancedContentAssist">
+      <category
+            id="markup"
+            name="%contentAssist_MarkupCategory_name">
+      </category>
+      <category
+            id="templates"
+            name="%contentAssist_TemplateCategory_name">
+      </category>
+      <computer
+            id="de.walware.docmlet.wikitext.contentAssist.MarkupTemplatesCompletion"
+            contentTypeId="de.walware.docmlet.wikitext.contentTypes.Wikidoc"
+            categoryId="markup"
+            class="de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupTemplateAssistComputer">
+         <partition
+               partitionType="Wikitext.Default">
+         </partition>
+      </computer>
+      <computer
+            id="de.walware.docmlet.wikitext.contentAssist.MarkupAnchorCompletion"
+            contentTypeId="de.walware.docmlet.wikitext.contentTypes.Wikidoc"
+            categoryId="markup"
+            class="de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupLabelAssistComputer">
+         <partition
+               partitionType="Wikitext.Default">
+         </partition>
+      </computer>
+      <computer
+            id="de.walware.docmlet.wikitext.contentAssist.WikitextTemplatesCompletion"
+            contentTypeId="de.walware.docmlet.wikitext.contentTypes.Wikidoc"
+            categoryId="templates"
+            class="de.walware.docmlet.wikitext.internal.ui.sourceediting.WikitextTemplateAssistComputer">
+         <partition
+               partitionType="Wikitext.Default">
+         </partition>
+      </computer>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+      <target
+            id="de.walware.docmlet.wikitext.editorHyperlinks.WikitextEditorTarget"
+            name="%editorHyperlinks_WikitextEditorTarget_name">
+         <context
+               type="de.walware.ecommons.ltk.ui.sourceediting.SourceEditor1">
+         </context>
+      </target>
+   </extension>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector
+            id="de.walware.docmlet.wikitext.editorHyperlinks.MarkupHyperlinkDetector"
+            targetId="de.walware.docmlet.wikitext.editorHyperlinks.WikitextEditorTarget"
+            name="%editorHyperlinks_MarkupLink_name"
+            class="de.walware.docmlet.wikitext.internal.ui.editors.MarkupHyperlinkDetector"
+            activate="true">
+      </hyperlinkDetector>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.Wikitext"
+            name="%preferencePages_Wikitext_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.WikitextBasePreferencePage">
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.MarkupConfig"
+            category="de.walware.docmlet.wikitext.preferencePages.Wikitext"
+            name="%preferencePages_WikitextMarkupConfig_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.MarkupConfigPreferencePage">
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.DocTemplates"
+            category="de.walware.docmlet.wikitext.preferencePages.Wikitext"
+            name="%preferencePages_WikitextDocTemplates_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.DocTemplatesPreferencePage">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceTemplates"/>
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.WikitextEditor"
+            category="de.walware.docmlet.wikitext.preferencePages.Wikitext"
+            name="%preferencePages_WikitextEditor_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.WikitextEditorPreferencePage">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoBracket"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoIndent"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.AutoWrap"/>
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.WikitextEditorContentAssist"
+            category="de.walware.docmlet.wikitext.preferencePages.WikitextEditor"
+            name="%preferencePages_WikitextEditorContentAssist_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.WikidocContentAssistConfiguration">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceEditor"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceContentAssist"/>
+      </page>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+         name="de.walware.docmlet.wikitext.ui.error"
+         super="org.eclipse.ui.workbench.texteditor.error"
+         markerSeverity="2">
+      </type>
+      <type
+         name="de.walware.docmlet.wikitext.ui.warning"
+         super="org.eclipse.ui.workbench.texteditor.warning"
+         markerSeverity="1">
+      </type>
+      <type
+         name="de.walware.docmlet.wikitext.ui.info"
+         super="org.eclipse.ui.workbench.texteditor.info"
+         markerSeverity="0">
+      </type>
+   </extension>
+   
+   <extension
+         point="de.walware.docmlet.base.markupHelp">
+      <contentProvider
+            class="de.walware.docmlet.wikitext.internal.ui.WikitextMarkupHelpProvider">
+      </contentProvider>
+   </extension>
+   
+</plugin>

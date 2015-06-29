@@ -11,8 +11,6 @@
 
 package de.walware.docmlet.tex.ui;
 
-import static de.walware.docmlet.tex.internal.ui.TexUIPlugin.PLUGIN_ID;
-
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -26,14 +24,16 @@ import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 public class TexUIResources {
 	
 	
-	public static final String OBJ_PREAMBLE_IMAGE_ID= PLUGIN_ID + "/image/obj/preamble"; //$NON-NLS-1$
-	public static final String OBJ_PART_IMAGE_ID= PLUGIN_ID + "/image/obj/sectioning-part"; //$NON-NLS-1$
-	public static final String OBJ_CHAPTER_IMAGE_ID= PLUGIN_ID + "/image/obj/sectioning-chapter"; //$NON-NLS-1$
-	public static final String OBJ_SECTION_IMAGE_ID= PLUGIN_ID + "/image/obj/sectioning-section"; //$NON-NLS-1$
-	public static final String OBJ_SUBSECTION_IMAGE_ID= PLUGIN_ID + "/image/obj/sectioning-subsection"; //$NON-NLS-1$
-	public static final String OBJ_SUBSUBSECTION_IMAGE_ID= PLUGIN_ID + "/image/obj/sectioning-subsubsection"; //$NON-NLS-1$
+	private static final String NS= "de.walware.docmlet.tex"; //$NON-NLS-1$
 	
-	public static final String OBJ_LABEL_IMAGE_ID= PLUGIN_ID + "/image/obj/label"; //$NON-NLS-1$
+	
+	public static final String OBJ_PART_IMAGE_ID= NS + "/image/obj/sectioning-part"; //$NON-NLS-1$
+	public static final String OBJ_CHAPTER_IMAGE_ID= NS + "/image/obj/sectioning-chapter"; //$NON-NLS-1$
+	public static final String OBJ_SECTION_IMAGE_ID= NS + "/image/obj/sectioning-section"; //$NON-NLS-1$
+	public static final String OBJ_SUBSECTION_IMAGE_ID= NS + "/image/obj/sectioning-subsection"; //$NON-NLS-1$
+	public static final String OBJ_SUBSUBSECTION_IMAGE_ID= NS + "/image/obj/sectioning-subsubsection"; //$NON-NLS-1$
+	
+	public static final String OBJ_LABEL_IMAGE_ID= NS + "/image/obj/label"; //$NON-NLS-1$
 	
 	
 	public static final TexUIResources INSTANCE= new TexUIResources();
@@ -45,7 +45,7 @@ public class TexUIResources {
 	
 	
 	private TexUIResources() {
-		this.registry= TexUIPlugin.getDefault().getImageRegistry();
+		this.registry= TexUIPlugin.getInstance().getImageRegistry();
 	}
 	
 	public ImageDescriptor getImageDescriptor(final String id) {
@@ -58,7 +58,7 @@ public class TexUIResources {
 	
 	public String getCommandImageId(final TexCommand command) {
 		if (commandImages == null) {
-			commandImages= TexUIPlugin.getDefault().getCommandImages();
+			commandImages= TexUIPlugin.getInstance().getCommandImages();
 		}
 		return commandImages.get(command.getControlWord());
 	}

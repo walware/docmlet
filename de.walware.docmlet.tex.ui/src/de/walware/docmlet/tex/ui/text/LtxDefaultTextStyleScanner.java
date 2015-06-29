@@ -13,27 +13,21 @@ package de.walware.docmlet.tex.ui.text;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.rules.Token;
 
 import de.walware.ecommons.collections.IntArrayMap;
-import de.walware.ecommons.text.BufferedDocumentParseInput;
-import de.walware.ecommons.text.CharArrayString;
-import de.walware.ecommons.text.ui.presentation.ITextPresentationConstants;
+import de.walware.ecommons.string.CharArrayString;
+import de.walware.ecommons.text.core.input.DocumentParserInput;
 import de.walware.ecommons.text.ui.settings.TextStyleManager;
-import de.walware.ecommons.ui.ColorManager;
-import de.walware.ecommons.ui.ISettingsChangedHandler;
 
 import de.walware.docmlet.tex.core.parser.LtxLexer;
 
 
-public class LtxDefaultTextStyleScanner extends BufferedDocumentParseInput
-		implements ITokenScanner, ISettingsChangedHandler {
+public class LtxDefaultTextStyleScanner extends DocumentParserInput implements ITokenScanner {
 	
 	
 	protected static void putAll(final Map<String, IToken> map, final String[] symbols, final IToken token) {
@@ -43,67 +37,69 @@ public class LtxDefaultTextStyleScanner extends BufferedDocumentParseInput
 	}
 	
 	
-	private final LtxLexer fLexer;
+	private final LtxLexer lexer;
 	
-	private final IToken[] fTokens;
-	private final TextStyleManager fTextStyles;
-	private final IToken fDefaultToken;
-	private IToken fNextToken;
-	private final Map<CharArrayString, IToken> fSpecialWords;
+	private final IToken[] tokens;
+	private final TextStyleManager textStyles;
+	private final IToken defaultToken;
+	private IToken nextToken;
+	private final Map<CharArrayString, IToken> specialWords;
 	
-	private int fCurrentOffset;
-	private int fCurrentLength;
+	private int currentOffset;
+	private int currentLength;
 	
 	
-	public LtxDefaultTextStyleScanner(final ColorManager colorManager, final IPreferenceStore preferenceStore) {
-		fLexer = createLexer();
-		fLexer.setReportAsterisk(false);
-		fTextStyles = new TextStyleManager(colorManager, preferenceStore, ITexTextStyles.GROUP_ID);
+	public LtxDefaultTextStyleScanner(final TextStyleManager textStyles) {
+		this.lexer= createLexer();
+		this.lexer.setReportAsterisk(false);
+		this.textStyles= textStyles;
 		
-		final IntArrayMap<IToken> tokens = new IntArrayMap<IToken>();
+		final IntArrayMap<IToken> tokens= new IntArrayMap<>();
 		registerTokens(tokens);
-		fDefaultToken = tokens.get(LtxLexer.DEFAULT_TEXT);
-		fTokens = tokens.toArray(IToken.class);
-		fSpecialWords = new HashMap<CharArrayString, IToken>();
-		updateWords(fSpecialWords);
+		this.defaultToken= tokens.get(LtxLexer.DEFAULT_TEXT);
+		this.tokens= tokens.toArray(IToken.class);
+		this.specialWords= new HashMap<>();
+		updateWords(this.specialWords);
 	}
 	
 	
 	protected LtxLexer createLexer() {
-		return new LtxLexer(this);
+		return new LtxLexer();
 	}
 	
 	protected IToken getToken(final String key) {
-		return fTextStyles.getToken(key);
+		return this.textStyles.getToken(key);
 	}
 	
 	
 	@Override
 	public void setRange(final IDocument document, final int offset, final int length) {
-		setDocument(document);
-		fCurrentOffset = offset;
-		fCurrentLength = 0;
-		fLexer.setRange(offset, length);
+		reset(document);
+		init(offset, offset + length);
+		this.lexer.reset(this);
+		
+		this.currentOffset= offset;
+		this.currentLength= 0;
 	}
 	
 	@Override
 	public IToken nextToken() {
-		fCurrentOffset += fCurrentLength;
-		IToken token = fNextToken;
+		this.currentOffset += this.currentLength;
+		IToken token = this.nextToken;
 		if (token != null) {
-			fNextToken = null;
+			this.nextToken = null;
 		}
 		else {
 			do {
-				token = getTokenFromScannerToken(fLexer.next());
-			} while (token == fDefaultToken);
+				token = getTokenFromScannerToken(this.lexer.next());
+			} while (token == this.defaultToken);
 		}
-		fCurrentLength = fLexer.getOffset()-fCurrentOffset;
-		if (fCurrentLength != 0) {
-			fNextToken = token;
-			return fDefaultToken;
+		this.currentLength = this.lexer.getOffset() - this.currentOffset;
+		if (this.currentLength != 0) {
+			this.nextToken = token;
+			return this.defaultToken;
 		}
-		fCurrentLength = fLexer.getLength();
+		this.currentLength = this.lexer.getLength();
 		return token;
 	}
 	
@@ -113,40 +109,31 @@ public class LtxDefaultTextStyleScanner extends BufferedDocumentParseInput
 		case LtxLexer.EOF:
 			return Token.EOF;
 		case LtxLexer.CONTROL_WORD:
-			substring(2, fLexer.getLength()-1, fTmpCharString);
-			if (fTmpCharString.length() > 0) {
-				token = fSpecialWords.get(fTmpCharString);
+			final CharArrayString label= getTmpString(1, this.lexer.getLength() - 1);
+			if (label.length() > 0) {
+				token = this.specialWords.get(label);
 				if (token != null) {
 					return token;
 				}
 			}
-			return fTokens[LtxLexer.CONTROL_WORD];
+			return this.tokens[LtxLexer.CONTROL_WORD];
 		default:
-			token = fTokens[lexerToken];
+			token = this.tokens[lexerToken];
 			if (token != null) {
 				return token;
 			}
-			return fDefaultToken;
+			return this.defaultToken;
 		}
 	}
 	
 	@Override
 	public int getTokenOffset() {
-		return fCurrentOffset;
+		return this.currentOffset;
 	}
 	
 	@Override
 	public int getTokenLength() {
-		return fCurrentLength;
-	}
-	
-	
-	@Override
-	public void handleSettingsChanged(final Set<String> groupIds, final Map<String, Object> options) {
-		fTextStyles.handleSettingsChanged(groupIds, options);
-		if (groupIds.contains(ITexTextStyles.GROUP_ID)) {
-			options.put(ITextPresentationConstants.SETTINGSCHANGE_AFFECTSPRESENTATION_KEY, Boolean.TRUE);
-		}
+		return this.currentLength;
 	}
 	
 	

@@ -11,51 +11,62 @@
 
 package de.walware.docmlet.tex.core.source;
 
-import org.eclipse.jface.text.IDocument;
+import java.util.List;
 
-import de.walware.ecommons.text.IPartitionConstraint;
-import de.walware.ecommons.text.PartitioningConfiguration;
+import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.text.core.IPartitionConstraint;
 
 
 public interface ITexDocumentConstants {
 	
 	
-	public final static String LTX_PARTITIONING= "ltx_walware"; //$NON-NLS-1$
+	/**
+	 * The id of partitioning of LaTeX documents.
+	 */
+	String LTX_PARTITIONING= "Ltx_walware"; //$NON-NLS-1$
 	
-	public final static String LTX_DEFAULT_CONTENT_TYPE= IDocument.DEFAULT_CONTENT_TYPE;
-	public final static String LTX_DEFAULT_EXPL_CONTENT_TYPE= "ltx.default"; //$NON-NLS-1$
-	public final static String LTX_COMMENT_CONTENT_TYPE= "ltx.comment"; //$NON-NLS-1$
-	public static final String LTX_MATH_CONTENT_TYPE= "ltx.math"; //$NON-NLS-1$
-	public final static String LTX_MATHCOMMENT_CONTENT_TYPE= "ltx.mathcomment"; //$NON-NLS-1$
-	public static final String LTX_VERBATIM_CONTENT_TYPE= "ltx.verbatim"; //$NON-NLS-1$
+	String LTX_DEFAULT_CONTENT_TYPE= "Ltx.Default"; //$NON-NLS-1$
+	String LTX_COMMENT_CONTENT_TYPE= "Ltx.Comment"; //$NON-NLS-1$
+	String LTX_MATH_CONTENT_TYPE= "Ltx.Math"; //$NON-NLS-1$
+	String LTX_MATHCOMMENT_CONTENT_TYPE= "Ltx.MathComment"; //$NON-NLS-1$
+	String LTX_VERBATIM_CONTENT_TYPE= "Ltx.Verbatim"; //$NON-NLS-1$
 	
-	
-	public static final String[] LTX_PARTITION_TYPES= new String[] {
+	/**
+	 * List with all partition content types of LaTeX documents.
+	 */
+	List<String> LTX_CONTENT_TYPES= ImCollections.newList(
 			LTX_DEFAULT_CONTENT_TYPE,
 			LTX_COMMENT_CONTENT_TYPE,
 			LTX_MATH_CONTENT_TYPE,
 			LTX_MATHCOMMENT_CONTENT_TYPE,
-			LTX_VERBATIM_CONTENT_TYPE,
-	};
+			LTX_VERBATIM_CONTENT_TYPE );
 	
-	public static final IPartitionConstraint LTX_DEFAULT_CONSTRAINT= new IPartitionConstraint() {
+	
+	IPartitionConstraint LTX_DEFAULT_CONTENT_CONSTRAINT= new IPartitionConstraint() {
 				@Override
 				public boolean matches(final String partitionType) {
-					return (partitionType == LTX_DEFAULT_CONTENT_TYPE
-							|| partitionType == LTX_DEFAULT_EXPL_CONTENT_TYPE );
+					return (partitionType == LTX_DEFAULT_CONTENT_TYPE);
 				}
 	};
 	
-	public static final IPartitionConstraint LTX_DEFAULT_OR_MATH_CONSTRAINT= new IPartitionConstraint() {
+	IPartitionConstraint LTX_DEFAULT_OR_MATH_CONTENT_CONSTRAINT= new IPartitionConstraint() {
 		@Override
 		public boolean matches(final String partitionType) {
 			return (partitionType == LTX_DEFAULT_CONTENT_TYPE
-					|| partitionType == LTX_DEFAULT_EXPL_CONTENT_TYPE
 					|| partitionType == LTX_MATH_CONTENT_TYPE );
 		}
 	};
 	
-	public static final PartitioningConfiguration LTX_PARTITIONING_CONFIG= new PartitioningConfiguration(
-			LTX_PARTITIONING, LTX_DEFAULT_CONSTRAINT);
+	IPartitionConstraint LTX_ANY_CONTENT_CONSTRAINT= new IPartitionConstraint() {
+		@Override
+		public boolean matches(final String partitionType) {
+//			return (partitionType.startsWith("Ltx.")); //$NON-NLS-1$
+			return (partitionType == LTX_DEFAULT_CONTENT_TYPE
+					|| partitionType == LTX_MATH_CONTENT_TYPE
+					|| partitionType == LTX_COMMENT_CONTENT_TYPE
+					|| partitionType == LTX_MATHCOMMENT_CONTENT_TYPE
+					|| partitionType == LTX_VERBATIM_CONTENT_TYPE );
+		}
+	};
 	
 }

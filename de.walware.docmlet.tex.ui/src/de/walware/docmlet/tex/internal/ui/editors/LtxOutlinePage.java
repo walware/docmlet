@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.services.IServiceLocator;
 
-import de.walware.ecommons.ltk.IModelElement;
+import de.walware.ecommons.ltk.core.model.IModelElement;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditor1;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditor2OutlinePage;
 import de.walware.ecommons.ltk.ui.util.ViewerDragSupport;
@@ -25,7 +25,7 @@ import de.walware.ecommons.ui.actions.HandlerCollection;
 import de.walware.ecommons.ui.util.DialogUtil;
 
 import de.walware.docmlet.tex.core.model.TexModel;
-import de.walware.docmlet.tex.core.sourcecode.TexRefactoring;
+import de.walware.docmlet.tex.core.refactoring.TexRefactoring;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
 import de.walware.docmlet.tex.ui.TexLabelProvider;
 
@@ -62,7 +62,7 @@ public class LtxOutlinePage extends SourceEditor2OutlinePage {
 	
 	@Override
 	protected IDialogSettings getDialogSettings() {
-		return DialogUtil.getDialogSettings(TexUIPlugin.getDefault(), "TexOutlineView"); //$NON-NLS-1$
+		return DialogUtil.getDialogSettings(TexUIPlugin.getInstance(), "TexOutlineView"); //$NON-NLS-1$
 	}
 	
 	@Override

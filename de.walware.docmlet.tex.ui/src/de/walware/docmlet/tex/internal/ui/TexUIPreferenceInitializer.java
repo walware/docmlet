@@ -29,14 +29,13 @@ import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssistComputerRegistry;
 import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.text.ui.settings.AssistPreferences;
-import de.walware.ecommons.text.ui.settings.DecorationPreferences;
 
 import de.walware.workbench.ui.IWaThemeConstants;
 import de.walware.workbench.ui.util.ThemeUtil;
 
-import de.walware.docmlet.tex.ui.TexUIPreferences;
-import de.walware.docmlet.tex.ui.editors.LtxEditorBuild;
-import de.walware.docmlet.tex.ui.editors.TexEditorOptions;
+import de.walware.docmlet.tex.ui.TexUI;
+import de.walware.docmlet.tex.ui.editors.TexEditorBuild;
+import de.walware.docmlet.tex.ui.sourceediting.TexEditingSettings;
 import de.walware.docmlet.tex.ui.text.ITexTextStyles;
 
 
@@ -49,9 +48,9 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	
 	@Override
 	public void initializeDefaultPreferences() {
-		final IPreferenceStore store = TexUIPlugin.getDefault().getPreferenceStore();
+		final IPreferenceStore store = TexUIPlugin.getInstance().getPreferenceStore();
 		final IScopeContext scope = DefaultScope.INSTANCE;
-		final IEclipsePreferences pref = scope.getNode(TexUIPlugin.PLUGIN_ID);
+		final IEclipsePreferences pref = scope.getNode(TexUI.PLUGIN_ID);
 		final ThemeUtil theme = new ThemeUtil();
 		
 		EditorsUI.useAnnotationsPreferencePage(store);
@@ -133,32 +132,28 @@ public class TexUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		pref.putBoolean(ITexTextStyles.TS_TASK_TAG + TEXTSTYLE_UNDERLINE_SUFFIX, false);
 		pref.putBoolean(ITexTextStyles.TS_TASK_TAG + TEXTSTYLE_STRIKETHROUGH_SUFFIX, false);
 		
-		final IEclipsePreferences editorNode = scope.getNode(TexUIPlugin.TEX_EDITOR_QUALIFIER);
-		editorNode.put(ContentAssistComputerRegistry.CIRCLING_ORDERED, "tex-elements:false,templates:true,paths:true"); //$NON-NLS-1$
-		editorNode.put(ContentAssistComputerRegistry.DEFAULT_DISABLED, ""); //$NON-NLS-1$
-		
+		{	final IEclipsePreferences node= scope.getNode(TexEditingSettings.ASSIST_LTX_PREF_QUALIFIER);
+			node.put(ContentAssistComputerRegistry.CIRCLING_ORDERED, "tex-elements:false,templates:true,paths:true"); //$NON-NLS-1$
+			node.put(ContentAssistComputerRegistry.DEFAULT_DISABLED, ""); //$NON-NLS-1$
+		}
 		// EditorPreferences
-		pref.putBoolean(DecorationPreferences.MATCHING_BRACKET_ENABLED_KEY, true);
-		pref.put(DecorationPreferences.MATCHING_BRACKET_COLOR_KEY, theme.getColorPrefValue(IWaThemeConstants.MATCHING_BRACKET_COLOR));
-		
-		{	final AssistPreferences assistPrefs = TexUIPreferences.EDITING_ASSIST_PREFERENCES;
+		{	final AssistPreferences assistPrefs= TexEditingSettings.getAssistPrefences();
 			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoActivationEnabledPref(), Boolean.TRUE);
-			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoActivationDelayPref(), 200);
 			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertSinglePref(), Boolean.FALSE);
 			PreferencesUtil.setPrefValue(scope, assistPrefs.getAutoInsertPrefixPref(), Boolean.FALSE);
 		}
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.FOLDING_RESTORE_STATE_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.FOLDING_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.FOLDING_RESTORE_STATE_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
 		
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_TAB_ACTION_PREF, TabAction.INSERT_INDENT_LEVEL);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, TexEditorOptions.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_TAB_ACTION_PREF, TabAction.INSERT_INDENT_LEVEL);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditingSettings.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
 		
-		PreferencesUtil.setPrefValue(scope, LtxEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, TexEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
 		
 	}
 	

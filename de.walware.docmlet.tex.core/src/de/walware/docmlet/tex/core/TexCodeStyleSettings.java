@@ -168,7 +168,7 @@ public class TexCodeStyleSettings extends AbstractPreferencesModelObject
 	}
 	
 	
-/*-- Properties --------------------------------------------------------------*/
+/*[ Properties ]===============================================================*/
 	
 	public void setTabSize(final int size) {
 		final int oldValue = fTabSize;

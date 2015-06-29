@@ -16,8 +16,8 @@ import java.util.List;
 
 public interface ITexLabelSet {
 	
-	public abstract List<String> getAccessLabels();
+	List<String> getAccessLabels();
 	
-	public abstract List<TexLabelAccess> getAllAccessOf(final String label);
+	List<TexLabelAccess> getAllAccessOf(String label);
 	
 }

@@ -17,29 +17,35 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
 
-import de.walware.ecommons.ltk.IModelElement;
+import de.walware.ecommons.ltk.core.model.IModelElement;
 import de.walware.ecommons.ltk.ui.IElementLabelProvider;
 
+import de.walware.docmlet.base.ui.DocBaseUIResources;
+
 import de.walware.docmlet.tex.core.commands.TexCommand;
-import de.walware.docmlet.tex.core.model.ILtxSourceElement;
+import de.walware.docmlet.tex.core.model.ITexSourceElement;
 import de.walware.docmlet.tex.core.model.TexLabelAccess;
 
 
 public class TexLabelProvider extends StyledCellLabelProvider implements IElementLabelProvider, ILabelProvider {
 	
 	
+	private DocBaseUIResources docBaseResources;
 	private TexUIResources texResources;
 	
 	
 	public TexLabelProvider() {
-		texResources= TexUIResources.INSTANCE;
+		this.docBaseResources= DocBaseUIResources.INSTANCE;
+		this.texResources= TexUIResources.INSTANCE;
 	}
 	
 	
 	@Override
 	public void dispose() {
 		super.dispose();
-		texResources = null;
+		
+		this.docBaseResources= null;
+		this.texResources= null;
 	}
 	
 	
@@ -57,18 +63,18 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 	@Override
 	public Image getImage(final IModelElement element) {
 		switch (element.getElementType() & IModelElement.MASK_C3) {
-		case ILtxSourceElement.C2_PREAMBLE:
-			return texResources.getImage(TexUIResources.OBJ_PREAMBLE_IMAGE_ID);
-		case ILtxSourceElement.C2_SECTIONING+TexCommand.PART_LEVEL:
-			return texResources.getImage(TexUIResources.OBJ_PART_IMAGE_ID);
-		case ILtxSourceElement.C2_SECTIONING+TexCommand.CHAPTER_LEVEL:
-			return texResources.getImage(TexUIResources.OBJ_CHAPTER_IMAGE_ID);
-		case ILtxSourceElement.C2_SECTIONING+TexCommand.SECTION_LEVEL:
-			return texResources.getImage(TexUIResources.OBJ_SECTION_IMAGE_ID);
-		case ILtxSourceElement.C2_SECTIONING+TexCommand.SUBSECTION_LEVEL:
-			return texResources.getImage(TexUIResources.OBJ_SUBSECTION_IMAGE_ID);
-		case ILtxSourceElement.C2_SECTIONING+TexCommand.SUBSUBSECTION_LEVEL:
-			return texResources.getImage(TexUIResources.OBJ_SUBSUBSECTION_IMAGE_ID);
+		case ITexSourceElement.C2_PREAMBLE:
+			return getDocBaseImage(DocBaseUIResources.OBJ_PREAMBLE_IMAGE_ID);
+		case ITexSourceElement.C2_SECTIONING | TexCommand.PART_LEVEL:
+			return getTexImage(TexUIResources.OBJ_PART_IMAGE_ID);
+		case ITexSourceElement.C2_SECTIONING | TexCommand.CHAPTER_LEVEL:
+			return getTexImage(TexUIResources.OBJ_CHAPTER_IMAGE_ID);
+		case ITexSourceElement.C2_SECTIONING | TexCommand.SECTION_LEVEL:
+			return getTexImage(TexUIResources.OBJ_SECTION_IMAGE_ID);
+		case ITexSourceElement.C2_SECTIONING | TexCommand.SUBSECTION_LEVEL:
+			return getTexImage(TexUIResources.OBJ_SUBSECTION_IMAGE_ID);
+		case ITexSourceElement.C2_SECTIONING | TexCommand.SUBSUBSECTION_LEVEL:
+			return getTexImage(TexUIResources.OBJ_SUBSUBSECTION_IMAGE_ID);
 		default:
 			return null;
 		}
@@ -76,9 +82,17 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 	
 	public Image getImage(final TexLabelAccess access) {
 		if (access.getType() == TexLabelAccess.LABEL) {
-			return texResources.getImage(TexUIResources.OBJ_LABEL_IMAGE_ID);
+			return getTexImage(TexUIResources.OBJ_LABEL_IMAGE_ID);
 		}
 		return null;
+	}
+	
+	protected Image getDocBaseImage(final String imageId) {
+		return this.docBaseResources.getImage(imageId);
+	}
+	
+	protected Image getTexImage(final String imageId) {
+		return this.texResources.getImage(imageId);
 	}
 	
 	@Override
