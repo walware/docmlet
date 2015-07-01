@@ -37,10 +37,10 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            categoryId="org.eclipse.ui.category.project"
-            defaultHandler="de.walware.docmlet.tex.internal.ui.ConvertToTexProjectHandler"
             id="de.walware.docmlet.tex.commands.ConvertToTexProject"
-            name="Convert to TeX Projects (StatET)">
+            categoryId="org.eclipse.ui.category.project"
+            name="Convert to TeX Projects\u2002[StatET]"
+            defaultHandler="de.walware.docmlet.tex.internal.ui.ConvertToTexProjectHandler">
       </command>
    </extension>
    <extension
