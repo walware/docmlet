@@ -26,6 +26,49 @@
       </initializer>
    </extension>
    
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="de.walware.docmlet.wikitext.commands.ConvertToWikitextProject"
+            categoryId="org.eclipse.ui.category.project"
+            name="%commands_ConvertToWikitextProject_name"
+            defaultHandler="de.walware.docmlet.wikitext.internal.ui.ConvertToWikitextProjectHandler">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.projectConfigure?endof=additions">
+         <command
+               commandId="de.walware.docmlet.wikitext.commands.ConvertToWikitextProject"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.open">
+                        </test>
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="de.walware.docmlet.wikitext.natures.Wikitext">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   
    <!--extension
          point="org.eclipse.ui.editors">
       <editor
