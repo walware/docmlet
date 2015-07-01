@@ -36,7 +36,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import de.walware.ecommons.ICommonStatusConstants;
 import de.walware.ecommons.collections.IdentityCollection;
 import de.walware.ecommons.debug.core.model.AbstractProcess;
-import de.walware.ecommons.runtime.core.utils.EnrichProgressMonitor;
+import de.walware.ecommons.runtime.core.util.EnrichProgressMonitor;
 
 import de.walware.docmlet.base.internal.ui.processing.Messages;
 import de.walware.docmlet.base.ui.DocBaseUI;
