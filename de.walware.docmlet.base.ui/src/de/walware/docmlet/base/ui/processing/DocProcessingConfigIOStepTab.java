@@ -50,7 +50,8 @@ import org.eclipse.swt.widgets.Text;
 
 import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.collections.ImList;
-import de.walware.ecommons.databinding.WritableEqualityValue;
+import de.walware.ecommons.databinding.core.observable.WritableEqualityValue;
+import de.walware.ecommons.databinding.core.util.UpdateableErrorValidator;
 import de.walware.ecommons.debug.core.variables.ObservableResourcePathVariable;
 import de.walware.ecommons.debug.core.variables.ResourceVariableResolver;
 import de.walware.ecommons.debug.core.variables.ResourceVariables;
@@ -464,7 +465,7 @@ public abstract class DocProcessingConfigIOStepTab extends DocProcessingConfigSt
 		dbc.bindValue(this.outputPathControl.getObservable(),
 				this.outputFilePathValue,
 				new UpdateValueStrategy().setAfterGetValidator(
-						new SavableErrorValidator(this.outputPathControl.getValidator()) ),
+						new UpdateableErrorValidator(this.outputPathControl.getValidator()) ),
 				null );
 	}
 	

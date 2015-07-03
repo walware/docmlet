@@ -52,7 +52,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import de.walware.ecommons.collections.ImList;
-import de.walware.ecommons.databinding.WritableEqualityValue;
+import de.walware.ecommons.databinding.core.observable.WritableEqualityValue;
+import de.walware.ecommons.databinding.core.util.UpdateableErrorValidator;
 import de.walware.ecommons.debug.core.variables.ResourceVariableResolver;
 import de.walware.ecommons.debug.core.variables.ResourceVariables;
 import de.walware.ecommons.debug.ui.config.LaunchConfigTabWithDbc;
@@ -302,23 +303,23 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 	}
 	
 	protected Composite createWorkingDirectoryGroup(final Composite parent) {
-		final ResourceInputComposite input= new ResourceInputComposite(parent,
+		final ResourceInputComposite pathInput= new ResourceInputComposite(parent,
 				ResourceInputComposite.STYLE_GROUP | ResourceInputComposite.STYLE_TEXT,
 				ResourceInputComposite.MODE_DIRECTORY | ResourceInputComposite.MODE_OPEN | ResourceInputComposite.MODE_WS_ONLY,
 				Messages.MainTab_WorkingDir_label + " (workspace path)");
-		input.getValidator().setResourceLabel(
+		pathInput.getValidator().setResourceLabel(
 				MessageUtil.removeMnemonics(Messages.MainTab_WorkingDir_label) );
-		input.setShowInsertVariable(true, DialogUtil.DEFAULT_INTERACTIVE_RESOURCE_FILTERS, null);
+		pathInput.setShowInsertVariable(true, DialogUtil.DEFAULT_INTERACTIVE_RESOURCE_FILTERS, null);
 		
 		final Map<String, IStringVariable> variables= new HashMap<>();
 		variables.putAll(getSourceFileVariables());
-		input.getValidator().setVariableResolver(new VariableText2(variables));
-		this.workingDirectoryControl= input;
+		pathInput.getValidator().setVariableResolver(new VariableText2(variables));
+		this.workingDirectoryControl= pathInput;
 		
-		this.resolvedWorkingDirectoryResourceValue= input.getValidator().getWorkspaceResourceObservable();
+		this.resolvedWorkingDirectoryResourceValue= pathInput.getValidator().getWorkspaceResourceObservable();
 		this.resolvedWorkingDirectoryResourceValue.addValueChangeListener(this);
 		
-		return input;
+		return pathInput;
 	}
 	
 	
@@ -359,7 +360,7 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 		dbc.bindValue(this.workingDirectoryControl.getObservable(),
 				this.workingDirectoryValue,
 				new UpdateValueStrategy().setAfterGetValidator(
-						new SavableErrorValidator(this.workingDirectoryControl.getValidator()) ),
+						new UpdateableErrorValidator(this.workingDirectoryControl.getValidator()) ),
 				null);
 	}
 	

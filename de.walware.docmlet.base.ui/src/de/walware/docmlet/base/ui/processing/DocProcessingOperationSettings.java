@@ -19,7 +19,7 @@ import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import de.walware.ecommons.databinding.DataBindingSubContext;
+import de.walware.ecommons.databinding.core.DataBindingSubContext;
 
 
 public abstract class DocProcessingOperationSettings {
