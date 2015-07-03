@@ -201,7 +201,7 @@ public class DocProcessingConfig {
 		@Override
 		public boolean equals(final Object obj) {
 			return super.equals(obj)
-					&& this.baseKey.equals(((CustomExtFormat) obj) );
+					&& this.baseKey.equals(((CustomExtFormat) obj).baseKey );
 		}
 		
 	}

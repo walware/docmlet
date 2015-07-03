@@ -57,7 +57,6 @@ public class Messages extends NLS {
 	public static String ProcessingOperation_RunLaunchConfigSettings_error_NewConfigFailed_message;
 	public static String ProcessingOperation_RunLaunchConfig_Config_error_SpecMissing_message;
 	public static String ProcessingOperation_RunLaunchConfig_Config_error_DefMissing_message;
-	public static String ProcessingOperation_RunLaunchConfig_;
 	
 	public static String ProcessingOperation_RunExternalProgram_label;
 	public static String ProcessingOperation_RunLaunchConfig_task;

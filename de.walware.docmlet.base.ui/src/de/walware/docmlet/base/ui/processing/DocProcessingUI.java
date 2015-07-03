@@ -55,7 +55,7 @@ public class DocProcessingUI {
 	public static final String TOGGLE_RUN_ON_SAVE_COMMAND_ID= "de.walware.docmlet.base.commands.ToggleRunDocProcessingOnSave"; //$NON-NLS-1$
 	
 	
-/*[ DocProcessingToolConfig Attributes ]========================================================*/
+/*[ DocProcessingToolConfig Attributes ]=======================================*/
 	
 	public static final String BASE_RUN_ATTR_QUALIFIER= "de.walware.docmlet.base/run"; //$NON-NLS-1$
 	

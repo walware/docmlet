@@ -197,7 +197,7 @@ public abstract class DocProcessingToolConfig {
 				validator.setResourceLabel("output file");
 				validator.setRequireWorkspace(true, true);
 				validator.setOnDirectory(IStatus.ERROR);
-				validator.setRelative((IDynamicVariable) getToolConfig().getVariables().get(WD_PATH_VAR_NAME), -1);
+				validator.setRelative(getToolConfig().getVariables().get(WD_PATH_VAR_NAME), -1);
 				validator.setVariableResolver(getVariableResolver());
 				
 				validator.setExplicit(filePath);
@@ -382,7 +382,6 @@ public abstract class DocProcessingToolConfig {
 		return new CoreException(new Status(IStatus.ERROR, DocBaseUI.PLUGIN_ID,
 				NLS.bind("Invalid configuration: configuration attribute ''{0}'' is missing.", attrName) ));
 	}
-	
 	
 	protected static CoreException createValidationFailed(final FileValidator validator) {
 		final IStatus status= validator.getStatus();
