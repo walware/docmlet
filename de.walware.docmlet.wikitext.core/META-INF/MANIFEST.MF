@@ -1,16 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: de.walware.docmlet.wikitext.core;singleton:=true
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-Vendor: WalWare.de
-Bundle-Name: DocMLET Wikitext Core
+Bundle-Name: DocMLET Wikitext - Core
 Bundle-Activator: de.walware.docmlet.wikitext.internal.core.WikitextCorePlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  de.walware.ecommons.text.core;visibility:=reexport,
- de.walware.ecommons.ltk.core;bundle-version="[2.3.0,2.4.0)",
+ de.walware.ecommons.ltk.core;bundle-version="[2.4.0,2.5.0)",
  org.eclipse.core.filebuffers,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.mylyn.wikitext.core;bundle-version="2.4.0";visibility:=reexport,

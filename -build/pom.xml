@@ -5,7 +5,7 @@
 	
 	<groupId>de.walware.docmlet</groupId>
 	<artifactId>docmlet</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<version>2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>DocMLET</name>
 	
@@ -63,7 +63,7 @@
 						<artifact>
 							<groupId>de.walware.docmlet</groupId>
 							<artifactId>de.walware.docmlet-default</artifactId>
-							<version>1.0.1</version>
+							<version>2.1.0</version>
 						</artifact>
 					</target>
 				</configuration>
