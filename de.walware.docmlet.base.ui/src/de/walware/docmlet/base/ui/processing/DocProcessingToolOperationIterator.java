@@ -109,7 +109,12 @@ public class DocProcessingToolOperationIterator implements Comparable<DocProcess
 		while (true) {
 			switch (++this.stepPart) {
 			case 0:
+				break;
 			case PRE:
+				this.stepPartList= this.stepConfig.getPre();
+				if (nextInPart()) {
+					return true;
+				}
 				break;
 			case MAIN:
 				this.operation= this.stepConfig.getOperation();

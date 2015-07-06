@@ -76,6 +76,7 @@ public abstract class DocProcessingToolConfig {
 		
 		private DocProcessingOperation operation;
 		
+		private List<DocProcessingOperation> preOperations;
 		private List<DocProcessingOperation> postOperations;
 		
 		private VariableText2 variableText;
@@ -289,6 +290,22 @@ public abstract class DocProcessingToolConfig {
 		
 		public DocProcessingOperation getOperation() {
 			return this.operation;
+		}
+		
+		
+		public void initPre(final ILaunchConfiguration configuration,
+				final SubMonitor m) throws CoreException {
+		}
+		
+		protected void addPre(final DocProcessingOperation operation) {
+			if (this.preOperations == null) {
+				this.preOperations= new ArrayList<>(4);
+			}
+			this.preOperations.add(operation);
+		}
+		
+		public List<DocProcessingOperation> getPre() {
+			return this.preOperations;
 		}
 		
 		
