@@ -27,6 +27,7 @@ import de.walware.ecommons.ui.util.ImageRegistryUtil;
 
 import de.walware.docmlet.base.internal.ui.markuphelp.MarkupHelpManager;
 import de.walware.docmlet.base.internal.ui.processing.DocProcessingRegistry;
+import de.walware.docmlet.base.internal.ui.viewer.DocViewerCloseDelegate;
 import de.walware.docmlet.base.ui.DocBaseUI;
 import de.walware.docmlet.base.ui.DocBaseUIResources;
 
@@ -55,6 +56,7 @@ public class DocBaseUIPlugin extends AbstractUIPlugin {
 	
 	private MarkupHelpManager markupHelpManager;
 	
+	private DocViewerCloseDelegate docViewerCloseDelegate;
 	private DocProcessingRegistry docProcessingRegistry;
 	
 	
@@ -130,6 +132,17 @@ public class DocBaseUIPlugin extends AbstractUIPlugin {
 			this.markupHelpManager= new MarkupHelpManager();
 		}
 		return this.markupHelpManager;
+	}
+	
+	public synchronized DocViewerCloseDelegate getDocViewerCloseDelegate() {
+		if (this.docViewerCloseDelegate == null) {
+			if (!this.started) {
+				throw new IllegalStateException("Plug-in is not started.");
+			}
+			this.docViewerCloseDelegate= new DocViewerCloseDelegate();
+			this.disposables.add(this.docViewerCloseDelegate);
+		}
+		return this.docViewerCloseDelegate;
 	}
 	
 	public synchronized DocProcessingRegistry getDocProcessingRegistry() {

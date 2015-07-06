@@ -30,7 +30,6 @@ public class Messages extends NLS {
 	public static String Format_Output_label;
 	
 	public static String MainTab_name;
-	public static String MainTab_LoadPreset_label;
 	public static String MainTab_Overview_label;
 	public static String MainTab_Overview_Step_header;
 	public static String MainTab_Overview_Run_header;
@@ -55,18 +54,21 @@ public class Messages extends NLS {
 	public static String ProcessingOperation_RunLaunchConfigSettings_New_label;
 	public static String ProcessingOperation_RunLaunchConfigSettings_error_NoConfigSelected_message;
 	public static String ProcessingOperation_RunLaunchConfigSettings_error_NewConfigFailed_message;
+	public static String ProcessingOperation_RunLaunchConfig_task;
+	public static String ProcessingOperation_RunLaunchConfig_ForPreview_task;
 	public static String ProcessingOperation_RunLaunchConfig_Config_error_SpecMissing_message;
 	public static String ProcessingOperation_RunLaunchConfig_Config_error_DefMissing_message;
 	
 	public static String ProcessingOperation_RunExternalProgram_label;
-	public static String ProcessingOperation_RunLaunchConfig_task;
-	public static String ProcessingOperation_RunLaunchConfig_ForPreview_task;
 	public static String ProcessingOperation_RunExternalProgram_Wd_error_SpecInvalid_message;
 	public static String ProcessingOperation_RunExternalProgram_Args_error_SpecInvalid_message;
 	
 	public static String ProcessingOperation_CheckOutput_label;
 	public static String ProcessingOperation_CheckOutput_task;
 	public static String ProcessingOperation_CheckOutput_error_FileNotExists_message;
+	
+	public static String ProcessingOperation_CloseInDocViewer_label;
+	public static String ProcessingOperation_OpenUsingDocViewer_label;
 	
 	public static String ProcessingOperation_OpenUsingEclipse_label;
 	public static String ProcessingOperation_OpenUsingEclipse_task;

@@ -72,6 +72,7 @@ public abstract class DocProcessingToolConfig {
 		private boolean isEnabled;
 		
 		private IFile inputFile;
+		private ResourceVariableUtil inputFileUtil;
 		private IFile outputFile;
 		
 		private DocProcessingOperation operation;
@@ -221,16 +222,18 @@ public abstract class DocProcessingToolConfig {
 				throw new NullPointerException("file"); //$NON-NLS-1$
 			}
 			this.inputFile= file;
+			this.inputFileUtil= new ResourceVariableUtil(
+					getToolConfig().getSourceFileVariableUtil(),
+					file );
 			
-			final Map<String, IStringVariable> variables= getVariableResolver().getExtraVariables();
-			VariableUtils.add(variables, new StaticVariable(
-					DocProcessingConfig.IN_FILE_PATH_VAR,
-					file.getFullPath().toString() ));
-			VariableUtils.add(variables,
-					ResourceVariables.getSingleResourceVariables(),
-					new ResourceVariableResolver(new ResourceVariableUtil(
-							getToolConfig().getSourceFileVariableUtil(),
-							file )) );
+			{	final Map<String, IStringVariable> variables= getVariableResolver().getExtraVariables();
+				VariableUtils.add(variables, new StaticVariable(
+						DocProcessingConfig.IN_FILE_PATH_VAR,
+						file.getFullPath().toString() ));
+				VariableUtils.add(variables,
+						ResourceVariables.getSingleResourceVariables(),
+						new ResourceVariableResolver(this.inputFileUtil) );
+			}
 		}
 		
 		protected void setOutputFile(final IFile file) {
@@ -247,6 +250,10 @@ public abstract class DocProcessingToolConfig {
 		
 		public IFile getInputFile() {
 			return this.inputFile;
+		}
+		
+		public ResourceVariableUtil getInputFileUtil() {
+			return this.inputFileUtil;
 		}
 		
 		public IFile getOutputFile() {
@@ -478,24 +485,23 @@ public abstract class DocProcessingToolConfig {
 			throw createValidationFailed(validator);
 		}
 		
-		if (this.sourceFileUtil == null) {
-			UIAccess.getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					final ResourceVariableUtil util= new ResourceVariableUtil(
-							validator.getWorkspaceResource() );
-					DocProcessingToolConfig.this.sourceFileUtil= util;
-				}
-			});
-		}
 		setSourceFile((IFile) validator.getWorkspaceResource());
 	}
 	
 	protected void setSourceFile(final IFile file) {
 		this.sourceFile= file;
 		
-		if (this.sourceFileUtil != null) {
-			final Map<String, IStringVariable> variables= getVariables();
+		if (this.sourceFileUtil == null) {
+			UIAccess.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					final ResourceVariableUtil util= new ResourceVariableUtil(file);
+					DocProcessingToolConfig.this.sourceFileUtil= util;
+				}
+			});
+		}
+		
+		{	final Map<String, IStringVariable> variables= getVariables();
 			VariableUtils.add(variables,
 					ResourceVariables.getSingleResourceVariables(),
 					new ResourceVariableResolver(this.sourceFileUtil) );

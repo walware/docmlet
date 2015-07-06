@@ -78,6 +78,36 @@
       </view>
    </extension>
    
+<!-- Document Viewer -->
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            id="de.walware.docmlet.base.launchConfigurations.DocViewer"
+            category="org.eclipse.ui.externaltools"
+            modes="run"
+            name="%launchConfigurations_DocViewer_name"
+            public="true"
+            delegate="de.walware.docmlet.base.internal.ui.viewer.DocViewerLaunchDelegate">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            id="de.walware.docmlet.base.images.DocViewer"
+            configTypeID="de.walware.docmlet.base.launchConfigurations.DocViewer"
+            icon="icons/tool_16/preview.png">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            id="de.walware.docmlet.base.launchConfigurationTabGroups.DocViewer"
+            type="de.walware.docmlet.base.launchConfigurations.DocViewer"
+            class="de.walware.docmlet.base.internal.ui.viewer.DocViewerConfigTabGroup"
+            description="%launchConfigurations_DocViewer_description">
+      </launchConfigurationTabGroup>
+   </extension>
+   
 <!-- Document Processing -->
    <extension-point id="de.walware.docmlet.base.docProcessing"
          name="Processing of Markup Language Documents"

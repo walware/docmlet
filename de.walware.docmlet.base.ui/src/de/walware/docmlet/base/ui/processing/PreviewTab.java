@@ -41,6 +41,7 @@ import de.walware.ecommons.variables.core.VariableUtils;
 import de.walware.docmlet.base.internal.ui.processing.Messages;
 import de.walware.docmlet.base.ui.DocBaseUIResources;
 import de.walware.docmlet.base.ui.processing.DocProcessingConfig.Format;
+import de.walware.docmlet.base.ui.processing.operations.OpenUsingDocViewerOperationSettings;
 import de.walware.docmlet.base.ui.processing.operations.OpenUsingEclipseOperation;
 import de.walware.docmlet.base.ui.processing.operations.OpenUsingEclipseOperationSettings;
 import de.walware.docmlet.base.ui.processing.operations.RunExternalProgramOperationSettings;
@@ -74,6 +75,7 @@ public class PreviewTab extends DocProcessingConfigStepTab
 		
 		setAvailableOperations(ImCollections.newList(
 				new OpenUsingEclipseOperationSettings(),
+				new OpenUsingDocViewerOperationSettings(),
 				new RunExternalProgramOperationSettings() ));
 		
 		produceTab.getOutputFileValue().addValueChangeListener(this);

@@ -105,13 +105,14 @@ public abstract class AbstractLaunchConfigOperation extends DocProcessingOperati
 		
 		final String launchMode= getLaunchMode();
 		final ILaunchConfigurationDelegate delegate= LaunchUtils.getLaunchConfigurationDelegate(
-				this.launchConfig, launchMode, toolProcess.getStatus() );
+				config, launchMode, toolProcess.getStatus() );
 		m.worked(1);
 		
-		delegate.launch(this.launchConfig, launchMode, toolProcess.getLaunch(), m.newChild(10));
+		launch(delegate, config, launchMode, toolProcess, m.newChild(10));
 		
 		return Status.OK_STATUS;
 	}
+	
 	
 	protected String getTaskLabel(final ILaunchConfiguration config) {
 		final StepConfig stepConfig= getStepConfig();
@@ -134,6 +135,13 @@ public abstract class AbstractLaunchConfigOperation extends DocProcessingOperati
 	
 	protected ILaunchConfiguration preprocessConfig(final ILaunchConfiguration config) throws CoreException {
 		return config;
+	}
+	
+	protected void launch(final ILaunchConfigurationDelegate delegate,
+			final ILaunchConfiguration config, final String launchMode,
+			final DocProcessingToolProcess toolProcess,
+			final SubMonitor m) throws CoreException {
+		delegate.launch(config, launchMode, toolProcess.getLaunch(), m);
 	}
 	
 }
