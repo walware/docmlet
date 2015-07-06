@@ -12,11 +12,9 @@
 package de.walware.docmlet.base.ui.processing;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -28,8 +26,6 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.IStringVariable;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -38,26 +34,19 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.statushandlers.StatusManager;
 
-import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.databinding.core.observable.WritableEqualityValue;
 import de.walware.ecommons.databinding.core.util.UpdateableErrorValidator;
 import de.walware.ecommons.debug.core.variables.ResourceVariableResolver;
 import de.walware.ecommons.debug.core.variables.ResourceVariables;
-import de.walware.ecommons.debug.ui.config.LaunchConfigTabWithDbc;
-import de.walware.ecommons.ui.components.DropDownButton;
+import de.walware.ecommons.debug.ui.config.LaunchConfigPresets;
+import de.walware.ecommons.debug.ui.config.LaunchConfigTabWithPresets;
 import de.walware.ecommons.ui.util.DialogUtil;
 import de.walware.ecommons.ui.util.LayoutUtil;
 import de.walware.ecommons.ui.util.MessageUtil;
@@ -69,10 +58,9 @@ import de.walware.ecommons.variables.core.VariableText2;
 import de.walware.ecommons.variables.core.VariableUtils;
 
 import de.walware.docmlet.base.internal.ui.processing.Messages;
-import de.walware.docmlet.base.ui.DocBaseUI;
 
 
-public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
+public class DocProcessingConfigMainTab extends LaunchConfigTabWithPresets
 		implements IValueChangeListener {
 	
 	
@@ -122,13 +110,8 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 	
 	private ResourceInputComposite workingDirectoryControl;
 	
-	private ImList<ILaunchConfiguration> presets;
 	
-	private Map<String, Object> presetToLoad;
-	private ILaunchConfiguration presetLoaded;
-	
-	
-	public DocProcessingConfigMainTab(final DocProcessingConfigPresets presets) {
+	public DocProcessingConfigMainTab(final LaunchConfigPresets presets) {
 		this.stepItems= new ArrayList<>();
 		
 		final Realm realm= getRealm();
@@ -153,16 +136,17 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 	int addStep(final DocProcessingConfigStepTab stepTab) {
 		final StepItem item= new StepItem(stepTab);
 		this.stepItems.add(item);
-		return this.stepItems.size();
+		return this.stepItems.size(); // 1-based
 	}
+	
+	protected DocProcessingConfigStepTab getStepTab(final int num) {
+		return this.stepItems.get(num - 1).tab;
+	}
+	
 	
 	@Override
 	public String getName() {
 		return Messages.MainTab_name;
-	}
-	
-	protected void setPresets(final DocProcessingConfigPresets presets) {
-		this.presets= presets.toList();
 	}
 	
 	
@@ -215,26 +199,7 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 		setControl(mainComposite);
 		mainComposite.setLayout(LayoutUtil.createTabGrid(1));
 		
-		if (this.presets != null) {
-			final DropDownButton button= new DropDownButton(mainComposite, SWT.SINGLE);
-			button.setText(Messages.MainTab_LoadPreset_label);
-			final GridData gd= new GridData(SWT.RIGHT, SWT.FILL, true, false);
-			button.setLayoutData(gd);
-			
-			final Menu menu= button.getDropDownMenu();
-			final SelectionListener selectionListener= new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					loadPreset((ILaunchConfiguration) e.widget.getData());
-				}
-			};
-			for (final ILaunchConfiguration preset : this.presets) {
-				final MenuItem item= new MenuItem(menu, SWT.PUSH);
-				item.setText(DocProcessingConfigPresets.getName(preset));
-				item.setData(preset);
-				item.addSelectionListener(selectionListener);
-			}
-		}
+		addPresetsButton(mainComposite);
 		
 		{	final Composite composite= createOverviewGroup(mainComposite);
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -323,33 +288,6 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 	}
 	
 	
-	protected void loadPreset(final ILaunchConfiguration preset) {
-		try {
-			this.presetToLoad= preset.getAttributes();
-			setDirty(true);
-			updateLaunchConfigurationDialog();
-			
-			if (this.presetLoaded != null) {
-				final ILaunchConfiguration config= this.presetLoaded;
-				final BitSet presetSteps= DocProcessingConfigPresets.getSteps(preset);
-				for (final StepItem stepItem : this.stepItems) {
-					if (presetSteps.get(stepItem.tab.getNum())) {
-						stepItem.tab.initializeFrom(config);
-					}
-				}
-			}
-		}
-		catch (final Exception e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, DocBaseUI.PLUGIN_ID, 0,
-						"An error occurred while loading the document processing preset.", e ),
-					(StatusManager.LOG | StatusManager.SHOW) );
-		}
-		finally {
-			this.presetToLoad= null;
-			this.presetLoaded= null;
-		}
-	}
-	
 	@Override
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(DocProcessingConfig.WORKING_DIRECTORY_ATTR_NAME, WORKING_DIRECTORY_DEFAULT_VALUE);
@@ -382,37 +320,6 @@ public class DocProcessingConfigMainTab extends LaunchConfigTabWithDbc
 		{	final String path= (String) this.workingDirectoryValue.getValue();
 			configuration.setAttribute(DocProcessingConfig.WORKING_DIRECTORY_ATTR_NAME, path);
 		}
-		
-		if (this.presetToLoad != null) {
-			try {
-				for (final Entry<String, Object> entry : this.presetToLoad.entrySet()) {
-					final String name= entry.getKey();
-					if (DocProcessingConfigPresets.isInternalArgument(name)) {
-						continue;
-					}
-					final Object value= entry.getValue();
-					if (value instanceof String) {
-						configuration.setAttribute(name, (String) value);
-					}
-					else if (value instanceof Integer) {
-						configuration.setAttribute(name, (Integer) value);
-					}
-					else if (value instanceof Boolean) {
-						configuration.setAttribute(name, (Boolean) value);
-					}
-					else if (value instanceof List) {
-						configuration.setAttribute(name, (List) value);
-					}
-					else if (value instanceof Map) {
-						configuration.setAttribute(name, (Map) value);
-					}
-				}
-				this.presetLoaded= configuration;
-			}
-			finally {
-				this.presetToLoad= null;
-			}
-		}
 	}
-
+	
 }
