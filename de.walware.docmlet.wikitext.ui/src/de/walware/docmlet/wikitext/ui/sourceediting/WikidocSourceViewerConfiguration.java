@@ -189,7 +189,7 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	
 	@Override
 	public String[] getDefaultPrefixes(final ISourceViewer sourceViewer, final String contentType) {
-		return new String[] { "" }; //$NON-NLS-1$
+		return new String[] { "<!--", "" }; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	
