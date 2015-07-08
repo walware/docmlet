@@ -60,7 +60,7 @@ public class ToggleRunOnSaveScopeHandler extends AbstractScopeHandler {
 		final RunDocProcessingOnSaveExtension saveExtension= getSaveExtension();
 		
 		setBaseEnabled(saveExtension != null);
-		if (this.currentChecked != isChecked(saveExtension)) {
+		if (this.currentChecked == null || this.currentChecked != isChecked(saveExtension)) {
 			refreshElements();
 		}
 	}
