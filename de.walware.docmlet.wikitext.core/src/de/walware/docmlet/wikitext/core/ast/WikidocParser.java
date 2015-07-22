@@ -23,7 +23,6 @@ import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.string.IStringFactory;
 import de.walware.ecommons.string.InternStringFactory;
 import de.walware.ecommons.text.core.util.HtmlUtils;
-import de.walware.ecommons.text.core.util.HtmlUtils.Entity;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 import de.walware.docmlet.wikitext.core.markup.IWikitextLocator;
@@ -277,11 +276,14 @@ public class WikidocParser extends DocumentBuilder {
 	@Override
 	public void entityReference(final String entity) {
 		if (this.collectText > 0) {
-			final Entity resolved= HtmlUtils.getEntity(HtmlUtils.getEntityName(entity));
-			if (resolved != null) {
-				characters(resolved.getString());
-				return;
+			try {
+				final String resovled= HtmlUtils.resolveEntity(HtmlUtils.getEntityReference(entity));
+				if (resovled != null) {
+					characters(resovled);
+					return;
+				}
 			}
+			catch (final IllegalArgumentException e) {}
 		}
 		characters(null);
 	}
