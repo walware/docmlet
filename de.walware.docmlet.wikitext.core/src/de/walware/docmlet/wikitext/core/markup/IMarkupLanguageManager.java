@@ -24,6 +24,8 @@ public interface IMarkupLanguageManager {
 		
 		String getName();
 		
+		String getLabel();
+		
 		IContributor getContributor();
 		
 		boolean isConfigSupported();

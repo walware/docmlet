@@ -45,6 +45,7 @@ public class MarkupLanguageManager implements IMarkupLanguageManager {
 	private static final String EXTENSION_POINT_ID= "de.walware.docmlet.wikitext.markupLanguages"; //$NON-NLS-1$
 	
 	private static final String NAME_ATTRIBUTE_NAME= "name"; //$NON-NLS-1$
+	private static final String LABEL_ATTRIBUTE_NAME= "label"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE_NAME= "class"; //$NON-NLS-1$
 	private static final String CONFIG_CLASS_ATTRIBUTE_NAME= "configClass"; //$NON-NLS-1$
 	private static final String CONTENT_TYPE_ID_ATTRIBUTE_NAME= "contentTypeId"; //$NON-NLS-1$
@@ -59,6 +60,7 @@ public class MarkupLanguageManager implements IMarkupLanguageManager {
 		
 		
 		private final String name;
+		private final String label;
 		
 		private final String contentTypdId;
 		
@@ -76,6 +78,9 @@ public class MarkupLanguageManager implements IMarkupLanguageManager {
 		public MLEntry(final String name, final IConfigurationElement element) {
 			this.name= name.intern();
 			
+			{	final String value= element.getAttribute(LABEL_ATTRIBUTE_NAME);
+				this.label= (value != null && !value.isEmpty()) ? value.intern() : this.name;
+			}
 			{	final String value= element.getAttribute(CONTENT_TYPE_ID_ATTRIBUTE_NAME);
 				this.contentTypdId= (value != null && !value.isEmpty()) ? value.intern() : null;
 			}
@@ -100,6 +105,11 @@ public class MarkupLanguageManager implements IMarkupLanguageManager {
 		@Override
 		public String getPreferenceQualifier() {
 			return this.prefQualifier;
+		}
+		
+		@Override
+		public String getLabel() {
+			return this.label;
 		}
 		
 		public String getContentTypdId() {

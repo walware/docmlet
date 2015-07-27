@@ -86,7 +86,7 @@ class MarkupConfigurationBlock extends ManagedConfigurationBlock {
 		}
 		
 		public String getLabel() {
-			return this.descriptor.getName();
+			return this.descriptor.getLabel();
 		}
 		
 		public Preference<String> getPref() {

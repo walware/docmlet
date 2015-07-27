@@ -59,11 +59,19 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The type id of the section type.
+                  The id of the language.
                </documentation>
                <appinfo>
                   <meta.attribute kind="identifier"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  The label of the language.
+If not specified, the name is used as label.
+               </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
