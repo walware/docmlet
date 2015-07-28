@@ -118,6 +118,7 @@ public class WikitextPartitionNodeType extends AbstractPartitionNodeType {
 		
 	}
 	
+	
 	public static final IntMap<Heading> HEADING_TYPES= new IntArrayMap<>();
 	static {
 		for (int level= 1; level <= 6; level++) {

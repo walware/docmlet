@@ -32,12 +32,17 @@ public interface IWikitextDocumentConstants {
 	
 	String WIKIDOC_YAML_CHUNK_CONTENT_TYPE= "WikidocYamlConfChunk"; //$NON-NLS-1$
 	
+	String WIKIDOC_HTML_DEFAULT_CONTENT_TYPE= "Html.Default"; //$NON-NLS-1$
+	String WIKIDOC_HTML_COMMENT_CONTENT_TYPE= "Html.Comment"; //$NON-NLS-1$
+	
 	
 	/**
 	 * List with all partition content types of Wikitext documents.
 	 */
 	List<String> WIKIDOC_CONTENT_TYPES= ImCollections.newList(
-			WIKIDOC_DEFAULT_CONTENT_TYPE );
+			WIKIDOC_DEFAULT_CONTENT_TYPE,
+			WIKIDOC_HTML_DEFAULT_CONTENT_TYPE,
+			WIKIDOC_HTML_COMMENT_CONTENT_TYPE );
 	
 	List<String> YAML_CHUNK_CONTENT_TYPES= ImCollections.newList(
 			WIKIDOC_YAML_CHUNK_CONTENT_TYPE );

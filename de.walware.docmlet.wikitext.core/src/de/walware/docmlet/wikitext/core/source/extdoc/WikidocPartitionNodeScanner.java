@@ -11,6 +11,9 @@
 
 package de.walware.docmlet.wikitext.core.source.extdoc;
 
+import java.util.List;
+
+import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScanner;
 
 import de.walware.docmlet.tex.core.source.LtxPartitionNodeScanner;
@@ -28,7 +31,22 @@ import de.walware.docmlet.wikitext.core.source.WikitextWeavePartitionNodeScanner
 public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScanner {
 	
 	
-	public static final WikitextPartitionNodeType YAML_CHUNK_WIKITEXT_TYPE= new WikitextPartitionNodeType();
+	private static final List<HtmlPartitionNodeType.Default> HTML_DEFAULT_HTML_TYPES= ImCollections.newList(
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default(),
+			new HtmlPartitionNodeType.Default() );
+	private static final HtmlPartitionNodeType HTML_COMMENT_HTML_TYPE= HtmlPartitionNodeType.COMMENT;
+	
+	private static final WikitextPartitionNodeType HTML_CHUNK_WIKITEXT_TYPE= new WikitextPartitionNodeType();
+	
+	
+	private static final WikitextPartitionNodeType YAML_CHUNK_WIKITEXT_TYPE= new WikitextPartitionNodeType();
+	
 	
 	public static final LtxPartitionNodeType TEX_BASE_TEX_TYPE= new LtxPartitionNodeType() {
 		
@@ -78,6 +96,14 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	@Override
 	protected void beginEmbeddingBlock(final BlockType type, final EmbeddingAttributes attributes) {
 		if (type == BlockType.CODE
+				&& attributes.getForeignType() == IExtdocMarkupLanguage.EMBEDDED_HTML) {
+			final HtmlPartitionNodeType htmlType= ((attributes.getEmbedDescr() & IExtdocMarkupLanguage.EMBEDDED_HTML_COMMENT_FLAG) != 0) ?
+					HTML_COMMENT_HTML_TYPE : HTML_DEFAULT_HTML_TYPES.get(
+							(attributes.getEmbedDescr() & IExtdocMarkupLanguage.EMBEDDED_HTML_DISTINCT_MASK) >> IExtdocMarkupLanguage.EMBEDDED_HTML_DISTINCT_SHIFT);
+			addNode(htmlType, HTML_CHUNK_WIKITEXT_TYPE, getEventBeginOffset());
+			return;
+		}
+		if (type == BlockType.CODE
 				&& attributes.getForeignType() == IExtdocMarkupLanguage.EMBEDDED_YAML) {
 			addNode(YAML_CHUNK_WIKITEXT_TYPE, YAML_CHUNK_WIKITEXT_TYPE, getEventBeginOffset());
 			setEmbedded(getNode(), attributes);
@@ -91,6 +117,10 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	protected void endEmbeddingBlock(final WikitextPartitionNodeType type, final EmbeddingAttributes attributes) {
 		if (type == YAML_CHUNK_WIKITEXT_TYPE) {
 			executeForeignScanner(getYamlScanner());
+			exitNode(getEventEndOffset());
+			return;
+		}
+		if (type == HTML_CHUNK_WIKITEXT_TYPE) {
 			exitNode(getEventEndOffset());
 			return;
 		}

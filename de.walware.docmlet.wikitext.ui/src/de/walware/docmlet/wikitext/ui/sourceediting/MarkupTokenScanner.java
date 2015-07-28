@@ -11,6 +11,7 @@
  *******************************************************************************/
 package de.walware.docmlet.wikitext.ui.sourceediting;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,15 +31,21 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.RGB;
 
 import de.walware.ecommons.ltk.core.SourceContent;
+import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNode;
 import de.walware.ecommons.text.core.treepartitioner.TreePartitionUtil;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 import de.walware.docmlet.wikitext.core.markup.MarkupParser2;
+import de.walware.docmlet.wikitext.core.source.EmbeddingAttributes;
 import de.walware.docmlet.wikitext.core.source.MarkupLanguageDocumentSetupParticipant;
+import de.walware.docmlet.wikitext.core.source.extdoc.IExtdocMarkupLanguage;
+import de.walware.docmlet.wikitext.internal.ui.sourceediting.EmbeddedHtml;
 import de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupCssStyleManager;
 
 
@@ -96,7 +103,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 		
 		private int scanCurrentOffset;
 		
-		private final List<FontState> scanFontStateStack= new ArrayList<>();
+		private final ArrayDeque<FontState> scanFontStateStack= new ArrayDeque<>();
+		
+		private FontState nestedCodeFontState;
 		
 		
 		public Builder() {
@@ -105,6 +114,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		
 		private void clearBuilder() {
 			this.scanFontStateStack.clear();
+			this.nestedCodeFontState= null;
 		}
 		
 		public void scan(final IDocument document, final int offset, final int length)
@@ -136,9 +146,13 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		
 		private void updateOffset() {
-			final int offset= this.scanRestartOffset + getLocator().getDocumentOffset();
+			updateOffset(getLocator().getDocumentOffset());
+		}
+		
+		private void updateOffset(final int locatorOffset) {
+			final int offset= this.scanRestartOffset + locatorOffset;
 			if (offset > this.scanCurrentOffset) {
-				addToken(this.scanFontStateStack.get(this.scanFontStateStack.size() - 1),
+				addToken(this.scanFontStateStack.getLast(),
 						this.scanCurrentOffset, Math.min(this.endOffset, offset) );
 				this.scanCurrentOffset= offset;
 			}
@@ -152,7 +166,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 		@Override
 		public void beginDocument() {
 			this.scanCurrentOffset= this.beginOffset;
-			this.scanFontStateStack.add(MarkupTokenScanner.this.styleManager.createDefaultFontState());
+			this.scanFontStateStack.addLast(MarkupTokenScanner.this.styleManager.createDefaultFontState());
 		}
 		
 		@Override
@@ -162,59 +176,102 @@ public class MarkupTokenScanner implements ITokenScanner {
 		
 		@Override
 		public void beginBlock(final BlockType type, final Attributes attributes) {
+			final FontState fontState;
+			if (type == BlockType.CODE && attributes instanceof EmbeddingAttributes
+					&& ((EmbeddingAttributes) attributes).getForeignType() == IExtdocMarkupLanguage.EMBEDDED_HTML) {
+				fontState= createHtmlFontState(
+						this.scanFontStateStack.getLast(),
+						(EmbeddingAttributes) attributes );
+			}
+			else {
+				fontState= createFontState(
+						this.scanFontStateStack.getLast(),
+						getPrefCssStyles(type),
+						(attributes != null) ? attributes.getCssStyle() : null );
+			}
+			
+			if (type == BlockType.CODE && this.scanFontStateStack.size() > 1) {
+				this.nestedCodeFontState= fontState;
+				return;
+			}
+			
 			updateOffset();
-			this.scanFontStateStack.add(createFontState(
-					this.scanFontStateStack.get(this.scanFontStateStack.size() - 1),
-					getPrefCssStyles(type),
-					(attributes != null) ? attributes.getCssStyle() : null ));
+			this.scanFontStateStack.addLast(fontState);
 		}
 		
 		@Override
 		public void endBlock() {
+			if (this.nestedCodeFontState != null) {
+				this.nestedCodeFontState= null;
+				return;
+			}
+			
 			updateOffset();
-			this.scanFontStateStack.remove(this.scanFontStateStack.size() - 1);
+			this.scanFontStateStack.removeLast();
 		}
 		
 		@Override
 		public void beginSpan(final SpanType type, final Attributes attributes) {
+			final FontState fontState;
+			if (type == SpanType.CODE && attributes instanceof EmbeddingAttributes
+					&& ((EmbeddingAttributes) attributes).getForeignType() == IExtdocMarkupLanguage.EMBEDDED_HTML) {
+				fontState= createHtmlFontState(
+						this.scanFontStateStack.getLast(),
+						(EmbeddingAttributes) attributes );
+			}
+			else {
+				fontState= createFontState(
+						this.scanFontStateStack.getLast(),
+						getPrefCssStyles(type),
+						(attributes != null) ? attributes.getCssStyle() : null );
+			}
+			
 			updateOffset();
-			this.scanFontStateStack.add(createFontState(
-					this.scanFontStateStack.get(this.scanFontStateStack.size() - 1),
-					getPrefCssStyles(type),
-					(attributes != null) ? attributes.getCssStyle() : null ));
+			this.scanFontStateStack.addLast(fontState);
 		}
 		
 		@Override
 		public void endSpan() {
 			updateOffset();
-			this.scanFontStateStack.remove(this.scanFontStateStack.size() - 1);
+			this.scanFontStateStack.removeLast();
 		}
 		
 		@Override
 		public void beginHeading(final int level, final Attributes attributes) {
-			updateOffset();
-			this.scanFontStateStack.add(createFontState(
-					this.scanFontStateStack.get(this.scanFontStateStack.size() - 1),
+			final FontState fontState= createFontState(
+					this.scanFontStateStack.getLast(),
 					getPrefCssStyles(level),
-					(attributes != null) ? attributes.getCssStyle() : null ));
+					(attributes != null) ? attributes.getCssStyle() : null );
+			
+			updateOffset();
+			this.scanFontStateStack.addLast(fontState);
 		}
 		
 		@Override
 		public void endHeading() {
 			updateOffset();
-			this.scanFontStateStack.remove(this.scanFontStateStack.size() - 1);
+			this.scanFontStateStack.removeLast();
 		}
 		
 		@Override
 		public void characters(final String text) {
+			if (this.nestedCodeFontState != null) {
+				updateOffset();
+				this.scanFontStateStack.addLast(this.nestedCodeFontState);
+				final Locator locator= getLocator();
+				updateOffset(locator.getLineDocumentOffset() + locator.getLineLength());
+				this.scanFontStateStack.removeLast();
+			}
 		}
 		
 		@Override
 		public void charactersUnescaped(final String literal) {
+			characters(literal);
 		}
 		
 		@Override
 		public void entityReference(final String entity) {
+			characters(entity);
 		}
 		
 		@Override
@@ -423,6 +480,28 @@ public class MarkupTokenScanner implements ITokenScanner {
 		if (explCssStyle != null) {
 			processCssStyles(fontState, parentState, explCssStyle);
 		}
+		return fontState;
+	}
+	
+	
+	private final RGB htmlCommentColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_COMMENT_COLOR);
+	private final RGB htmlDefaultColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_BACKGROUND_COLOR);
+	
+	private FontState createHtmlFontState(final FontState parentState,
+			final EmbeddingAttributes attributes) {
+		final FontState fontState= new FontState(parentState);
+		
+		if ((attributes.getEmbedDescr() & IExtdocMarkupLanguage.EMBEDDED_HTML_COMMENT_FLAG) != 0) {
+			if (this.htmlCommentColor != null) {
+				fontState.setForeground(this.htmlCommentColor);
+			}
+		}
+		else {
+			if (this.htmlDefaultColor != null) {
+				fontState.setBackground(this.htmlDefaultColor);
+			}
+		}
+		
 		return fontState;
 	}
 	

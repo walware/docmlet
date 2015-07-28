@@ -23,6 +23,18 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 public interface IExtdocMarkupLanguage extends IMarkupLanguage {
 	
 	
+	String EMBEDDED_HTML= "Html"; //$NON-NLS-1$
+	
+	int EMBEDDED_HTML_OTHER_BLOCK_DESCR=                    IEmbeddingAstNode.EMBED_CHUNK;
+	int EMBEDDED_HTML_DISTINCT_MASK=                        0x000000_7_0;
+	int EMBEDDED_HTML_DISTINCT_SHIFT=                       Integer.lowestOneBit(EMBEDDED_HTML_DISTINCT_MASK);
+	int EMBEDDED_HTML_COMMENT_FLAG=                         0x000000_8_0;
+	int EMBEDDED_HTML_COMMENT_BLOCK_DESCR=                  IEmbeddingAstNode.EMBED_CHUNK | EMBEDDED_HTML_COMMENT_FLAG;
+	
+	int EMBEDDED_HTML_OTHER_INLINE_DESCR=                   IEmbeddingAstNode.EMBED_INLINE;
+	int EMBEDDED_HTML_COMMENT_INLINE_DESCR=                 IEmbeddingAstNode.EMBED_INLINE | EMBEDDED_HTML_COMMENT_FLAG;
+	
+	
 	String EMBEDDED_YAML= YamlModel.YAML_TYPE_ID;
 	
 	int EMBEDDED_YAML_METADATA_FLAG=                        0x000000_1_0;

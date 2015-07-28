@@ -13,6 +13,7 @@ package de.walware.docmlet.wikitext.internal.ui;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -21,6 +22,11 @@ import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
 import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.text.ui.settings.AssistPreferences;
 
+import de.walware.workbench.ui.IWaThemeConstants;
+import de.walware.workbench.ui.util.ThemeUtil;
+
+import de.walware.docmlet.wikitext.internal.ui.sourceediting.EmbeddedHtml;
+import de.walware.docmlet.wikitext.ui.WikitextUI;
 import de.walware.docmlet.wikitext.ui.editors.WikitextEditorBuild;
 import de.walware.docmlet.wikitext.ui.sourceediting.WikitextEditingSettings;
 
@@ -35,6 +41,7 @@ public class WikitextUIPreferenceInitializer extends AbstractPreferenceInitializ
 	@Override
 	public void initializeDefaultPreferences() {
 		final IScopeContext scope= DefaultScope.INSTANCE;
+		final ThemeUtil theme= new ThemeUtil();
 		
 		final IPreferenceStore store= WikitextUIPlugin.getInstance().getPreferenceStore();
 		EditorsUI.useAnnotationsPreferencePage(store);
@@ -59,6 +66,14 @@ public class WikitextUIPreferenceInitializer extends AbstractPreferenceInitializ
 		
 		PreferencesUtil.setPrefValue(scope, WikitextEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
 		
+		final IEclipsePreferences pref= scope.getNode(WikitextUI.PLUGIN_ID);
+		
+		{	final String value= theme.getColorPrefValue("de.walware.workbench.themes.CodeRawBackgroundColor");
+			if (!value.equals("255,255,255")) {
+				pref.put(EmbeddedHtml.HTML_BACKGROUND_COLOR_KEY, value);
+			}
+		}
+		pref.put(EmbeddedHtml.HTML_COMMENT_COLOR_KEY, theme.getColorPrefValue(IWaThemeConstants.CODE_COMMENT_COLOR));
 	}
 	
 }

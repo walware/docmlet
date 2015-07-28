@@ -120,7 +120,8 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	
 	@Override
 	protected ITokenScanner getScanner(String contentType) {
-		if (contentType == IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE) {
+		if (contentType == IWikitextDocumentConstants.WIKIDOC_HTML_DEFAULT_CONTENT_TYPE
+				|| contentType == IWikitextDocumentConstants.WIKIDOC_HTML_COMMENT_CONTENT_TYPE) {
 			contentType= IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE;
 		}
 		return super.getScanner(contentType);
@@ -133,6 +134,10 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 					getScanner(IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE) );
 			reconciler.setDamager(dr, IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE);
 			reconciler.setRepairer(dr, IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE);
+			reconciler.setDamager(dr, IWikitextDocumentConstants.WIKIDOC_HTML_DEFAULT_CONTENT_TYPE);
+			reconciler.setRepairer(dr, IWikitextDocumentConstants.WIKIDOC_HTML_DEFAULT_CONTENT_TYPE);
+			reconciler.setDamager(dr, IWikitextDocumentConstants.WIKIDOC_HTML_COMMENT_CONTENT_TYPE);
+			reconciler.setRepairer(dr, IWikitextDocumentConstants.WIKIDOC_HTML_COMMENT_CONTENT_TYPE);
 		}
 	}
 	
