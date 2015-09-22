@@ -79,7 +79,7 @@ public abstract class AbstractMarkupConfig<T extends AbstractMarkupConfig<? supe
 	}
 	
 	
-	public void setYamlMetadataEnabled(final boolean enabled) {
+	public synchronized void setYamlMetadataEnabled(final boolean enabled) {
 		checkSeal();
 		if (this.isYamlMetadataEnabled != enabled) {
 			this.isYamlMetadataEnabled= enabled;
@@ -120,7 +120,12 @@ public abstract class AbstractMarkupConfig<T extends AbstractMarkupConfig<? supe
 	public String getString() {
 		String s= this.configString;
 		if (s == null) {
-			s= createConfigString();
+			final StringBuilder sb= new StringBuilder(getConfigType());
+			sb.append(':');
+			createConfigString(sb);
+			s= (sb.charAt(sb.length() - 1) == ';') ?
+					sb.substring(0, sb.length() - 1) :
+					sb.toString();
 			this.configString= s;
 		}
 		return s;
@@ -132,9 +137,7 @@ public abstract class AbstractMarkupConfig<T extends AbstractMarkupConfig<? supe
 		return getConfigType().equals(configType);
 	}
 	
-	protected String createConfigString() {
-		final StringBuilder sb= new StringBuilder(getConfigType());
-		sb.append(':');
+	protected void createConfigString(final StringBuilder sb) {
 		if (isYamlMetadataEnabled()) {
 			sb.append(YAML_METADATA_ENABLED_KEY + ';');
 		}
@@ -144,7 +147,6 @@ public abstract class AbstractMarkupConfig<T extends AbstractMarkupConfig<? supe
 		if (isTexMathSBackslashEnabled()) {
 			sb.append(TEX_MATH_SBACKSLASH_ENABLED_KEY + ';');
 		}
-		return (sb.length() == 0) ? "" : sb.substring(0, sb.length() - 1); //$NON-NLS-1$
 	}
 	
 	protected void load(final String configType, final List<String> s) {
@@ -182,14 +184,14 @@ public abstract class AbstractMarkupConfig<T extends AbstractMarkupConfig<? supe
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AbstractMarkupConfig)) {
-			return false;
+		if (obj instanceof AbstractMarkupConfig) {
+			final AbstractMarkupConfig<?> other= (AbstractMarkupConfig<?>) obj;
+			return (getConfigType() == other.getConfigType()
+					&& isYamlMetadataEnabled() == other.isYamlMetadataEnabled()
+					&& isTexMathDollarsEnabled() == other.isTexMathDollarsEnabled()
+					&& isTexMathSBackslashEnabled() == other.isTexMathSBackslashEnabled() );
 		}
-		final AbstractMarkupConfig<?> other= (AbstractMarkupConfig<?>) obj;
-		return (this.getConfigType() == other.getConfigType()
-				&& this.isYamlMetadataEnabled() == other.isYamlMetadataEnabled()
-				&& this.isTexMathDollarsEnabled() == other.isTexMathDollarsEnabled()
-				&& this.isTexMathSBackslashEnabled() == other.isTexMathSBackslashEnabled() );
+		return false;
 	}
 	
 	@Override

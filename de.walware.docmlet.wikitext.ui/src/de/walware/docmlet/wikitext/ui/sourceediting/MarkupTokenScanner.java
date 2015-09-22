@@ -30,7 +30,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.swt.custom.StyleRange;
 
 import de.walware.ecommons.ltk.core.SourceContent;
@@ -124,13 +123,12 @@ public class MarkupTokenScanner implements ITokenScanner {
 			}
 			
 			final IMarkupLanguage markupLanguage= MarkupLanguageDocumentSetupParticipant.getMarkupLanguage(document, MarkupTokenScanner.this.partitioning);
-			if (markupLanguage instanceof AbstractMarkupLanguage) {
-				final AbstractMarkupLanguage language= (AbstractMarkupLanguage) markupLanguage;
-				language.setFilterGenerativeContents(true);
-				language.setBlocksOnly(false);
-			}
 			
 			final MarkupParser2 markupParser= new MarkupParser2(markupLanguage, this);
+			markupParser.disable(MarkupParser2.GENERATIVE_CONTENT);
+			markupParser.enable(MarkupParser2.SOURCE_STRUCT);
+			markupParser.enable(MarkupParser2.INLINE_ALL);
+			
 			final SourceContent content= new SourceContent(0,
 					document.get(this.scanRestartOffset, Math.min(this.endOffset + 100, document.getLength()) - this.scanRestartOffset),
 					this.scanRestartOffset );

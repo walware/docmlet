@@ -26,14 +26,11 @@ import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.text.ILineInformation;
 
 import de.walware.docmlet.wikitext.core.markup.IWikitextLocator;
+import de.walware.docmlet.wikitext.core.markup.MarkupParser2;
 
 
 public class WeaveLanguageProcessor extends DocumentBuilder {
 	
-	
-	public static final byte MODE_BLOCKS_ONLY= 0;
-	public static final byte MODE_BLOCKS_AND_INLINE= 1;
-	public static final byte MODE_ORG= 4;
 	
 	private static final boolean DEBUGGING= false;
 	
@@ -329,7 +326,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	private final ExplLocator explLocator= new ExplLocator();
 	
-	private byte mode;
+	private int flags;
 	private DocumentBuilder builder;
 	private boolean finished;
 	
@@ -381,11 +378,12 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	}
 	
 	
-	public String preprocess(final SourceContent content, final DocumentBuilder builder, final byte mode) {
+	public String preprocess(final SourceContent content, final DocumentBuilder builder,
+			final int flags) {
 		this.orgContent= content;
 		this.builder= builder;
 		this.builder.setLocator(this.explLocator);
-		this.mode= mode;
+		this.flags= flags;
 		this.explLocator.reset();
 		this.finished= false;
 		
@@ -566,7 +564,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	}
 	
 	private void sendInline(final EmbeddedInline inline) {
-		if (this.mode >= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_EMBEDDED) != 0) {
 			final WeaveParticipant part= inline.getParticipant();
 			this.explLocator.setTo(inline.getBeginOffset(), inline.getEndOffset());
 			this.builder.beginSpan(SpanType.CODE, new EmbeddingAttributes(
@@ -653,7 +651,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void beginSpan(final SpanType type, final Attributes attributes) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -674,7 +672,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void endSpan() {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		if (this.ignoreCounter > 0) {
@@ -744,7 +742,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void characters(final String text) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		int offset= this.locator.getDocumentOffset();
@@ -786,7 +784,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void entityReference(final String entity) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -804,7 +802,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void image(final Attributes attributes, final String url) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -822,7 +820,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void link(final Attributes attributes, final String hrefOrHashName, final String text) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -845,7 +843,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	@Override
 	public void imageLink(final Attributes linkAttributes, final Attributes imageAttributes,
 			final String href, final String imageUrl) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -864,7 +862,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void acronym(final String text, final String definition) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();
@@ -883,7 +881,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void lineBreak() {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= this.locator.getDocumentOffset();
@@ -893,7 +891,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 	
 	@Override
 	public void charactersUnescaped(final String literal) {
-		if (this.mode <= MODE_BLOCKS_AND_INLINE) {
+		if ((this.flags & MarkupParser2.INLINE_MARKUP) == 0) {
 			return;
 		}
 		final int beginOffset= getSegmentBeginOffset();

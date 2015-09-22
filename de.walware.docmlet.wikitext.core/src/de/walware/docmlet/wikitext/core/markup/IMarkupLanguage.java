@@ -15,14 +15,22 @@ package de.walware.docmlet.wikitext.core.markup;
 public interface IMarkupLanguage extends Cloneable {
 	
 	
+	int TEMPLATE_MODE=                  1 << 4;
+	
+	int MYLYN_COMPAT_MODE=              1 << 8;
+	
+	
 	String getName();
 	
 	IMarkupLanguage clone();
 	
 	String getScope();
-	IMarkupLanguage clone(String scope);
+	IMarkupLanguage clone(String scope, int mode);
 	
 	IMarkupConfig getMarkupConfig();
 	void setMarkupConfig(IMarkupConfig config);
+	
+	int getMode();
+	boolean isModeEnabled(int modeMask);
 	
 }

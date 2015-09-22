@@ -40,7 +40,7 @@ import de.walware.docmlet.wikitext.core.source.extdoc.AbstractMarkupConfig;
 import de.walware.docmlet.wikitext.internal.ui.config.Messages;
 
 
-public abstract class AbstractMarkupConfigDialog<T extends AbstractMarkupConfig<?>> extends ExtStatusDialog {
+public abstract class AbstractMarkupConfigDialog<T extends AbstractMarkupConfig<? super T>> extends ExtStatusDialog {
 	
 	
 	private final String contextLabel;

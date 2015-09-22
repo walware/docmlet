@@ -50,7 +50,6 @@ import de.walware.docmlet.wikitext.core.model.IWikidocSuModelContainerEmbeddedEx
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.core.model.WikidocSuModelContainer;
 import de.walware.docmlet.wikitext.core.source.MarkupLanguageDocumentSetupParticipant;
-import de.walware.docmlet.wikitext.core.source.extdoc.IExtdocMarkupLanguage;
 
 
 public class WikidocReconciler {
@@ -199,10 +198,8 @@ public class WikidocReconciler {
 		synchronized (this.languages) {
 			IMarkupLanguage internal= this.languages.get(markupLanguage);
 			if (internal == null) {
-				internal= markupLanguage.clone("Reconciler"); //$NON-NLS-1$
-				if (internal instanceof IExtdocMarkupLanguage) {
-					this.languages.put(internal, internal);
-				}
+				internal= markupLanguage.clone("Reconciler", markupLanguage.getMode());
+				this.languages.put(internal, internal);
 			}
 			return internal;
 		}
@@ -212,7 +209,7 @@ public class WikidocReconciler {
 			final IProgressMonitor monitor) {
 		final IMarkupLanguage markupLanguage= getMarkupLanguage(data, monitor);
 		if (markupLanguage == null) {
-			return;
+			throw new UnsupportedOperationException("Markup language is missing.");
 		}
 		final MarkupSourceModelStamp stamp= new MarkupSourceModelStamp(data.content.getStamp(), markupLanguage);
 		
@@ -225,7 +222,7 @@ public class WikidocReconciler {
 			final SourceComponent sourceNode;
 //			final StringParseInput input= new StringParseInput(data.content.text);
 //			
-			this.f1Parser.setMarkupLanguage(getMarkupLanguage(data, monitor));
+			this.f1Parser.setMarkupLanguage(markupLanguage);
 			this.f1Parser.setCollectEmebeddedNodes(true);
 			
 			sourceNode= this.f1Parser.parse(data.content);

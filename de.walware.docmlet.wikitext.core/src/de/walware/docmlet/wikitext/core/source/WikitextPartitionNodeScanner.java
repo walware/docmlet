@@ -16,7 +16,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNode;
@@ -36,7 +35,7 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	
 	private IMarkupLanguage markupLanguage;
 	
-	private final boolean templateMode;
+	private final int markupLanguageMode;
 	
 	private ITreePartitionNodeScan scan;
 	
@@ -55,11 +54,12 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	
 	
 	public WikitextPartitionNodeScanner(final IMarkupLanguage markupLanguage) {
-		this(markupLanguage, false);
+		this(markupLanguage, 0);
 	}
 	
-	public WikitextPartitionNodeScanner(final IMarkupLanguage markupLanguage, final boolean templateMode) {
-		this.templateMode= templateMode;
+	public WikitextPartitionNodeScanner(final IMarkupLanguage markupLanguage,
+			final int markupLanguageMode) {
+		this.markupLanguageMode= markupLanguageMode;
 		setMarkupLanguage(markupLanguage);
 	}
 	
@@ -77,11 +77,11 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 				return;
 			}
 		}
-		this.markupLanguage= markupLanguage.clone("Doc/Partitioner"); //$NON-NLS-1$
+		this.markupLanguage= markupLanguage.clone("Doc/Partitioner", this.markupLanguageMode); //$NON-NLS-1$
 	}
 	
 	protected boolean isTemplateMode() {
-		return this.templateMode;
+		return ((this.markupLanguageMode & IMarkupLanguage.TEMPLATE_MODE) != 0);
 	}
 	
 	
@@ -206,13 +206,14 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	
 	private void process() {
 		try {
-			configure(this.markupLanguage);
 			final DocumentBuilder builder= this;
 //			final DocumentBuilder builder= new MultiplexingDocumentBuilder(new EventLoggingDocumentBuilder(), this);
 			final MarkupParser2 markupParser= new MarkupParser2(this.markupLanguage, builder);
+			configure(markupParser);
 			final SourceContent content= new SourceContent(0,
 					this.scan.getDocument().get(this.beginOffset, this.endOffset - this.beginOffset),
 					this.beginOffset );
+			
 			markupParser.parse(content, false);
 		}
 		catch (final BadLocationException e) {
@@ -220,12 +221,10 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 		}
 	}
 	
-	protected void configure(final IMarkupLanguage markupLanguage) {
-		if (markupLanguage instanceof AbstractMarkupLanguage) {
-			final AbstractMarkupLanguage language= (AbstractMarkupLanguage) this.markupLanguage;
-			language.setFilterGenerativeContents(true);
-			language.setBlocksOnly(true);
-		}
+	protected void configure(final MarkupParser2 markupParser) {
+		markupParser.disable(MarkupParser2.GENERATIVE_CONTENT);
+		markupParser.enable(MarkupParser2.SOURCE_STRUCT);
+		markupParser.disable(MarkupParser2.INLINE_ALL);
 	}
 	
 	

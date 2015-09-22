@@ -17,14 +17,11 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 /**
  * The document setup participant for Wikitext documents.
  */
-public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetupParticipant {
+public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetupParticipant1 {
 	
 	
 	private static final String[] CONTENT_TYPES= IWikitextDocumentConstants.WIKIDOC_CONTENT_TYPES.toArray(
 			new String[IWikitextDocumentConstants.WIKIDOC_CONTENT_TYPES.size()] );
-	
-	
-	private final boolean templateMode;
 	
 	
 	public WikidocDocumentSetupParticipant(final IMarkupLanguage markupLanguage) {
@@ -32,10 +29,8 @@ public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetup
 	}
 	
 	public WikidocDocumentSetupParticipant(final IMarkupLanguage markupLanguage,
-			final boolean enableTemplateMode) {
-		super(markupLanguage);
-		
-		this.templateMode= enableTemplateMode;
+			final boolean templateMode) {
+		super(markupLanguage, (templateMode) ? IMarkupLanguage.TEMPLATE_MODE : 0);
 	}
 	
 	
@@ -47,7 +42,7 @@ public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetup
 	@Override
 	protected IMarkupLanguagePartitioner createDocumentPartitioner(final IMarkupLanguage markupLanguage) {
 		return new WikitextPartitioner(
-				new WikitextPartitionNodeScanner(markupLanguage, this.templateMode),
+				new WikitextPartitionNodeScanner(markupLanguage, getMarkupLanguageMode()),
 				CONTENT_TYPES );
 	}
 	

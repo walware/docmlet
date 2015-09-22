@@ -52,22 +52,12 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	
 	
 	public WikidocPartitionNodeScanner(final IMarkupLanguage markupLanguage) {
-		super(markupLanguage);
+		this(markupLanguage, 0);
 	}
 	
 	public WikidocPartitionNodeScanner(final IMarkupLanguage markupLanguage,
-			final boolean templateMode) {
-		super(markupLanguage, templateMode);
-	}
-	
-	
-	@Override
-	protected void configure(final IMarkupLanguage markupLanguage) {
-		super.configure(markupLanguage);
-		
-		if (markupLanguage instanceof IExtdocMarkupLanguage) {
-			((IExtdocMarkupLanguage) markupLanguage).setBlocksOnly(true, true);
-		}
+			final int markupLanguageMode) {
+		super(markupLanguage, markupLanguageMode);
 	}
 	
 	

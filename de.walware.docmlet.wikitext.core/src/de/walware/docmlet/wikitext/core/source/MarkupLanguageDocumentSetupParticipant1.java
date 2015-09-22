@@ -34,8 +34,9 @@ public abstract class MarkupLanguageDocumentSetupParticipant1
 	private final IMarkupLanguageManager1 markupLanguageManager;
 	
 	
-	public MarkupLanguageDocumentSetupParticipant1(final IMarkupLanguage markupLanguage) {
-		super(markupLanguage);
+	public MarkupLanguageDocumentSetupParticipant1(final IMarkupLanguage markupLanguage,
+			final int markupLanguageMode) {
+		super(markupLanguage, markupLanguageMode);
 		
 		this.markupLanguageManager= WikitextCore.getMarkupLanguageManager();
 	}

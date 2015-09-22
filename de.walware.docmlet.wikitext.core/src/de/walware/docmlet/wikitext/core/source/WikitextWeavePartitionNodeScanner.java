@@ -20,6 +20,7 @@ import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScanner;
 import de.walware.ecommons.text.core.treepartitioner.WrappedPartitionScan;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
+import de.walware.docmlet.wikitext.core.markup.MarkupParser2;
 
 
 public class WikitextWeavePartitionNodeScanner extends WikitextPartitionNodeScanner {
@@ -35,12 +36,12 @@ public class WikitextWeavePartitionNodeScanner extends WikitextPartitionNodeScan
 	
 	
 	public WikitextWeavePartitionNodeScanner(final IMarkupLanguage markupLanguage) {
-		super(markupLanguage);
+		this(markupLanguage, 0);
 	}
 	
 	public WikitextWeavePartitionNodeScanner(final IMarkupLanguage markupLanguage,
-			final boolean templateMode) {
-		super(markupLanguage, templateMode);
+			final int markupLanguageMode) {
+		super(markupLanguage, markupLanguageMode);
 	}
 	
 	
@@ -59,6 +60,13 @@ public class WikitextWeavePartitionNodeScanner extends WikitextPartitionNodeScan
 		this.embeddingAttributes= null;
 		
 		super.init();
+	}
+	
+	@Override
+	protected void configure(final MarkupParser2 markupParser) {
+		super.configure(markupParser);
+		
+		markupParser.enable(MarkupParser2.INLINE_EMBEDDED);
 	}
 	
 	protected WrappedPartitionScan getForeignScan() {

@@ -11,8 +11,6 @@
 
 package de.walware.docmlet.wikitext.core.markup;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-
 import de.walware.ecommons.ltk.core.SourceContent;
 
 import de.walware.docmlet.wikitext.core.WikitextProblemReporter;
@@ -21,7 +19,7 @@ import de.walware.docmlet.wikitext.core.WikitextProblemReporter;
 public interface IMarkupLanguageExtension2 {
 	
 	
-	void processContent(MarkupParser parser, SourceContent content, boolean asDocument);
+	void processContent(MarkupParser2 parser, SourceContent content, boolean asDocument);
 	
 	WikitextProblemReporter getProblemReporter();
 	

@@ -18,7 +18,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.string.IStringFactory;
@@ -93,9 +92,10 @@ public class WikidocParser extends DocumentBuilder {
 			this.content= content;
 			this.depth= -1;
 			
-			configureMarkupLanguage(this.markupLanguage);
-			
 			final MarkupParser2 markupParser= new MarkupParser2(this.markupLanguage, this);
+			markupParser.disable(MarkupParser2.GENERATIVE_CONTENT);
+			markupParser.enable(MarkupParser2.SOURCE_STRUCT);
+			
 			markupParser.parse(content, true);
 			
 			return (SourceComponent) this.currentNode;
@@ -106,14 +106,6 @@ public class WikidocParser extends DocumentBuilder {
 				list.clear();
 				this.depth--;
 			}
-		}
-	}
-	
-	protected void configureMarkupLanguage(final IMarkupLanguage markupLanguage) {
-		if (markupLanguage instanceof AbstractMarkupLanguage) {
-			final AbstractMarkupLanguage language= (AbstractMarkupLanguage) markupLanguage;
-			language.setBlocksOnly(false);
-			language.setFilterGenerativeContents(true);
 		}
 	}
 	

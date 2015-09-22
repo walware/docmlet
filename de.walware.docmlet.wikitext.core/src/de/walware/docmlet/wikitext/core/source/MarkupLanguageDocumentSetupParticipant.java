@@ -32,17 +32,25 @@ public abstract class MarkupLanguageDocumentSetupParticipant extends Partitioner
 	
 	private final IMarkupLanguage markupLanguage;
 	
+	private final int markupLanguageMode;
 	
-	public MarkupLanguageDocumentSetupParticipant(final IMarkupLanguage markupLanguage) {
+	
+	public MarkupLanguageDocumentSetupParticipant(final IMarkupLanguage markupLanguage,
+			final int markupLanguageMode) {
 		if (markupLanguage == null) {
 			throw new NullPointerException("markupLanguage"); //$NON-NLS-1$
 		}
 		this.markupLanguage= markupLanguage;
+		this.markupLanguageMode= markupLanguageMode;
 	}
 	
 	
 	public IMarkupLanguage getMarkupLanguage() {
 		return this.markupLanguage;
+	}
+	
+	protected int getMarkupLanguageMode() {
+		return this.markupLanguageMode;
 	}
 	
 	

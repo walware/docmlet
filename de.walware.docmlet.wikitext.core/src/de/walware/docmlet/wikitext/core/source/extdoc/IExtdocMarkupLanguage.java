@@ -45,11 +45,6 @@ public interface IExtdocMarkupLanguage extends IMarkupLanguage {
 	@Override
 	IExtdocMarkupLanguage clone();
 	@Override
-	IExtdocMarkupLanguage clone(String scopeKey);
-	
-	void setTemplateMode(boolean enable);
-	boolean getTemplateMode();
-	
-	void setBlocksOnly(boolean blocksOnly, boolean enableInlineWeaves);
+	IExtdocMarkupLanguage clone(String scopeKey, int mode);
 	
 }
