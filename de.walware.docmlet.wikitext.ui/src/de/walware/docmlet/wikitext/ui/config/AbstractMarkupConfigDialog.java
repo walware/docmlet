@@ -9,7 +9,7 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.wikitext.ui.sourceediting;
+package de.walware.docmlet.wikitext.ui.config;
 
 import java.beans.Introspector;
 import java.util.LinkedHashMap;

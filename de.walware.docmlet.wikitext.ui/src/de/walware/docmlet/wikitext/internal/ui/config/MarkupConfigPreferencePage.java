@@ -45,7 +45,7 @@ import de.walware.docmlet.wikitext.core.WikitextCore;
 import de.walware.docmlet.wikitext.core.markup.IMarkupConfig;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageManager.IMarkupLanguageDescriptor;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageManager1;
-import de.walware.docmlet.wikitext.ui.sourceediting.IMarkupConfigUIAdapter;
+import de.walware.docmlet.wikitext.ui.config.IMarkupConfigUIAdapter;
 
 
 public class MarkupConfigPreferencePage extends ConfigurationBlockPreferencePage {

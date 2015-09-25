@@ -40,8 +40,8 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageManager1;
 import de.walware.docmlet.wikitext.core.model.IWikidocWorkspaceSourceUnit;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.ui.WikitextUI;
+import de.walware.docmlet.wikitext.ui.config.IMarkupConfigUIAdapter;
 import de.walware.docmlet.wikitext.ui.editors.IWikidocEditor;
-import de.walware.docmlet.wikitext.ui.sourceediting.IMarkupConfigUIAdapter;
 
 
 public class ConfigureMarkupHandler extends AbstractHandler {
