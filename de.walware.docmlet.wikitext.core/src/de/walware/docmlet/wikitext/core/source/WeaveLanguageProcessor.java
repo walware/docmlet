@@ -172,7 +172,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		
 	}
 	
-	private class ExplLocator implements Locator, IWikitextLocator {
+	private final class ExplLocator implements Locator, IWikitextLocator {
 		
 		
 		private int lineNumber;
@@ -183,6 +183,9 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		
 		private int endOffset;
 		
+		
+		public ExplLocator() {
+		}
 		
 		
 		public void setShift(final int offset) {
@@ -198,14 +201,18 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 			this.endOffset= offset;
 		}
 		
+		public int computeOffset(final int offset) {
+			return this.shift + offset;
+		}
+		
 		public void setTo(final int beginOffset) {
-			setOffset(this.shift + beginOffset);
+			setOffset(computeOffset(beginOffset));
 		}
 		
 		public void setTo(final int beginOffset, final int endOffset) {
 			setOffset(this.shift + beginOffset);
 			if (endOffset > beginOffset) {
-				this.endOffset= this.shift + endOffset;
+				this.endOffset= computeOffset(endOffset);
 			}
 		}
 		
@@ -588,6 +595,15 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 				this.maxOffset );
 	}
 	
+	private LabelInfo updatePosition(final LabelInfo labelInfo) {
+		if (labelInfo == null) {
+			return null;
+		}
+		return new LabelInfo(labelInfo.getLabel(),
+				this.explLocator.computeOffset(labelInfo.getOffset()),
+				this.explLocator.computeOffset(labelInfo.getEndOffset()) );
+	}
+	
 	@Override
 	public void beginDocument() {
 		this.explLocator.setTo(0);
@@ -814,6 +830,10 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		if (beginOffset > this.lastOffset) {
 			return;
 		}
+		if (attributes instanceof ImageByRefAttributes) {
+			final ImageByRefAttributes refAttributes= (ImageByRefAttributes) attributes;
+			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
+		}
 		this.explLocator.setTo(beginOffset, endOffset);
 		this.builder.image(attributes, url);
 	}
@@ -834,6 +854,14 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 //			if (text.indexOf(REPLACEMENT_CHAR) >= 0) {
 //				text= replaceText(text, locator.getLineDocumentOffset() + locator.getLineCharacterOffset());
 //			}
+		}
+		if (attributes instanceof LinkRefDefinitionAttributes) {
+			final LinkRefDefinitionAttributes refAttributes= (LinkRefDefinitionAttributes) attributes;
+			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
+		}
+		if (attributes instanceof LinkByRefAttributes) {
+			final LinkByRefAttributes refAttributes= (LinkByRefAttributes) attributes;
+			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
 		}
 		this.lastOffset= endOffset;
 		this.explLocator.setTo(beginOffset, endOffset);

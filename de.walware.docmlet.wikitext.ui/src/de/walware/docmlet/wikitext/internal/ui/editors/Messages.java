@@ -20,6 +20,9 @@ public class Messages extends NLS {
 	public static String Hyperlinks_OpenDeclaration_label;
 	public static String Hyperlinks_OpenMarkupLink_label;
 	
+	public static String Proposal_RenameInFile_label;
+	public static String Proposal_RenameInFile_description;
+	
 	
 	static {
 		NLS.initializeMessages(Messages.class.getName(), Messages.class);

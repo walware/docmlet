@@ -20,21 +20,16 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 
-import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.util.OpenWorkspaceFileHyperlink;
 
 import de.walware.docmlet.wikitext.core.ast.Link;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.core.model.WikitextModel;
+import de.walware.docmlet.wikitext.core.model.WikitextNameAccess;
 
 
 public class MarkupHyperlinkDetector extends AbstractHyperlinkDetector {
-	
-	
-	private static IWikitextSourceUnit getWikitextSourceUnit(final ISourceUnit su) {
-		return (su instanceof IWikitextSourceUnit) ? (IWikitextSourceUnit) su : null;
-	}
 	
 	
 	public MarkupHyperlinkDetector() {
@@ -48,24 +43,36 @@ public class MarkupHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (editor == null) {
 			return null;
 		}
-		final IWikitextSourceUnit su= WikitextModel.asWikitextSourceUnit(editor.getSourceUnit());
-		if (su == null) {
+		final IWikitextSourceUnit sourceUnit= WikitextModel.asWikitextSourceUnit(editor.getSourceUnit());
+		if (sourceUnit == null) {
 			return null;
 		}
 		
 		final List<IHyperlink> hyperlinks= new ArrayList<>(4);
-		final Link link= MarkupOpenHyperlinkHandler.searchLink(su, region);
-		if (link != null && link.getHref() != null && !link.getHref().isEmpty()) {
-			if (link.getHref().charAt(0) == '#') {
-				if (link.getHref().length() > 1) {
-					hyperlinks.add(new OpenMarkupElementHyperlink(editor, su, link,
-							link.getHref().substring(1) ));
+		
+		final Link link= MarkupOpenHyperlinkHandler.searchLink(sourceUnit, region);
+		if (link != null) {
+			if (link.getLinkType() == Link.LINK_BY_REF) {
+				for (final Object attachment : link.getAttachments()) {
+					if (attachment instanceof WikitextNameAccess) {
+						hyperlinks.add(new OpenMarkupElementHyperlink(editor, sourceUnit,
+								(WikitextNameAccess) attachment ));
+						break;
+					}
 				}
 			}
-			else {
-				final List<IFile> files= MarkupOpenHyperlinkHandler.refLocalFile(editor, link);
-				for (final IFile file : files) {
-					hyperlinks.add(new OpenWorkspaceFileHyperlink(link, file));
+			else if (link.getUri() != null && !link.getUri().isEmpty()) {
+				if (link.getUri().charAt(0) == '#') {
+					if (link.getUri().length() > 1) {
+						hyperlinks.add(new OpenMarkupElementHyperlink(editor, sourceUnit,
+								link, link.getUri().substring(1) ));
+					}
+				}
+				else {
+					final List<IFile> files= MarkupOpenHyperlinkHandler.refLocalFile(editor, link);
+					for (final IFile file : files) {
+						hyperlinks.add(new OpenWorkspaceFileHyperlink(link, file));
+					}
 				}
 			}
 		}

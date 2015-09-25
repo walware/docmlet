@@ -17,7 +17,6 @@ import static de.walware.ecommons.ltk.core.model.IModelElement.MASK_C2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,16 @@ import java.util.Map;
 import org.eclipse.jface.text.Region;
 
 import de.walware.ecommons.ltk.AstInfo;
+import de.walware.ecommons.ltk.core.impl.NameAccessAccumulator;
+import de.walware.ecommons.ltk.core.impl.NameAccessSet;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 
 import de.walware.docmlet.wikitext.core.ast.Block;
 import de.walware.docmlet.wikitext.core.ast.Embedded;
 import de.walware.docmlet.wikitext.core.ast.Heading;
+import de.walware.docmlet.wikitext.core.ast.Image;
+import de.walware.docmlet.wikitext.core.ast.Label;
+import de.walware.docmlet.wikitext.core.ast.Link;
 import de.walware.docmlet.wikitext.core.ast.SourceComponent;
 import de.walware.docmlet.wikitext.core.ast.Span;
 import de.walware.docmlet.wikitext.core.ast.Text;
@@ -38,6 +43,7 @@ import de.walware.docmlet.wikitext.core.model.EmbeddingReconcileItem;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceElement;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.core.model.WikitextElementName;
+import de.walware.docmlet.wikitext.core.model.WikitextNameAccess;
 import de.walware.docmlet.wikitext.internal.core.model.WikitextSourceElement.EmbeddedRef;
 
 
@@ -61,7 +67,8 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 	private int minSectionLevel;
 	private int maxSectionLevel;
 	
-	private Map<String, WikitextAstNode> labelMap= new HashMap<>();
+	private Map<String, NameAccessAccumulator<WikitextNameAccess>> linkAnchorLabels= new HashMap<>();
+	private Map<String, NameAccessAccumulator<WikitextNameAccess>> linkDefLabels= new HashMap<>();
 	
 	
 	public void clear() {
@@ -86,8 +93,11 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 			return null;
 		}
 		
-		if (!this.labelMap.isEmpty()) {
-			this.labelMap.clear();
+		if (!this.linkAnchorLabels.isEmpty()) {
+			this.linkAnchorLabels.clear();
+		}
+		if (!this.linkDefLabels.isEmpty()) {
+			this.linkDefLabels.clear();
 		}
 		final IWikitextSourceElement root= this.currentElement= new WikitextSourceElement.SourceContainer(
 				IWikitextSourceElement.C2_SOURCE_FILE, su, (WikitextAstNode) ast.root);
@@ -98,16 +108,25 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 				this.minSectionLevel= 0;
 				this.maxSectionLevel= 0;
 			}
-			final Map<String, WikitextAstNode> labels;
-			if (this.labelMap.isEmpty()) {
-				labels= Collections.emptyMap();
+			final INameAccessSet<WikitextNameAccess> linkAnchorLabels;
+			final INameAccessSet<WikitextNameAccess> linkDefLabels;
+			if (this.linkAnchorLabels.isEmpty()) {
+				linkAnchorLabels= NameAccessSet.emptySet();
 			}
 			else {
-				labels= Collections.unmodifiableMap(this.labelMap);
-				this.labelMap= new HashMap<>();
+				linkAnchorLabels= new NameAccessSet<>(this.linkAnchorLabels);
+				this.linkAnchorLabels= new HashMap<>();
+			}
+			if (this.linkDefLabels.isEmpty()) {
+				linkDefLabels= NameAccessSet.emptySet();
+			}
+			else {
+				linkDefLabels= new NameAccessSet<>(this.linkDefLabels);
+				this.linkDefLabels= new HashMap<>();
 			}
 			
-			final WikidocSourceUnitModelInfo model= new WikidocSourceUnitModelInfo(ast, root, labels,
+			final WikidocSourceUnitModelInfo model= new WikidocSourceUnitModelInfo(ast, root,
+					linkAnchorLabels, linkDefLabels,
 					this.minSectionLevel, this.maxSectionLevel );
 			return model;
 		}
@@ -216,6 +235,31 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 		return offset;
 	}
 	
+	private RefLabelAccess addLinkAnchorAccess(final WikitextAstNode node) {
+		final String label= node.getLabel();
+		NameAccessAccumulator<WikitextNameAccess> shared= this.linkAnchorLabels.get(label);
+		if (shared == null) {
+			shared= new NameAccessAccumulator<>(label);
+			this.linkAnchorLabels.put(label, shared);
+		}
+		final RefLabelAccess access= new RefLabelAccess.LinkAnchor(shared, node, null);
+		node.addAttachment(access);
+		return access;
+	}
+	
+	private RefLabelAccess addLinkDefAccess(final WikitextAstNode node, final Label labelNode) {
+		final String label= labelNode.getText();
+		NameAccessAccumulator<WikitextNameAccess> shared= this.linkDefLabels.get(label);
+		if (shared == null) {
+			shared= new NameAccessAccumulator<>(label);
+			this.linkDefLabels.put(label, shared);
+		}
+		final RefLabelAccess access= new RefLabelAccess.LinkDef(shared, node, labelNode);
+		node.addAttachment(access);
+		return access;
+	}
+	
+	
 	@Override
 	public void visit(final SourceComponent node) throws InvocationTargetException {
 		this.currentElement.offset= node.getOffset();
@@ -232,7 +276,8 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 	@Override
 	public void visit(final Block node) throws InvocationTargetException {
 		if (node.getLabel() != null) {
-			this.labelMap.put(node.getLabel(), node);
+			final RefLabelAccess access= addLinkAnchorAccess(node);
+			access.flags|= RefLabelAccess.A_WRITE;
 		}
 		
 		node.acceptInWikitextChildren(this);
@@ -243,7 +288,8 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 	@Override
 	public void visit(final Heading node) throws InvocationTargetException {
 		if (node.getLabel() != null) {
-			this.labelMap.put(node.getLabel(), node);
+			final RefLabelAccess access= addLinkAnchorAccess(node);
+			access.flags|= RefLabelAccess.A_WRITE;
 		}
 		
 		COMMAND: {
@@ -301,7 +347,8 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 	@Override
 	public void visit(final Span node) throws InvocationTargetException {
 		if (node.getLabel() != null) {
-			this.labelMap.put(node.getLabel(), node);
+			final RefLabelAccess access= addLinkAnchorAccess(node);
+			access.flags|= RefLabelAccess.A_WRITE;
 		}
 		
 		node.acceptInWikitextChildren(this);
@@ -320,6 +367,36 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 		}
 		
 		this.currentElement.length= node.getEndOffset() - this.currentElement.getOffset();
+	}
+	
+	@Override
+	public void visit(final Link node) throws InvocationTargetException {
+		final RefLabelAccess access;
+		switch (node.getLinkType()) {
+		case Link.LINK_REF_DEFINITION:
+			access= addLinkDefAccess(node, node.getReferenceLabel());
+			access.flags|= RefLabelAccess.A_WRITE;
+			break;
+		case Link.LINK_BY_REF:
+			access= addLinkDefAccess(node, node.getReferenceLabel());
+			break;
+		default:
+			break;
+		}
+		super.visit(node);
+	}
+	
+	@Override
+	public void visit(final Image node) throws InvocationTargetException {
+		final RefLabelAccess access;
+		switch (node.getImageType()) {
+		case Image.SRC_BY_REF:
+			access= addLinkDefAccess(node, node.getReferenceLabel());
+			break;
+		default:
+			break;
+		}
+		super.visit(node);
 	}
 	
 	@Override

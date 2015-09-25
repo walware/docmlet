@@ -114,7 +114,7 @@
             id="de.walware.docmlet.wikitext.contentAssist.MarkupAnchorCompletion"
             contentTypeId="de.walware.docmlet.wikitext.contentTypes.Wikidoc"
             categoryId="markup"
-            class="de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupLabelAssistComputer">
+            class="de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupLabelCompletionComputer">
          <partition
                partitionType="Wikitext.Default">
          </partition>

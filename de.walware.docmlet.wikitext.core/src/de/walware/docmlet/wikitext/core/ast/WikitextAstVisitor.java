@@ -33,14 +33,17 @@ public class WikitextAstVisitor {
 		node.acceptInWikitextChildren(this);
 	}
 	
-	public void visit(final Label node) throws InvocationTargetException {
-	}
-	
 	public void visit(final Text node) throws InvocationTargetException {
 	}
 	
 	public void visit(final Link node) throws InvocationTargetException {
 		node.acceptInWikitextChildren(this);
+	}
+	
+	public void visit(final Image node) throws InvocationTargetException {
+	}
+	
+	public void visit(final Label node) throws InvocationTargetException {
 	}
 	
 	
@@ -55,5 +58,5 @@ public class WikitextAstVisitor {
 	
 	public void visit(final Embedded node) throws InvocationTargetException {
 	}
-
+	
 }

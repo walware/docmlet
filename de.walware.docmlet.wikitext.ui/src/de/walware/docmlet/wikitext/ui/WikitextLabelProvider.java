@@ -27,6 +27,7 @@ import de.walware.docmlet.base.ui.DocBaseUIResources;
 import de.walware.eutils.yaml.core.model.YamlModel;
 
 import de.walware.docmlet.wikitext.core.model.IWikitextElement;
+import de.walware.docmlet.wikitext.core.model.WikitextNameAccess;
 
 
 public class WikitextLabelProvider extends StyledCellLabelProvider
@@ -54,9 +55,9 @@ public class WikitextLabelProvider extends StyledCellLabelProvider
 		if (element instanceof IModelElement) {
 			return getImage((IModelElement) element);
 		}
-//		if (element instanceof WikitextLabelAccess) {
-//			return getImage(element);
-//		}
+		if (element instanceof WikitextNameAccess) {
+			return getImage(element);
+		}
 		return null;
 	}
 	
@@ -96,21 +97,21 @@ public class WikitextLabelProvider extends StyledCellLabelProvider
 		return null;
 	}
 	
-//	public Image getImage(final WikitextLabelAccess access) {
-//		if (access.getType() == WikitextLabelAccess.LABEL) {
+	public Image getImage(final WikitextNameAccess access) {
+//		if (access.getType() == WikitextNameAccess.LABEL) {
 //			return this.wikitextResources.getImage(WikitextUIResources.OBJ_LABEL_IMAGE_ID);
 //		}
-//		return null;
-//	}
+		return null;
+	}
 	
 	@Override
 	public String getText(final Object element) {
 		if (element instanceof IModelElement) {
 			return getText((IModelElement) element);
 		}
-//		if (element instanceof WikitextLabelAccess) {
-//			return getText(element);
-//		}
+		if (element instanceof WikitextNameAccess) {
+			return getText(element);
+		}
 		return null;
 	}
 	
@@ -119,9 +120,9 @@ public class WikitextLabelProvider extends StyledCellLabelProvider
 		return element.getElementName().getDisplayName();
 	}
 	
-//	public String getText(final WikitextLabelAccess access) {
-//		return access.getDisplayName();
-//	}
+	public String getText(final WikitextNameAccess access) {
+		return access.getDisplayName();
+	}
 	
 	@Override
 	public StyledString getStyledText(final IModelElement element) {

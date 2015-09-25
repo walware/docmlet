@@ -19,23 +19,22 @@ import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
 import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 
 
-public abstract class Link extends ContainerNode {
+public abstract class Image extends WikitextAstNode {
 	
 	
 	public static final byte COMMON= 0;
-	public static final byte LINK_REF_DEFINITION= 1;
-	public static final byte LINK_BY_REF= 2;
+	public static final byte SRC_BY_REF= 2;
 	
 	
-	static final class Ref extends Link {
+	static final class Ref extends Image {
 		
 		
 		private final Label referenceLabel;
 		
 		
-		Ref(final WikitextAstNode parent, final int beginOffset, final int endOffset,
+		Ref(final WikitextAstNode parent, final int startOffset, final int stopOffset,
 				final byte linkType, final Label referenceLabel) {
-			super(parent, beginOffset, endOffset, linkType, null);
+			super(parent, startOffset, stopOffset, linkType, null);
 			
 			if (referenceLabel == null) {
 				throw new NullPointerException("referenceLabel");
@@ -52,7 +51,7 @@ public abstract class Link extends ContainerNode {
 		
 		@Override
 		public int getChildCount() {
-			return this.children.length + 1;
+			return 1;
 		}
 		
 		@Override
@@ -65,7 +64,7 @@ public abstract class Link extends ContainerNode {
 			if (index == 0) {
 				return this.referenceLabel;
 			}
-			return this.children[index - 1];
+			throw new IndexOutOfBoundsException(Integer.toString(index));
 		}
 		
 		@Override
@@ -73,38 +72,27 @@ public abstract class Link extends ContainerNode {
 			if (this.referenceLabel == element) {
 				return 0;
 			}
-			for (int i= 0; i < this.children.length; i++) {
-				if (this.children[i] == element) {
-					return i + 1;
-				}
-			}
 			return -1;
 		}
 		
 		@Override
 		public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
 			this.referenceLabel.accept(visitor);
-			for (final WikitextAstNode child : this.children) {
-				child.accept(visitor);
-			}
 		}
 		
 		@Override
 		public void acceptInWikitextChildren(final WikitextAstVisitor visitor) throws InvocationTargetException {
 			this.referenceLabel.acceptInWikitext(visitor);
-			for (final WikitextAstNode child : this.children) {
-				child.acceptInWikitext(visitor);
-			}
 		}
 		
 	}
 	
-	static final class Common extends Link {
+	static final class Common extends Image {
 		
 		
-		Common(final WikitextAstNode parent, final int beginOffset, final int endOffset,
+		Common(final WikitextAstNode parent, final int startOffset, final int stopOffset,
 				final byte linkType, final String href) {
-			super(parent, beginOffset, endOffset, linkType, href);
+			super(parent, startOffset, stopOffset, linkType, href);
 		}
 		
 		
@@ -121,22 +109,21 @@ public abstract class Link extends ContainerNode {
 	private final String uri;
 	
 	
-	private Link(final WikitextAstNode parent, final int beginOffset, final int endOffset,
+	private Image(final WikitextAstNode parent, final int startOffset, final int stopOffset,
 			final byte linkType, final String uri) {
-		super(parent, beginOffset, endOffset);
+		super(parent, startOffset, stopOffset);
 		
 		this.linkType= linkType;
 		this.uri= uri;
 	}
 	
-	private Link(final WikitextAstNode parent, final int beginOffset,
+	private Image(final WikitextAstNode parent, final int startOffset,
 			final String uri) {
-		super(parent, beginOffset, beginOffset);
+		super(parent, startOffset, startOffset);
 		
 		this.linkType= 0;
 		this.uri= uri;
 	}
-	
 	
 	
 	@Override
@@ -144,7 +131,7 @@ public abstract class Link extends ContainerNode {
 		return NodeType.LINK;
 	}
 	
-	public byte getLinkType() {
+	public byte getImageType() {
 		return this.linkType;
 	}
 	
@@ -154,11 +141,38 @@ public abstract class Link extends ContainerNode {
 	
 	public abstract Label getReferenceLabel();
 	
+	@Override
+	public boolean hasChildren() {
+		return false;
+	}
+	
+	@Override
+	public int getChildCount() {
+		return 0;
+	}
+	
+	@Override
+	public WikitextAstNode getChild(final int index) {
+		throw new IndexOutOfBoundsException();
+	}
+	
+	
+	@Override
+	public int getChildIndex(final IAstNode element) {
+		return -1;
+	}
+	
+	@Override
+	public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
+	}
 	
 	@Override
 	public void acceptInWikitext(final WikitextAstVisitor visitor) throws InvocationTargetException {
 		visitor.visit(this);
 	}
 	
+	@Override
+	public void acceptInWikitextChildren(final WikitextAstVisitor visitor) throws InvocationTargetException {
+	}
 	
 }

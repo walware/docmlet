@@ -18,12 +18,14 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 import de.walware.ecommons.ltk.IModelManager;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
+import de.walware.ecommons.ltk.ui.sourceediting.actions.OpenDeclaration;
 
-import de.walware.docmlet.wikitext.core.ast.WikitextAstNode;
 import de.walware.docmlet.wikitext.core.model.IWikidocModelInfo;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.core.model.WikitextModel;
+import de.walware.docmlet.wikitext.core.model.WikitextNameAccess;
 
 
 public class OpenMarkupElementHyperlink implements IHyperlink {
@@ -33,18 +35,32 @@ public class OpenMarkupElementHyperlink implements IHyperlink {
 	private final IRegion region;
 	
 	private final IWikitextSourceUnit sourceUnit;
+	private final WikitextNameAccess access;
 	private final String label;
 	
 	
-	public OpenMarkupElementHyperlink(final ISourceEditor editor, final IWikitextSourceUnit su,
+	public OpenMarkupElementHyperlink(final ISourceEditor editor, final IWikitextSourceUnit sourceUnit,
 			final IRegion region, final String label) {
-		assert (su != null);
+		assert (sourceUnit != null);
 		assert (label != null);
 		
 		this.editor= editor;
 		this.region= region;
-		this.sourceUnit= su;
+		this.sourceUnit= sourceUnit;
+		this.access= null;
 		this.label= label;
+	}
+	
+	public OpenMarkupElementHyperlink(final ISourceEditor editor, final IWikitextSourceUnit sourceUnit,
+			final WikitextNameAccess access) {
+		assert (sourceUnit != null);
+		assert (access != null);
+		
+		this.editor= editor;
+		this.region= (access.getNameNode() != null) ? access.getNameNode() : access.getNode();
+		this.sourceUnit= sourceUnit;
+		this.access= access;
+		this.label= this.access.getSegmentName();
 	}
 	
 	
@@ -68,9 +84,22 @@ public class OpenMarkupElementHyperlink implements IHyperlink {
 		final IWikidocModelInfo modelInfo= (IWikidocModelInfo) this.sourceUnit.getModelInfo(
 				WikitextModel.WIKIDOC_TYPE_ID, IModelManager.MODEL_FILE, new NullProgressMonitor() );
 		if (modelInfo != null) {
-			final WikitextAstNode node= modelInfo.getLabels().get(this.label);
-			if (node != null) {
-				this.editor.selectAndReveal(node.getOffset(), 0);
+			final int type= (this.access != null) ? this.access.getType() : WikitextNameAccess.LINK_ANCHOR_LABEL;
+			final INameAccessSet<WikitextNameAccess> labels;
+			switch (type) {
+			case WikitextNameAccess.LINK_DEF_LABEL:
+				labels= modelInfo.getLinkRefLabels();
+				break;
+			case WikitextNameAccess.LINK_ANCHOR_LABEL:
+				labels= modelInfo.getLinkAnchorLabels();
+				break;
+			default:
+				return;
+			}
+			final OpenDeclaration open= new OpenDeclaration();
+			final WikitextNameAccess declAccess= open.selectAccess(labels.getAllInUnit(this.label));
+			if (declAccess != null) {
+				open.open(this.editor, declAccess);
 				return;
 			}
 			Display.getCurrent().beep();

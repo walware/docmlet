@@ -56,7 +56,7 @@ public class MarkupOpenHyperlinkHandler {
 	}
 	
 	static List<IFile> refLocalFile(final ISourceEditor editor, final Link link) {
-		final String href= link.getHref();
+		final String href= link.getUri();
 		if (href.indexOf(':') == -1 && href.length() > 1 && href.charAt(0) != '/') {
 			try {
 				final Object resource= editor.getSourceUnit().getResource();

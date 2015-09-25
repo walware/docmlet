@@ -11,12 +11,10 @@
 
 package de.walware.docmlet.wikitext.core.model;
 
-import java.util.Map;
-
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAstInfo;
-import de.walware.docmlet.wikitext.core.ast.WikitextAstNode;
 
 
 public interface IWikidocModelInfo extends ISourceUnitModelInfo {
@@ -25,7 +23,8 @@ public interface IWikidocModelInfo extends ISourceUnitModelInfo {
 	@Override
 	WikitextAstInfo getAst();
 	
-	Map<String, WikitextAstNode> getLabels();
+	INameAccessSet<WikitextNameAccess> getLinkAnchorLabels();
+	INameAccessSet<WikitextNameAccess> getLinkRefLabels();
 	int getMinSectionLevel();
 	int getMaxSectionLevel();
 	

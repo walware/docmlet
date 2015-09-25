@@ -17,8 +17,13 @@ import de.walware.ecommons.ltk.IElementName;
 public abstract class WikitextElementName implements IElementName {
 	
 	
-	public static final int RESOURCE=                       0x0f;
-	public static final int TITLE=                          0x11;
+	public static final byte RESOURCE=                      0x0f;
+	
+	public static final byte TITLE=                         0x11;
+	
+//	public static final byte LABEL=                         0x40;
+	public static final byte LINK_ANCHOR_LABEL=             0x41;
+	public static final byte LINK_DEF_LABEL=                0x45;
 	
 	
 	private static class Default extends WikitextElementName {

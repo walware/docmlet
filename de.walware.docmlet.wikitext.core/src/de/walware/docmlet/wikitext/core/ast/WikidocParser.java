@@ -28,6 +28,10 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 import de.walware.docmlet.wikitext.core.markup.IWikitextLocator;
 import de.walware.docmlet.wikitext.core.markup.MarkupParser2;
 import de.walware.docmlet.wikitext.core.source.EmbeddingAttributes;
+import de.walware.docmlet.wikitext.core.source.ImageByRefAttributes;
+import de.walware.docmlet.wikitext.core.source.LabelInfo;
+import de.walware.docmlet.wikitext.core.source.LinkByRefAttributes;
+import de.walware.docmlet.wikitext.core.source.LinkRefDefinitionAttributes;
 
 
 public class WikidocParser extends DocumentBuilder {
@@ -220,9 +224,7 @@ public class WikidocParser extends DocumentBuilder {
 			}
 		}
 		else if (type == SpanType.LINK && attributes instanceof LinkAttributes) {
-			node= new Link(this.currentNode,
-					this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
-					((LinkAttributes) attributes).getHref() );
+			node= createLink(attributes, null);
 		}
 		else {
 			node= new Span(this.currentNode,
@@ -291,14 +293,68 @@ public class WikidocParser extends DocumentBuilder {
 	@Override
 	public void image(final Attributes attributes, final String url) {
 		finishText();
+		addChildNode(createImage(attributes, url));
+	}
+	
+	private Image createImage(final Attributes attributes, final String src) {
+		final byte linkType;
+		final LabelInfo referenceInfo;
+		if (attributes instanceof ImageByRefAttributes) {
+			linkType= Image.SRC_BY_REF;
+			referenceInfo= ((ImageByRefAttributes) attributes).getReferenceLabel();
+		}
+		else {
+			linkType= 0;
+			referenceInfo= null;
+		}
+		if (linkType != 0 && referenceInfo != null) {
+			final Label referenceNode= createLabel(referenceInfo);
+			return new Image.Ref(this.currentNode,
+					this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
+					linkType, referenceNode );
+		}
+		return new Image.Common(this.currentNode,
+				this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
+				Image.COMMON, src );
 	}
 	
 	@Override
 	public void link(final Attributes attributes, final String hrefOrHashName, final String text) {
 		finishText();
-		addChildNode(new Link(this.currentNode,
+		addChildNode(createLink(attributes, null));
+	}
+	
+	private Link createLink(final Attributes attributes, String href) {
+		if (href == null && attributes instanceof LinkAttributes) {
+			href= ((LinkAttributes) attributes).getHref();
+		}
+		final byte linkType;
+		final LabelInfo referenceInfo;
+		if (attributes instanceof LinkRefDefinitionAttributes) {
+			linkType= Link.LINK_REF_DEFINITION;
+			referenceInfo= ((LinkRefDefinitionAttributes) attributes).getReferenceLabel();
+		}
+		else if (attributes instanceof LinkByRefAttributes) {
+			linkType= Link.LINK_BY_REF;
+			referenceInfo= ((LinkByRefAttributes) attributes).getReferenceLabel();
+		}
+		else {
+			linkType= 0;
+			referenceInfo= null;
+		}
+		if (linkType != 0 && referenceInfo != null) {
+			final Label referenceNode= createLabel(referenceInfo);
+			return new Link.Ref(this.currentNode,
+					this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
+					linkType, referenceNode );
+		}
+		return new Link.Common(this.currentNode,
 				this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
-				hrefOrHashName));
+				Link.COMMON, href );
+	}
+	
+	private Label createLabel(final LabelInfo labelInfo) {
+		return new Label(null, labelInfo.getOffset(), labelInfo.getEndOffset(), labelInfo.getLabel());
 	}
 	
 	@Override

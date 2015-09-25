@@ -22,11 +22,13 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.QuickAssistProcessor;
 
 import de.walware.docmlet.base.ui.sourceediting.MarkupHelpComputer;
 
+import de.walware.docmlet.wikitext.internal.ui.editors.WikitextQuickRenameComputer;
+
 
 public class WikidocQuickAssistProcessor extends QuickAssistProcessor {
 	
 	
-//	private final IQuickAssistComputer refactoringComputer= new WikitextQuickRenameComputer();
+	private final IQuickAssistComputer refactoringComputer= new WikitextQuickRenameComputer();
 	
 	private final IQuickAssistComputer helpComputer= new MarkupHelpComputer();
 	
@@ -40,7 +42,7 @@ public class WikidocQuickAssistProcessor extends QuickAssistProcessor {
 	protected void addModelAssistProposals(final AssistInvocationContext context,
 			final AssistProposalCollector<IAssistCompletionProposal> proposals,
 			final IProgressMonitor monitor) {
-//		this.refactoringComputer.computeAssistProposals(context, proposals, monitor);
+		this.refactoringComputer.computeAssistProposals(context, proposals, monitor);
 		this.helpComputer.computeAssistProposals(context, proposals, monitor);
 	}
 	

@@ -11,15 +11,14 @@
 
 package de.walware.docmlet.wikitext.internal.core.model;
 
-import java.util.Map;
-
 import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.core.impl.AbstractSourceModelInfo;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAstInfo;
-import de.walware.docmlet.wikitext.core.ast.WikitextAstNode;
 import de.walware.docmlet.wikitext.core.model.IWikidocModelInfo;
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceElement;
+import de.walware.docmlet.wikitext.core.model.WikitextNameAccess;
 
 
 public class WikidocSourceUnitModelInfo extends AbstractSourceModelInfo implements IWikidocModelInfo {
@@ -27,19 +26,22 @@ public class WikidocSourceUnitModelInfo extends AbstractSourceModelInfo implemen
 	
 	private final IWikitextSourceElement sourceElement;
 	
-	private final Map<String, WikitextAstNode> labels;
+	private final INameAccessSet<WikitextNameAccess> linkAnchorLabels;
+	private final INameAccessSet<WikitextNameAccess> linkDefLabels;
 	
 	private final int minSectionLevel;
 	private final int maxSectionLevel;
 	
 	
 	WikidocSourceUnitModelInfo(final AstInfo ast, final IWikitextSourceElement unitElement,
-			final Map<String, WikitextAstNode> labels,
+			final INameAccessSet<WikitextNameAccess> linkAnchorLabels,
+			final INameAccessSet<WikitextNameAccess> linkDefLabels,
 			final int minSectionLevel, final int maxSectionLevel) {
 		super(ast);
 		this.sourceElement= unitElement;
 		
-		this.labels= labels;
+		this.linkAnchorLabels= linkAnchorLabels;
+		this.linkDefLabels= linkDefLabels;
 		
 		this.minSectionLevel= minSectionLevel;
 		this.maxSectionLevel= maxSectionLevel;
@@ -58,8 +60,13 @@ public class WikidocSourceUnitModelInfo extends AbstractSourceModelInfo implemen
 	
 	
 	@Override
-	public Map<String, WikitextAstNode> getLabels() {
-		return this.labels;
+	public INameAccessSet<WikitextNameAccess> getLinkAnchorLabels() {
+		return this.linkAnchorLabels;
+	}
+	
+	@Override
+	public INameAccessSet<WikitextNameAccess> getLinkRefLabels() {
+		return this.linkDefLabels;
 	}
 	
 	@Override
