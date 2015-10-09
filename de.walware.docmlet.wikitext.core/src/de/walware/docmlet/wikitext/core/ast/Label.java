@@ -22,16 +22,14 @@ import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 public final class Label extends WikitextAstNode {
 	
 	
-	private final String fLabel;
+	private final String label;
 	
 	
-	Label(final ContainerNode parent, final int startOffset, final int stopOffset,
+	Label(final WikitextAstNode parent, final int beginOffset, final int endOffset,
 			final String label) {
-		this.parent= parent;
-		this.startOffset= startOffset;
-		this.stopOffset= stopOffset;
+		super(parent, beginOffset, endOffset);
 		
-		this.fLabel= label;
+		this.label= label;
 	}
 	
 	
@@ -42,7 +40,7 @@ public final class Label extends WikitextAstNode {
 	
 	@Override
 	public String getText() {
-		return this.fLabel;
+		return this.label;
 	}
 	
 	

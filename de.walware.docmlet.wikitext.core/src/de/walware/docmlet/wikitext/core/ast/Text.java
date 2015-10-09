@@ -25,8 +25,8 @@ public class Text extends WikitextAstNode {
 	String text;
 	
 	
-	Text(final WikitextAstNode parent, final int startOffset, final int stopOffset) {
-		super(parent, startOffset, stopOffset);
+	Text(final WikitextAstNode parent, final int beginOffset, final int endOffset) {
+		super(parent, beginOffset, endOffset);
 	}
 	
 	

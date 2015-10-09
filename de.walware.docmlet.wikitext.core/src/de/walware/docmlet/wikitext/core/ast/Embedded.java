@@ -29,9 +29,9 @@ public class Embedded extends WikitextAstNode implements IEmbeddingAstNode {
 	private IAstNode foreignNode;
 	
 	
-	Embedded(final WikitextAstNode parent, final int startOffset, final int stopOffset,
+	Embedded(final WikitextAstNode parent, final int beginOffset, final int endOffset,
 			final String foreignType, final int embedDescr) {
-		super(parent, startOffset, stopOffset);
+		super(parent, beginOffset, endOffset);
 		this.foreignType= foreignType;
 		this.embedDescr= embedDescr;
 	}

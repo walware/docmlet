@@ -26,6 +26,7 @@ Import-Package: com.ibm.icu.text;version="4.4.2.2",
  de.walware.ecommons.string
 Export-Package: de.walware.docmlet.wikitext.ui,
  de.walware.docmlet.wikitext.ui.actions,
+ de.walware.docmlet.wikitext.ui.config,
  de.walware.docmlet.wikitext.ui.editors,
  de.walware.docmlet.wikitext.ui.sourceediting,
  de.walware.docmlet.wikitext.ui.util

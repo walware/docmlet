@@ -13,40 +13,35 @@ package de.walware.docmlet.wikitext.core.ast;
 
 import java.lang.reflect.InvocationTargetException;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.ast.IAstNode;
-import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
+import de.walware.ecommons.ltk.core.impl.AbstractAstNode;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 
 
-public abstract class WikitextAstNode implements IAstNode {
+public abstract class WikitextAstNode extends AbstractAstNode
+		implements IAstNode {
 	
 	
 	protected static final WikitextAstNode[] NO_CHILDREN= new WikitextAstNode[0];
 	
-	private static final ImList<Object> NO_ATTACHMENT= ImCollections.emptyList();
-	
 	
 	WikitextAstNode parent;
 	
-	int startOffset;
-	int stopOffset;
+	int beginOffset;
+	int endOffset;
 	
 	int status;
-	
-	private volatile ImList<Object> attachments= NO_ATTACHMENT;
 	
 	
 	WikitextAstNode() {
 	}
 	
-	WikitextAstNode(final WikitextAstNode parent, final int startOffset, final int stopOffset) {
+	WikitextAstNode(final WikitextAstNode parent, final int beginOffset, final int endOffset) {
 		this.parent= parent;
 		
-		this.startOffset= startOffset;
-		this.stopOffset= stopOffset;
+		this.beginOffset= beginOffset;
+		this.endOffset= endOffset;
 	}
 	
 	
@@ -57,41 +52,32 @@ public abstract class WikitextAstNode implements IAstNode {
 		return this.status;
 	}
 	
+	public final WikitextAstNode getWikitextParent() {
+		return this.parent;
+	}
+	
 	@Override
 	public final IAstNode getParent() {
 		return this.parent;
 	}
 	
-	@Override
-	public final WikitextAstNode getRoot() {
-		WikitextAstNode candidate= this;
-		WikitextAstNode p;
-		while ((p= candidate.parent) != null) {
-			candidate= p;
-		}
-		return candidate;
-	}
 	
 	@Override
 	public final int getOffset() {
-		return this.startOffset;
+		return this.beginOffset;
 	}
 	
 	@Override
-	public final int getStopOffset() {
-		return this.stopOffset;
+	public final int getEndOffset() {
+		return this.endOffset;
 	}
 	
 	@Override
 	public final int getLength() {
-		return this.stopOffset - this.startOffset;
+		return this.endOffset - this.beginOffset;
 	}
 	
 	public String getLabel() {
-		return null;
-	}
-	
-	public String getText() {
 		return null;
 	}
 	
@@ -99,29 +85,10 @@ public abstract class WikitextAstNode implements IAstNode {
 	@Override
 	public abstract WikitextAstNode getChild(final int index);
 	
-	@Override
-	public final void accept(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		visitor.visit(this);
-	}
 	
 	public abstract void acceptInWikitext(WikitextAstVisitor visitor) throws InvocationTargetException;
 	
 	public abstract void acceptInWikitextChildren(WikitextAstVisitor visitor) throws InvocationTargetException;
 	
-	
-	@Override
-	public synchronized void addAttachment(final Object data) {
-		this.attachments= ImCollections.addElement(this.attachments, data);
-	}
-	
-	@Override
-	public synchronized void removeAttachment(final Object data) {
-		this.attachments= ImCollections.removeElement(this.attachments, data);
-	}
-	
-	@Override
-	public ImList<Object> getAttachments() {
-		return this.attachments;
-	}
 	
 }

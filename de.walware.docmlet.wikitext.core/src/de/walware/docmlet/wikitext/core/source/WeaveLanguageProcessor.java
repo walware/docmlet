@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 import de.walware.ecommons.ltk.core.SourceContent;
-import de.walware.ecommons.text.ILineInformation;
+import de.walware.ecommons.text.core.ILineInformation;
 
 import de.walware.docmlet.wikitext.core.markup.IWikitextLocator;
 import de.walware.docmlet.wikitext.core.markup.MarkupParser2;

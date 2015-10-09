@@ -19,7 +19,7 @@ import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 public final class SourceComponent extends ContainerNode {
 	
 	
-	public SourceComponent(final int length) {
+	SourceComponent(final int length) {
 		super(null, 0, length);
 	}
 	

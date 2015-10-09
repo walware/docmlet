@@ -26,28 +26,28 @@ abstract class ContainerNode extends WikitextAstNode {
 	ContainerNode() {
 	}
 	
-	ContainerNode(final WikitextAstNode parent, final int startOffset, final int stopOffset) {
-		super(parent, startOffset, stopOffset);
+	ContainerNode(final WikitextAstNode parent, final int beginOffset, final int endOffset) {
+		super(parent, beginOffset, endOffset);
 	}
 	
 	
 	@Override
-	public final boolean hasChildren() {
+	public boolean hasChildren() {
 		return (this.children.length > 0);
 	}
 	
 	@Override
-	public final int getChildCount() {
+	public int getChildCount() {
 		return this.children.length;
 	}
 	
 	@Override
-	public final WikitextAstNode getChild(final int index) {
+	public WikitextAstNode getChild(final int index) {
 		return this.children[index];
 	}
 	
 	@Override
-	public final int getChildIndex(final IAstNode element) {
+	public int getChildIndex(final IAstNode element) {
 		for (int i= 0; i < this.children.length; i++) {
 			if (this.children[i] == element) {
 				return i;

@@ -224,9 +224,9 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 			finishTitleText();
 		}
 		while ((this.currentElement.getElementType() & MASK_C1) != IWikitextSourceElement.C1_SOURCE) {
-			exitContainer(node.getStopOffset(), true);
+			exitContainer(node.getEndOffset(), true);
 		}
-		exitContainer(node.getStopOffset(), true);
+		exitContainer(node.getEndOffset(), true);
 	}
 	
 	@Override
@@ -237,7 +237,7 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 		
 		node.acceptInWikitextChildren(this);
 		
-		this.currentElement.length= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.length= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
@@ -276,7 +276,7 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 					this.titleDoBuild= true;
 					
 					final int nameOffset= node.getChild(0).getOffset();
-					final int nameStopOffset= readLinebreakBackward(node.getChild(count - 1).getStopOffset(), nameOffset);
+					final int nameStopOffset= readLinebreakBackward(node.getChild(count - 1).getEndOffset(), nameOffset);
 					this.titleElement.nameRegion= new Region(nameOffset, nameStopOffset - nameOffset);
 					
 					node.acceptInWikitextChildren(this);
@@ -295,7 +295,7 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 		
 		node.acceptInWikitextChildren(this);
 		
-		this.currentElement.length= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.length= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
@@ -319,14 +319,14 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 			}
 		}
 		
-		this.currentElement.length= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.length= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
 		if ((node.getEmbedDescr() & 0b0_00000011) == Embedded.EMBED_INLINE) {
 			if (this.titleDoBuild) {
-				this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
+				this.titleBuilder.append(this.input, node.getOffset(), node.getEndOffset());
 				if (this.titleBuilder.length() >= 100) {
 					finishTitleText();
 				}
@@ -349,7 +349,7 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 			this.embeddedItems.add(new EmbeddingReconcileItem(node, element));
 		}
 		
-		this.currentElement.length= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.length= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 }

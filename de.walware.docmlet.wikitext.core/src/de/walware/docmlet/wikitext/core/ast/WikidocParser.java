@@ -138,18 +138,18 @@ public class WikidocParser extends DocumentBuilder {
 	private void exitNode(final int offset) {
 		finishNode();
 		
-//		if (offset < this.currentNode.stopOffset) {
+//		if (offset < this.currentNode.endOffset) {
 //			System.out.println("endOffset: " + offset);
 //		}
-//		if (offset > this.currentNode.stopOffset) {
-		this.currentNode.stopOffset= offset;
+//		if (offset > this.currentNode.endOffset) {
+		this.currentNode.endOffset= offset;
 //		}
 //		else {
-//			offset= this.currentNode.stopOffset;
+//			offset= this.currentNode.endOffset;
 //		}
 		this.currentNode= this.currentNode.parent;
-//		if (offset > this.currentNode.stopOffset) {
-//			this.currentNode.stopOffset= offset;
+//		if (offset > this.currentNode.endOffset) {
+//			this.currentNode.endOffset= offset;
 //		}
 		this.depth--;
 	}
@@ -265,8 +265,8 @@ public class WikidocParser extends DocumentBuilder {
 			addChildNode(this.currentText);
 			this.textBuilder.setLength(0);
 		}
-		else if (this.locator2.getEndOffset() > this.currentText.stopOffset) {
-			this.currentText.stopOffset= this.locator2.getEndOffset();
+		else if (this.locator2.getEndOffset() > this.currentText.endOffset) {
+			this.currentText.endOffset= this.locator2.getEndOffset();
 		}
 		if (this.collectText > 0) {
 			this.textBuilder.append(text);

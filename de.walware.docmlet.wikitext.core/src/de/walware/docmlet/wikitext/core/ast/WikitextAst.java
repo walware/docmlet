@@ -11,9 +11,10 @@
 
 package de.walware.docmlet.wikitext.core.ast;
 
+import de.walware.ecommons.ltk.ast.Ast;
 
 
-public class WikitextAst {
+public class WikitextAst extends Ast {
 	
 	
 	/**
@@ -52,7 +53,7 @@ public class WikitextAst {
 				if (offset < nodes[i].getOffset()) {
 					return -1;
 				}
-				if (offset <= nodes[i].getStopOffset()) {
+				if (offset <= nodes[i].getEndOffset()) {
 					return i;
 				}
 			}

@@ -24,7 +24,7 @@ public final class Heading extends ContainerNode {
 	private final String label;
 	
 	
-	public Heading(final WikitextAstNode parent, final int offset, final int level,
+	Heading(final WikitextAstNode parent, final int offset, final int level,
 			final String label) {
 		super(parent, offset, offset);
 		

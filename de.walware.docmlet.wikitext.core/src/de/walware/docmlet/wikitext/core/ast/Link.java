@@ -22,16 +22,16 @@ public class Link extends ContainerNode {
 	private final String href;
 	
 	
-	Link(final WikitextAstNode parent, final int startOffset, final int stopOffset,
+	Link(final WikitextAstNode parent, final int beginOffset, final int endOffset,
 			final String href) {
-		super(parent, startOffset, stopOffset);
+		super(parent, beginOffset, endOffset);
 		
 		this.href= href;
 	}
 	
-	Link(final WikitextAstNode parent, final int startOffset,
+	Link(final WikitextAstNode parent, final int beginOffset,
 			final String href) {
-		super(parent, startOffset, startOffset);
+		super(parent, beginOffset, beginOffset);
 		
 		this.href= href;
 	}

@@ -57,7 +57,7 @@ public class LtxReconcilerExtension implements IWikidocSuModelContainerEmbeddedE
 			}
 			
 			final SourceComponent component= this.raParser.parse(
-					this.raInput.init(embeddingNode.getOffset(), embeddingNode.getStopOffset()),
+					this.raInput.init(embeddingNode.getOffset(), embeddingNode.getEndOffset()),
 					embeddingNode, commandSet );
 			embeddingNode.setForeignNode(component);
 		}

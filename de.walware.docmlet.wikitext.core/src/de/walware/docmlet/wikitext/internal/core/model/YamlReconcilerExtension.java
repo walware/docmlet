@@ -67,7 +67,7 @@ public class YamlReconcilerExtension implements IWikidocSuModelContainerEmbedded
 				offset++;
 			}
 			final SourceComponent component= this.parser.parse(
-					text.substring(offset, embeddingNode.getStopOffset()),
+					text.substring(offset, embeddingNode.getEndOffset()),
 					embeddingNode, offset );
 			embeddingNode.setForeignNode(component);
 		}

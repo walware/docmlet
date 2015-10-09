@@ -26,9 +26,9 @@ public final class Span extends ContainerNode {
 	private final String label;
 	
 	
-	public Span(final WikitextAstNode parent, final int startOffset, final int stopOffset,
+	Span(final WikitextAstNode parent, final int beginOffset, final int endOffset,
 			final SpanType spanType, final String label) {
-		super(parent, startOffset, stopOffset);
+		super(parent, beginOffset, endOffset);
 		this.spanType= spanType;
 		this.label= label;
 	}
