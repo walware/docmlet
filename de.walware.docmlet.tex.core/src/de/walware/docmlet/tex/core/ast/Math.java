@@ -26,8 +26,8 @@ public class Math extends ContainerNode {
 	
 	static class SingleDollar extends Math {
 		
-		SingleDollar(final TexAstNode parent, final int startOffset, final int stopOffset) {
-			super(parent, startOffset, stopOffset);
+		SingleDollar(final TexAstNode parent, final int beginOffset, final int endOffset) {
+			super(parent, beginOffset, endOffset);
 		}
 		
 		@Override
@@ -39,8 +39,8 @@ public class Math extends ContainerNode {
 	
 	static class DoubleDollar extends Math {
 		
-		DoubleDollar(final TexAstNode parent, final int startOffset, final int stopOffset) {
-			super(parent, startOffset, stopOffset);
+		DoubleDollar(final TexAstNode parent, final int beginOffset, final int endOffset) {
+			super(parent, beginOffset, endOffset);
 		}
 		
 		@Override
@@ -51,8 +51,8 @@ public class Math extends ContainerNode {
 	}
 	
 	
-	private Math(final TexAstNode parent, final int startOffset, final int stopOffset) {
-		super(parent, startOffset, stopOffset);
+	private Math(final TexAstNode parent, final int beginOffset, final int endOffset) {
+		super(parent, beginOffset, endOffset);
 	}
 	
 	
@@ -107,15 +107,15 @@ public class Math extends ContainerNode {
 	
 	
 	@Override
-	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		this.stopOffset= stopOffset;
+	void setEndNode(final int endOffset, final TexAstNode endNode) {
+		this.endOffset= endOffset;
 	}
 	
 	@Override
 	void setMissingEnd() {
 		this.status= STATUS2_MATH_NOT_CLOSED;
 		if (this.children.length > 0) {
-			this.stopOffset= this.children[this.children.length-1].stopOffset;
+			this.endOffset= this.children[this.children.length-1].endOffset;
 		}
 	}
 	

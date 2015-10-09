@@ -28,8 +28,8 @@ public final class SourceComponent extends ContainerNode {
 	public SourceComponent() {
 	}
 	
-	public SourceComponent(final IAstNode parent, final int startOffset, final int stopOffset) {
-		super(null, startOffset, stopOffset);
+	public SourceComponent(final IAstNode parent, final int beginOffset, final int endOffset) {
+		super(null, beginOffset, endOffset);
 		this.parent= parent;
 	}
 	
@@ -91,14 +91,14 @@ public final class SourceComponent extends ContainerNode {
 	
 	
 	@Override
-	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		this.stopOffset= stopOffset;
+	void setEndNode(final int endOffset, final TexAstNode endNode) {
+		this.endOffset= endOffset;
 	}
 	
 	@Override
 	void setMissingEnd() {
 		if (this.children.length > 0) {
-			this.stopOffset= this.children[this.children.length-1].stopOffset;
+			this.endOffset= this.children[this.children.length-1].endOffset;
 		}
 	}
 	

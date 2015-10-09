@@ -29,7 +29,7 @@ import de.walware.ecommons.text.ui.presentation.ITextPresentationConstants;
 
 import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class TexMarkOccurrencesLocator {
@@ -49,10 +49,9 @@ public class TexMarkOccurrencesLocator {
 			return false;
 		}
 		do {
-			final List<Object> attachments = node.getAttachments();
-			for (int i = 0; i < attachments.size(); i++) {
-				if (attachments.get(i) instanceof TexLabelAccess) {
-					final TexLabelAccess access = (TexLabelAccess) attachments.get(i);
+			for (final Object attachment : node.getAttachments()) {
+				if (attachment instanceof TexNameAccess) {
+					final TexNameAccess access = (TexNameAccess) attachment;
 					final Map<Annotation, Position> annotations = checkDefault(run, access);
 					
 					if (annotations != null) {
@@ -67,23 +66,23 @@ public class TexMarkOccurrencesLocator {
 		return false;
 	}
 	
-	private Map<Annotation, Position> checkDefault(final RunData run, TexLabelAccess access) throws BadLocationException {
+	private Map<Annotation, Position> checkDefault(final RunData run, TexNameAccess access) throws BadLocationException {
 		while (access != null) {
 			final TexAstNode nameNode = access.getNameNode();
 			if (nameNode == null) {
 				return null;
 			}
-			if (run.accept(new Point(nameNode.getOffset(), nameNode.getStopOffset()))) {
-				final List<? extends TexLabelAccess> accessList = access.getAllInUnit();
+			if (run.accept(new Point(nameNode.getOffset(), nameNode.getEndOffset()))) {
+				final List<? extends TexNameAccess> accessList= access.getAllInUnit();
 				final Map<Annotation, Position> annotations = new LinkedHashMap<>(accessList.size());
-				for (final TexLabelAccess item : accessList) {
-					final String message = run.doc.get(item.getNode().getOffset(), item.getNode().getLength());
+				for (final TexNameAccess occurrence : accessList) {
+					final String message = run.doc.get(occurrence.getNode().getOffset(), occurrence.getNode().getLength());
 					annotations.put(
-							new Annotation(item.isWriteAccess() ? 
+							new Annotation(occurrence.isWriteAccess() ? 
 									ITextPresentationConstants.ANNOTATIONS_WRITE_OCCURRENCES_TYPE:
 									ITextPresentationConstants.ANNOTATIONS_COMMON_OCCURRENCES_TYPE,
 									false, message),
-							TexLabelAccess.getTextPosition(item.getNameNode()) );
+							TexNameAccess.getTextPosition(occurrence.getNameNode()) );
 				}
 				return annotations;
 			}

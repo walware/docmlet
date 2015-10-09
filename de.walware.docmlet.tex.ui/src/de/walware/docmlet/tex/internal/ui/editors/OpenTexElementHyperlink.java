@@ -11,18 +11,16 @@
 
 package de.walware.docmlet.tex.internal.ui.editors;
 
-import java.util.List;
-
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
+import de.walware.ecommons.ltk.ui.sourceediting.actions.OpenDeclaration;
 
-import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class OpenTexElementHyperlink implements IHyperlink {
@@ -31,18 +29,18 @@ public class OpenTexElementHyperlink implements IHyperlink {
 	private final ISourceEditor editor;
 	private final IRegion region;
 	
-	private final ITexSourceUnit su;
-	private final TexLabelAccess access;
+	private final ITexSourceUnit sourceUnit;
+	private final TexNameAccess access;
 	
 	
-	public OpenTexElementHyperlink(final ISourceEditor editor, final ITexSourceUnit su,
-			final TexLabelAccess access) {
-		assert (su != null);
+	public OpenTexElementHyperlink(final ISourceEditor editor, final ITexSourceUnit sourceUnit,
+			final TexNameAccess access) {
+		assert (sourceUnit != null);
 		assert (access != null);
 		
 		this.editor= editor;
-		this.region= TexLabelAccess.getTextRegion(access.getNameNode());
-		this.su= su;
+		this.region= TexNameAccess.getTextRegion(access.getNameNode());
+		this.sourceUnit= sourceUnit;
 		this.access= access;
 	}
 	
@@ -65,13 +63,11 @@ public class OpenTexElementHyperlink implements IHyperlink {
 	@Override
 	public void open() {
 //		try {
-			final List<? extends TexLabelAccess> all= this.access.getAllInUnit();
-			for (final TexLabelAccess cand : all) {
-				if (cand.isWriteAccess()) {
-					final TexAstNode node= cand.getNode();
-					this.editor.selectAndReveal(node.getOffset(), node.getLength());
-					return;
-				}
+			final OpenDeclaration open= new OpenDeclaration();
+			final TexNameAccess declAccess= open.selectAccess(this.access.getAllInUnit());
+			if (declAccess != null) {
+				open.open(this.editor, declAccess);
+				return;
 			}
 			Display.getCurrent().beep();
 //		}

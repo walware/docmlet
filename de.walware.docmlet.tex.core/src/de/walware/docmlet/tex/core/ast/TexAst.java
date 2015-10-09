@@ -18,12 +18,14 @@ import java.util.List;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 
+import de.walware.ecommons.ltk.ast.Ast;
+
 import de.walware.docmlet.tex.core.ITexProblemConstants;
 import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.IEnvDefinitions;
 
 
-public class TexAst {
+public class TexAst extends Ast {
 	
 	
 	/**
@@ -100,7 +102,7 @@ public class TexAst {
 				if (offset < nodes[i].getOffset()) {
 					return -1;
 				}
-				if (offset <= nodes[i].getStopOffset()) {
+				if (offset <= nodes[i].getEndOffset()) {
 					return i;
 				}
 			}

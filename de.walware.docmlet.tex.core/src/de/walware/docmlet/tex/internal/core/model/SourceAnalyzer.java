@@ -25,6 +25,9 @@ import java.util.Map;
 import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.AstInfo;
+import de.walware.ecommons.ltk.core.impl.NameAccessAccumulator;
+import de.walware.ecommons.ltk.core.impl.NameAccessSet;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 
 import de.walware.docmlet.tex.core.ast.ControlNode;
 import de.walware.docmlet.tex.core.ast.Embedded;
@@ -42,9 +45,8 @@ import de.walware.docmlet.tex.core.model.EmbeddingReconcileItem;
 import de.walware.docmlet.tex.core.model.ITexSourceElement;
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexElementName;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 import de.walware.docmlet.tex.internal.core.model.LtxSourceElement.EmbeddedRef;
-import de.walware.docmlet.tex.internal.core.model.RefLabelAccess.Shared;
 
 
 public class SourceAnalyzer extends TexAstVisitor {
@@ -62,7 +64,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 	private LtxSourceElement.Container titleElement;
 	private final Map<String, Integer> structNamesCounter= new HashMap<>();
 	
-	private Map<String, RefLabelAccess.Shared> labels= new HashMap<>();
+	private Map<String, NameAccessAccumulator<TexNameAccess>> labels= new HashMap<>();
 	private final List<EmbeddingReconcileItem> embeddedItems= new ArrayList<>();
 	
 	private int minSectionLevel;
@@ -99,16 +101,13 @@ public class SourceAnalyzer extends TexAstVisitor {
 		try {
 			((TexAstNode) ast.root).acceptInTex(this);
 			
-			final Map<String, RefLabelAccess.Shared> labels;
+			final INameAccessSet<TexNameAccess> labels;
 			if (this.labels.isEmpty()) {
-				labels= Collections.emptyMap();
+				labels= NameAccessSet.emptySet();
 			}
 			else {
-				labels= this.labels;
+				labels= new NameAccessSet<>(this.labels);
 				this.labels= null;
-				for (final Shared access : labels.values()) {
-					access.finish();
-				}
 			}
 			
 			if (this.minSectionLevel == Integer.MAX_VALUE) {
@@ -245,9 +244,9 @@ public class SourceAnalyzer extends TexAstVisitor {
 			finishTitleText();
 		}
 		while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
-			exitContainer(node.getStopOffset(), true);
+			exitContainer(node.getEndOffset(), true);
 		}
-		exitContainer(node.getStopOffset(), true);
+		exitContainer(node.getEndOffset(), true);
 	}
 	
 	@Override
@@ -271,27 +270,26 @@ public class SourceAnalyzer extends TexAstVisitor {
 			}
 			while ((this.currentElement.getElementType() & MASK_C1) != ITexSourceElement.C1_SOURCE) {
 				exitContainer((node.getEndNode() != null) ?
-						node.getEndNode().getOffset() : node.getStopOffset(), false );
+						node.getEndNode().getOffset() : node.getEndOffset(), false );
 			}
 		}
 		
 		{	final TexAstNode beginLabel= getLabelNode(node.getBeginNode());
 			if (beginLabel != null) {
-				final EnvLabelAccess[] access;
+				final ImList<EnvLabelAccess> accessList;
 				final TexAstNode endLabel= getLabelNode(node.getEndNode());
 				if (endLabel != null) {
-					access= new EnvLabelAccess[2];
-					access[0]= new EnvLabelAccess(node.getBeginNode(), beginLabel);
-					access[1]= new EnvLabelAccess(node.getEndNode(), endLabel);
+					accessList= ImCollections.newList(
+							new EnvLabelAccess(node.getBeginNode(), beginLabel),
+							new EnvLabelAccess(node.getEndNode(), endLabel) );
 				}
 				else {
-					access= new EnvLabelAccess[1];
-					access[0]= new EnvLabelAccess(node.getBeginNode(), endLabel);
+					accessList= ImCollections.newList(
+							new EnvLabelAccess(node.getBeginNode(), endLabel) );
 				}
-				final ImList<TexLabelAccess> list= ImCollections.<TexLabelAccess>newList(access);
-				for (int i= 0; i < access.length; i++) {
-					access[i].fAll= list;
-					access[i].getNode().addAttachment(access[i]);
+				for (final EnvLabelAccess access : accessList) {
+					access.all= accessList;
+					access.getNode().addAttachment(access);
 				}
 			}
 		}
@@ -366,14 +364,14 @@ public class SourceAnalyzer extends TexAstVisitor {
 					final TexAstNode nameNode= getLabelNode(node);
 					if (nameNode != null) {
 						final String label= nameNode.getText();
-						RefLabelAccess.Shared shared= this.labels.get(label);
+						NameAccessAccumulator<TexNameAccess> shared= this.labels.get(label);
 						if (shared == null) {
-							shared= new RefLabelAccess.Shared(label);
+							shared= new NameAccessAccumulator<>(label);
 							this.labels.put(label, shared);
 						}
 						final RefLabelAccess access= new RefLabelAccess(shared, node, nameNode);
 						if ((command.getType() & TexCommand.MASK_C3) == TexCommand.C3_LABEL_REFLABEL_DEF) {
-							access.fFlags |= RefLabelAccess.A_WRITE;
+							access.flags |= RefLabelAccess.A_WRITE;
 						}
 						node.addAttachment(access);
 					}
@@ -384,7 +382,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 						this.titleDoBuild= true;
 					}
 					
-					this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
+					this.currentElement.fLength= node.getEndOffset() - this.currentElement.getOffset();
 					return;
 				}
 				break;
@@ -402,7 +400,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 								this.titleBuilder.append(text);
 							}
 							
-							this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
+							this.currentElement.fLength= node.getEndOffset() - this.currentElement.getOffset();
 							return;
 						}
 						this.titleBuilder.append(text);
@@ -414,26 +412,26 @@ public class SourceAnalyzer extends TexAstVisitor {
 		
 		node.acceptInTexChildren(this);
 		
-		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.fLength= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
 	public void visit(final Text node) throws InvocationTargetException {
 		if (this.titleDoBuild) {
-			this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
+			this.titleBuilder.append(this.input, node.getOffset(), node.getEndOffset());
 			if (this.titleBuilder.length() >= 100) {
 				finishTitleText();
 			}
 		}
 		
-		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.fLength= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
 		if ((node.getEmbedDescr() & 0xf) == Embedded.EMBED_INLINE) {
 			if (this.titleDoBuild) {
-				this.titleBuilder.append(this.input, node.getOffset(), node.getStopOffset());
+				this.titleBuilder.append(this.input, node.getOffset(), node.getEndOffset());
 				if (this.titleBuilder.length() >= 100) {
 					finishTitleText();
 				}
@@ -456,7 +454,7 @@ public class SourceAnalyzer extends TexAstVisitor {
 			this.embeddedItems.add(new EmbeddingReconcileItem(node, element));
 		}
 		
-		this.currentElement.fLength= node.getStopOffset() - this.currentElement.getOffset();
+		this.currentElement.fLength= node.getEndOffset() - this.currentElement.getOffset();
 	}
 	
 	

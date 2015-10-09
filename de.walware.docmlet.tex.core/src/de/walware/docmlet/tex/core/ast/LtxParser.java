@@ -175,11 +175,11 @@ public class LtxParser {
 		
 		final SourceComponent node= new SourceComponent();
 		if (this.lexer.next() != LtxLexer.EOF) {
-			node.startOffset= this.lexer.getOffset();
+			node.beginOffset= this.lexer.getOffset();
 		}
 		putToStack(ST_ROOT, null);
 		parseGroup(node);
-		node.stopOffset= this.lexer.getStopOffset();
+		node.endOffset= this.lexer.getStopOffset();
 		
 		return node;
 	}
@@ -204,11 +204,11 @@ public class LtxParser {
 		final SourceComponent node= new SourceComponent(parent,
 				input.getStartIndex(), input.getStopIndex() );
 		if (this.lexer.next() != LtxLexer.EOF) {
-			node.startOffset= this.lexer.getOffset();
+			node.beginOffset= this.lexer.getOffset();
 		}
 		putToStack(ST_ROOT, null);
 		parseGroup(node);
-		node.stopOffset= this.lexer.getStopOffset();
+		node.endOffset= this.lexer.getStopOffset();
 		
 		return node;
 	}
@@ -249,7 +249,7 @@ public class LtxParser {
 		GROUP: while (this.foundEndStackPos < 0) {
 			switch (this.lexer.pop()) {
 			case LtxLexer.EOF:
-				group.stopOffset= this.lexer.getStopOffset();
+				group.endOffset= this.lexer.getStopOffset();
 				group.status= STATUS2_GROUP_NOT_CLOSED;
 				this.foundEndStackPos= 0;
 				this.foundEndNode= null;
@@ -270,8 +270,8 @@ public class LtxParser {
 				this.wasLinebreak= false;
 				{	final ControlNode.Char node= new ControlNode.Char(
 						this.lexer.getText(this.symbolTextFactory) );
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					if (this.inMath) {
 						if (node.getText() == ")") { //$NON-NLS-1$
 							int endPos= this.stackPos;
@@ -342,8 +342,8 @@ public class LtxParser {
 			case LtxLexer.CURLY_BRACKET_OPEN:
 				this.wasLinebreak= false;
 				{	final Group node= new Group.Bracket(group, this.lexer.getOffset(), this.lexer.getStopOffset());
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					children.add(node);
 					this.lexer.consume();
 					putToStack(ST_CURLY, null);
@@ -364,8 +364,8 @@ public class LtxParser {
 				else {
 					final Dummy node= new Dummy();
 					node.status= STATUS2_GROUP_NOT_OPENED;
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					node.texParent= group;
 					children.add(node);
 					this.lexer.consume();
@@ -387,13 +387,13 @@ public class LtxParser {
 					continue GROUP;
 				}
 				else if (textNode == this.whitespace) {
-					textNode= new Text(group, textNode.startOffset, this.lexer.getStopOffset());
+					textNode= new Text(group, textNode.beginOffset, this.lexer.getStopOffset());
 					children.add(textNode);
 					this.lexer.consume();
 					continue GROUP;
 				}
 				else {
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -401,7 +401,7 @@ public class LtxParser {
 				if (textNode == null) {
 					if (children.size() > 0) {
 						textNode= this.whitespace;
-						textNode.startOffset= this.lexer.getOffset();
+						textNode.beginOffset= this.lexer.getOffset();
 						this.lexer.consume();
 						continue GROUP;
 					}
@@ -413,7 +413,7 @@ public class LtxParser {
 					continue GROUP;
 				}
 				else {
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -422,8 +422,8 @@ public class LtxParser {
 				if (this.stackEndKeys[this.stackPos] == LABEL_TEXT && children.isEmpty()) {
 					final Label node= new Label(group, this.lexer.getOffset(), this.lexer.getStopOffset(),
 							this.lexer.getFullText(this.symbolTextFactory) );
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					node.texParent= group;
 					children.add(node);
 					this.lexer.consume();
@@ -432,8 +432,8 @@ public class LtxParser {
 				if (this.stackEndKeys[this.stackPos] == NUM_TEXT && children.isEmpty()) {
 					final Text node= new Text.Num(group, this.lexer.getOffset(), this.lexer.getStopOffset(),
 							checkNum(this.lexer.getFullText(this.otherTextFactory)) );
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					node.texParent= group;
 					children.add(node);
 					this.lexer.consume();
@@ -446,13 +446,13 @@ public class LtxParser {
 					continue GROUP;
 				}
 				else if (textNode == this.whitespace) {
-					textNode= new Text(group, textNode.startOffset, this.lexer.getStopOffset());
+					textNode= new Text(group, textNode.beginOffset, this.lexer.getStopOffset());
 					children.add(textNode);
 					this.lexer.consume();
 					continue GROUP;
 				}
 				else {
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -466,7 +466,7 @@ public class LtxParser {
 					continue GROUP;
 				}
 				else {
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -494,7 +494,7 @@ public class LtxParser {
 						this.lexer.consume();
 						continue GROUP;
 					}
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -524,14 +524,14 @@ public class LtxParser {
 						}
 						endPos--;
 					}
-					group.stopOffset= this.lexer.getStopOffset();
+					group.endOffset= this.lexer.getStopOffset();
 					if (textNode == null || textNode == this.whitespace) {
 						textNode= new Text(group, this.lexer.getOffset(), this.lexer.getStopOffset());
 						children.add(textNode);
 						this.lexer.consume();
 						continue GROUP;
 					}
-					textNode.stopOffset= this.lexer.getStopOffset();
+					textNode.endOffset= this.lexer.getStopOffset();
 					this.lexer.consume();
 					continue GROUP;
 				}
@@ -553,8 +553,8 @@ public class LtxParser {
 				this.wasLinebreak= false;
 				{	final Verbatim node= new Verbatim();
 					node.texParent= group;
-					node.startOffset= this.lexer.getOffset();
-					node.stopOffset= this.lexer.getStopOffset();
+					node.beginOffset= this.lexer.getOffset();
+					node.endOffset= this.lexer.getStopOffset();
 					children.add(node);
 					this.lexer.consume();
 					textNode= null;
@@ -599,8 +599,8 @@ public class LtxParser {
 		this.wasLinebreak= false;
 		final ControlNode.Word controlNode= new ControlNode.Word(
 				label= this.lexer.getText(this.symbolTextFactory) );
-		controlNode.startOffset= this.lexer.getOffset();
-		controlNode.stopOffset= this.lexer.getStopOffset();
+		controlNode.beginOffset= this.lexer.getOffset();
+		controlNode.endOffset= this.lexer.getStopOffset();
 		this.lexer.consume();
 		
 		TexCommand command= getCommand(label);
@@ -663,7 +663,7 @@ public class LtxParser {
 					else {
 						parseGroup(argNode);
 					}
-					controlNode.stopOffset= argNode.stopOffset;
+					controlNode.endOffset= argNode.endOffset;
 					
 					nextArg++;
 					continue ARGUMENTS;
@@ -690,7 +690,7 @@ public class LtxParser {
 					else {
 						parseGroup(argNode);
 					}
-					controlNode.stopOffset= argNode.stopOffset;
+					controlNode.endOffset= argNode.endOffset;
 					
 					if (command.getType() == TexCommand.C2_GENERICENV_BEGIN) {
 						if (argNode.status == 0 && argNode.children.length == 1
@@ -761,16 +761,16 @@ public class LtxParser {
 					verbatimNode= new Verbatim();
 					verbatimNode.texParent= controlNode;
 					verbatimNode.status= STATUS2_VERBATIM_INLINE_NOT_CLOSED;
-					verbatimNode.startOffset= this.lexer.getOffset() + 1;
-					verbatimNode.stopOffset= controlNode.stopOffset =
+					verbatimNode.beginOffset= this.lexer.getOffset() + 1;
+					verbatimNode.endOffset= controlNode.endOffset =
 							this.lexer.getStopOffset();
 					this.lexer.consume();
 					break;
 				default:
 					verbatimNode= new Verbatim();
 					verbatimNode.texParent= controlNode;
-					verbatimNode.startOffset= this.lexer.getOffset() + 1;
-					verbatimNode.stopOffset= controlNode.stopOffset =
+					verbatimNode.beginOffset= this.lexer.getOffset() + 1;
+					verbatimNode.endOffset= controlNode.endOffset =
 							this.lexer.getStopOffset() - 1;
 					this.lexer.consume();
 					break;
@@ -971,7 +971,7 @@ public class LtxParser {
 			break;
 		}
 		
-		embedded.stopOffset= this.lexer.getOffset();
+		embedded.endOffset= this.lexer.getOffset();
 		group.children= new TexAstNode[] { embedded };
 		if (this.embeddedList != null) {
 			this.embeddedList.add(embedded);
@@ -989,8 +989,8 @@ public class LtxParser {
 	
 	
 	public byte consumeEmbeddedDefault() {
-		final TextParserInput input= lexer.getInput();
-		lexer.consume(true);
+		final TextParserInput input= this.lexer.getInput();
+		this.lexer.consume(true);
 		
 		final int endChar;
 		final byte endReturn;
@@ -1012,12 +1012,12 @@ public class LtxParser {
 			final int c= input.get(offset++);
 			if (c < 0x20) {
 				input.consume(offset - 1);
-				lexer.consume(true);
+				this.lexer.consume(true);
 				return 0;
 			}
 			if (c == endChar) {
 				input.consume(offset);
-				lexer.consume(true);
+				this.lexer.consume(true);
 				return endReturn;
 			}
 		}

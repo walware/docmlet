@@ -26,8 +26,8 @@ public class Embedded extends TexAstNode implements IEmbeddingAstNode {
 	static class Inline extends Embedded {
 		
 		
-		Inline(final TexAstNode parent, final int startOffset, final String type) {
-			super(parent, startOffset, startOffset, type);
+		Inline(final TexAstNode parent, final int beginOffset, final String type) {
+			super(parent, beginOffset, beginOffset, type);
 		}
 		
 		
@@ -44,9 +44,9 @@ public class Embedded extends TexAstNode implements IEmbeddingAstNode {
 	private IAstNode foreignNode;
 	
 	
-	Embedded(final TexAstNode parent, final int startOffset, final int stopOffset,
+	Embedded(final TexAstNode parent, final int beginOffset, final int endOffset,
 			final String foreignType) {
-		super(parent, startOffset, stopOffset);
+		super(parent, beginOffset, endOffset);
 		this.foreignType= foreignType;
 	}
 	

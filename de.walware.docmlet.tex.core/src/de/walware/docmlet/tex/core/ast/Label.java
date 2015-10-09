@@ -25,11 +25,11 @@ public final class Label extends TexAstNode {
 	private final String label;
 	
 	
-	Label(final ContainerNode parent, final int startOffset, final int stopOffset,
+	Label(final ContainerNode parent, final int beginOffset, final int endOffset,
 			final String label) {
 		this.texParent= parent;
-		this.startOffset= startOffset;
-		this.stopOffset= stopOffset;
+		this.beginOffset= beginOffset;
+		this.endOffset= endOffset;
 		
 		this.label= label;
 	}

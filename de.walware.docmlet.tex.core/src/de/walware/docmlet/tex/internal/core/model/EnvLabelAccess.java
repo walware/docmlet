@@ -11,25 +11,25 @@
 
 package de.walware.docmlet.tex.internal.core.model;
 
-import java.util.List;
+import de.walware.ecommons.collections.ImList;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.TexElementName;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
-public class EnvLabelAccess extends TexLabelAccess {
+public class EnvLabelAccess extends TexNameAccess {
 	
 	
-	private final TexAstNode fNode;
-	private final TexAstNode fNameNode;
+	private final TexAstNode node;
+	private final TexAstNode nameNode;
 	
-	List<TexLabelAccess> fAll;
+	ImList<EnvLabelAccess> all;
 	
 	
 	protected EnvLabelAccess(final TexAstNode node, final TexAstNode labelNode) {
-		fNode = node;
-		fNameNode = labelNode;
+		this.node= node;
+		this.nameNode= labelNode;
 	}
 	
 	
@@ -40,12 +40,12 @@ public class EnvLabelAccess extends TexLabelAccess {
 	
 	@Override
 	public String getSegmentName() {
-		return fNode.getText();
+		return this.node.getText();
 	}
 	
 	@Override
 	public String getDisplayName() {
-		return fNode.getText();
+		return this.node.getText();
 	}
 	
 	@Override
@@ -56,17 +56,17 @@ public class EnvLabelAccess extends TexLabelAccess {
 	
 	@Override
 	public TexAstNode getNode() {
-		return fNode;
+		return this.node;
 	}
 	
 	@Override
 	public TexAstNode getNameNode() {
-		return fNameNode;
+		return this.nameNode;
 	}
 	
 	@Override
-	public List<? extends TexLabelAccess> getAllInUnit() {
-		return fAll;
+	public ImList<? extends TexNameAccess> getAllInUnit() {
+		return this.all;
 	}
 	
 	
@@ -74,6 +74,5 @@ public class EnvLabelAccess extends TexLabelAccess {
 	public boolean isWriteAccess() {
 		return false;
 	}
-	
 	
 }

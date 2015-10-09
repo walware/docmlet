@@ -11,61 +11,35 @@
 
 package de.walware.docmlet.tex.internal.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
+import de.walware.ecommons.ltk.core.impl.NameAccessAccumulator;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.TexElementName;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
-public class RefLabelAccess extends TexLabelAccess {
+public class RefLabelAccess extends TexNameAccess {
 	
 	
 	public final static int A_READ =                       0x00000000;
 	public final static int A_WRITE =                      0x00000002;
 	
 	
-	static class Shared {
-		
-		
-		private final String fLabel;
-		
-		private List<TexLabelAccess> fAll;
-		
-		
-		public Shared(final String label) {
-			fLabel = label;
-			fAll = new ArrayList<>(8);
-		}
-		
-		
-		public void finish() {
-			fAll= ImCollections.toList(fAll);
-		}
-		
-		public List<TexLabelAccess> getAll() {
-			return fAll;
-		}
-		
-	}
+	private final NameAccessAccumulator<TexNameAccess> shared;
+	
+	private final TexAstNode node;
+	private final TexAstNode nameNode;
+	
+	int flags;
 	
 	
-	private final Shared fShared;
-	
-	private final TexAstNode fNode;
-	private final TexAstNode fNameNode;
-	
-	int fFlags;
-	
-	
-	protected RefLabelAccess(final Shared shared, final TexAstNode node, final TexAstNode labelNode) {
-		fShared = shared;
-		shared.fAll.add(this);
-		fNode = node;
-		fNameNode = labelNode;
+	protected RefLabelAccess(final NameAccessAccumulator<TexNameAccess> shared, final TexAstNode node, final TexAstNode labelNode) {
+		this.shared = shared;
+		shared.getList().add(this);
+		this.node = node;
+		this.nameNode = labelNode;
 	}
 	
 	
@@ -76,12 +50,12 @@ public class RefLabelAccess extends TexLabelAccess {
 	
 	@Override
 	public String getSegmentName() {
-		return fShared.fLabel;
+		return this.shared.getLabel();
 	}
 	
 	@Override
 	public String getDisplayName() {
-		return fShared.fLabel;
+		return this.shared.getLabel();
 	}
 	
 	@Override
@@ -92,23 +66,23 @@ public class RefLabelAccess extends TexLabelAccess {
 	
 	@Override
 	public TexAstNode getNode() {
-		return fNode;
+		return this.node;
 	}
 	
 	@Override
 	public TexAstNode getNameNode() {
-		return fNameNode;
+		return this.nameNode;
 	}
 	
 	@Override
-	public List<? extends TexLabelAccess> getAllInUnit() {
-		return fShared.fAll;
+	public ImList<? extends TexNameAccess> getAllInUnit() {
+		return ImCollections.toList(this.shared.getList());
 	}
 	
 	
 	@Override
 	public boolean isWriteAccess() {
-		return ((fFlags & A_WRITE) != 0);
+		return ((this.flags & A_WRITE) != 0);
 	}
 	
 }

@@ -53,7 +53,7 @@ public class MarkupHelpComputer implements IQuickAssistComputer {
 		
 		@Override
 		public int getRelevance() {
-			return 1000;
+			return 50;
 		}
 		
 		@Override

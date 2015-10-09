@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
@@ -24,7 +25,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.IQuickAssistComputer;
 
 import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class TexQuickRenameComputer implements IQuickAssistComputer {
@@ -48,8 +49,8 @@ public class TexQuickRenameComputer implements IQuickAssistComputer {
 			SEARCH_ACCESS : while (candidate != null) {
 				final List<Object> attachments= candidate.getAttachments();
 				for (final Object attachment : attachments) {
-					if (attachment instanceof TexLabelAccess) {
-						TexLabelAccess access = (TexLabelAccess) attachment; 
+					if (attachment instanceof TexNameAccess) {
+						TexNameAccess access= (TexNameAccess) attachment; 
 						SUB: while (access != null) {
 							if (access.getSegmentName() == null) {
 								break SUB;
@@ -70,9 +71,9 @@ public class TexQuickRenameComputer implements IQuickAssistComputer {
 	}
 	
 	protected void addAccessAssistProposals(final AssistInvocationContext context,
-			final TexLabelAccess access,
+			final TexNameAccess access,
 			final AssistProposalCollector<IAssistCompletionProposal> proposals) {
-		final List<? extends TexLabelAccess> accessList = access.getAllInUnit();
+		final ImList<? extends TexNameAccess> accessList= access.getAllInUnit();
 		
 		proposals.add(new TexLinkedNamesAssistProposal(TexLinkedNamesAssistProposal.IN_FILE, context, access));
 //		

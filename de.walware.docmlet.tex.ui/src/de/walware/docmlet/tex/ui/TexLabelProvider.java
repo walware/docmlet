@@ -24,7 +24,7 @@ import de.walware.docmlet.base.ui.DocBaseUIResources;
 
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.model.ITexSourceElement;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class TexLabelProvider extends StyledCellLabelProvider implements IElementLabelProvider, ILabelProvider {
@@ -54,8 +54,8 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 		if (element instanceof IModelElement) {
 			return getImage((IModelElement) element);
 		}
-		if (element instanceof TexLabelAccess) {
-			return getImage((TexLabelAccess) element);
+		if (element instanceof TexNameAccess) {
+			return getImage((TexNameAccess) element);
 		}
 		return null;
 	}
@@ -80,8 +80,8 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 		}
 	}
 	
-	public Image getImage(final TexLabelAccess access) {
-		if (access.getType() == TexLabelAccess.LABEL) {
+	public Image getImage(final TexNameAccess access) {
+		if (access.getType() == TexNameAccess.LABEL) {
 			return getTexImage(TexUIResources.OBJ_LABEL_IMAGE_ID);
 		}
 		return null;
@@ -100,8 +100,8 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 		if (element instanceof IModelElement) {
 			return getText((IModelElement) element);
 		}
-		if (element instanceof TexLabelAccess) {
-			return getText((TexLabelAccess) element);
+		if (element instanceof TexNameAccess) {
+			return getText((TexNameAccess) element);
 		}
 		return null;
 	}
@@ -111,7 +111,7 @@ public class TexLabelProvider extends StyledCellLabelProvider implements IElemen
 		return element.getElementName().getDisplayName();
 	}
 	
-	public String getText(final TexLabelAccess access) {
+	public String getText(final TexNameAccess access) {
 		return access.getDisplayName();
 	}
 	

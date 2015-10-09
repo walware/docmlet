@@ -13,40 +13,35 @@ package de.walware.docmlet.tex.core.ast;
 
 import java.lang.reflect.InvocationTargetException;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.ast.IAstNode;
-import de.walware.ecommons.ltk.ast.ICommonAstVisitor;
+import de.walware.ecommons.ltk.core.impl.AbstractAstNode;
 
 import de.walware.docmlet.tex.core.ast.TexAst.NodeType;
 
 
-public abstract class TexAstNode implements IAstNode {
+public abstract class TexAstNode extends AbstractAstNode
+		implements IAstNode {
 	
 	
 	protected static final TexAstNode[] NO_CHILDREN= new TexAstNode[0];
-	
-	private static final ImList<Object> NO_ATTACHMENT= ImCollections.emptyList();
 	
 	
 	int status;
 	
 	TexAstNode texParent;
 	
-	int startOffset;
-	int stopOffset;
-	
-	private volatile ImList<Object> attachments= NO_ATTACHMENT;
+	int beginOffset;
+	int endOffset;
 	
 	
 	TexAstNode() {
 	}
 	
-	TexAstNode(final TexAstNode parent, final int startOffset, final int stopOffset) {
+	TexAstNode(final TexAstNode parent, final int beginOffset, final int endOffset) {
 		this.texParent= parent;
 		
-		this.startOffset= startOffset;
-		this.stopOffset= stopOffset;
+		this.beginOffset= beginOffset;
+		this.endOffset= endOffset;
 	}
 	
 	
@@ -66,62 +61,30 @@ public abstract class TexAstNode implements IAstNode {
 		return this.texParent;
 	}
 	
-	@Override
-	public final IAstNode getRoot() {
-		IAstNode candidate= this;
-		IAstNode p;
-		while ((p= candidate.getParent()) != null) {
-			candidate= p;
-		}
-		return candidate;
-	}
 	
 	@Override
 	public final int getOffset() {
-		return this.startOffset;
+		return this.beginOffset;
 	}
 	
 	@Override
-	public final int getStopOffset() {
-		return this.stopOffset;
+	public final int getEndOffset() {
+		return this.endOffset;
 	}
 	
 	@Override
 	public final int getLength() {
-		return this.stopOffset - this.startOffset;
-	}
-	
-	public String getText() {
-		return null;
+		return this.endOffset - this.beginOffset;
 	}
 	
 	
 	@Override
 	public abstract TexAstNode getChild(final int index);
 	
-	@Override
-	public final void accept(final ICommonAstVisitor visitor) throws InvocationTargetException {
-		visitor.visit(this);
-	}
 	
 	public abstract void acceptInTex(TexAstVisitor visitor) throws InvocationTargetException;
 	
 	public abstract void acceptInTexChildren(TexAstVisitor visitor) throws InvocationTargetException;
 	
-	
-	@Override
-	public synchronized void addAttachment(final Object data) {
-		this.attachments= ImCollections.addElement(this.attachments, data);
-	}
-	
-	@Override
-	public synchronized void removeAttachment(final Object data) {
-		this.attachments= ImCollections.removeElement(this.attachments, data);
-	}
-	
-	@Override
-	public ImList<Object> getAttachments() {
-		return this.attachments;
-	}
 	
 }

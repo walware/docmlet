@@ -13,6 +13,7 @@ package de.walware.docmlet.tex.core.model;
 
 import java.util.Map;
 
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 
 import de.walware.docmlet.tex.core.commands.TexCommand;
@@ -24,7 +25,7 @@ public interface ILtxModelInfo extends ISourceUnitModelInfo {
 	int getMinSectionLevel();
 	int getMaxSectionLevel();
 	
-	ITexLabelSet getLabels();
+	INameAccessSet<TexNameAccess> getLabels();
 	Map<String, TexCommand> getCustomCommandMap();
 	Map<String, TexCommand> getCustomEnvMap();
 	

@@ -30,8 +30,8 @@ public class Group extends ContainerNode {
 	static final class Bracket extends Group {
 		
 		
-		Bracket(final TexAstNode group, final int offset, final int stopOffset) {
-			super(group, offset, stopOffset);
+		Bracket(final TexAstNode group, final int offset, final int endOffset) {
+			super(group, offset, endOffset);
 		}
 		
 		
@@ -45,8 +45,8 @@ public class Group extends ContainerNode {
 	static final class Square extends Group {
 		
 		
-		Square(final TexAstNode group, final int offset, final int stopOffset) {
-			super(group, offset, stopOffset);
+		Square(final TexAstNode group, final int offset, final int endOffset) {
+			super(group, offset, endOffset);
 		}
 		
 		
@@ -58,8 +58,8 @@ public class Group extends ContainerNode {
 	}
 	
 	
-	private Group(final TexAstNode group, final int offset, final int stopOffset) {
-		super(group, offset, stopOffset);
+	private Group(final TexAstNode group, final int offset, final int endOffset) {
+		super(group, offset, endOffset);
 	}
 	
 	
@@ -115,15 +115,15 @@ public class Group extends ContainerNode {
 	
 	
 	@Override
-	void setEndNode(final int stopOffset, final TexAstNode endNode) {
-		this.stopOffset= stopOffset;
+	void setEndNode(final int endOffset, final TexAstNode endNode) {
+		this.endOffset= endOffset;
 	}
 	
 	@Override
 	void setMissingEnd() {
 		this.status= STATUS2_GROUP_NOT_CLOSED;
 		if (this.children.length > 0) {
-			this.stopOffset= this.children[this.children.length-1].stopOffset;
+			this.endOffset= this.children[this.children.length-1].endOffset;
 		}
 	}
 	

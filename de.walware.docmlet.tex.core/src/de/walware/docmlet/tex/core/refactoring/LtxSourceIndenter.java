@@ -141,15 +141,15 @@ public class LtxSourceIndenter {
 					final Set<String> envs = fCodeStyle.getIndentEnvLabels();
 					while (texNode != null
 							&& (texNode.getOffset() >= prevLine.getOffset()
-									|| texNode.getStopOffset() <= currentLineStop )) {
+									|| texNode.getEndOffset() <= currentLineStop )) {
 						if (texNode.getNodeType() == NodeType.ENVIRONMENT) {
 							if (envs == null || envs.contains(texNode.getText())) {
 								if (texNode.getOffset() >= prevLine.getOffset()
-										&& texNode.getStopOffset() > currentLineStop ) {
+										&& texNode.getEndOffset() > currentLineStop ) {
 									addEnv = true;
 								}
 								else if (texNode.getOffset() < prevLine.getOffset()
-										&& texNode.getStopOffset() <= currentLineStop ) {
+										&& texNode.getEndOffset() <= currentLineStop ) {
 									final int beginLine = fDocument.getLineOfOffset(texNode.getOffset());
 									if (fLineColumns[beginLine] < 0) {
 										fLineColumns[beginLine] = fUtil.getLineIndent(beginLine, false)[IndentUtil.COLUMN_IDX];

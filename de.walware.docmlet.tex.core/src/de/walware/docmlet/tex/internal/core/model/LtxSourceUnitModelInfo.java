@@ -15,12 +15,12 @@ import java.util.Map;
 
 import de.walware.ecommons.ltk.AstInfo;
 import de.walware.ecommons.ltk.core.impl.AbstractSourceModelInfo;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.ITexSourceElement;
-import de.walware.docmlet.tex.internal.core.model.RefLabelAccess.Shared;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class LtxSourceUnitModelInfo extends AbstractSourceModelInfo implements ILtxModelInfo {
@@ -31,14 +31,15 @@ public class LtxSourceUnitModelInfo extends AbstractSourceModelInfo implements I
 	private final int minSectionLevel;
 	private final int maxSectionLevel;
 	
-	private final ITexLabelSet labels;
+	private final INameAccessSet<TexNameAccess> labels;
 	
 	private final Map<String, TexCommand> customCommands;
 	private final Map<String, TexCommand> customEnvs;
 	
 	
 	LtxSourceUnitModelInfo(final AstInfo ast, final ITexSourceElement unitElement,
-			final int minSectionLevel, final int maxSectionLevel, final Map<String, Shared> labels,
+			final int minSectionLevel, final int maxSectionLevel,
+			final INameAccessSet<TexNameAccess> labels,
 			final Map<String, TexCommand> customCommands, final Map<String, TexCommand> customEnvs) {
 		super(ast);
 		this.sourceElement= unitElement;
@@ -46,7 +47,7 @@ public class LtxSourceUnitModelInfo extends AbstractSourceModelInfo implements I
 		this.minSectionLevel= minSectionLevel;
 		this.maxSectionLevel= maxSectionLevel;
 		
-		this.labels= new LabelSet(labels);
+		this.labels= labels;
 		this.customCommands= customCommands;
 		this.customEnvs= customEnvs;
 	}
@@ -69,7 +70,7 @@ public class LtxSourceUnitModelInfo extends AbstractSourceModelInfo implements I
 	}
 	
 	@Override
-	public ITexLabelSet getLabels() {
+	public INameAccessSet<TexNameAccess> getLabels() {
 		return this.labels;
 	}
 	

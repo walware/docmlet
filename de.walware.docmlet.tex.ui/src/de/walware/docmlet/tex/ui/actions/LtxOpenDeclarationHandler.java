@@ -9,9 +9,7 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.tex.ui.sourceediting;
-
-import java.util.List;
+package de.walware.docmlet.tex.ui.actions;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IRegion;
@@ -23,13 +21,14 @@ import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.actions.AbstractOpenDeclarationHandler;
+import de.walware.ecommons.ltk.ui.sourceediting.actions.OpenDeclaration;
 
 import de.walware.docmlet.tex.core.ast.TexAst;
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.core.model.TexModel;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
@@ -44,7 +43,7 @@ public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
 //	}
 	
 	
-	public static TexLabelAccess searchAccess(final ISourceEditor editor, final IRegion region) {
+	public static TexNameAccess searchAccess(final ISourceEditor editor, final IRegion region) {
 //		try {
 //			final IDocument document = editor.getViewer().getDocument();
 			final ISourceUnit su = editor.getSourceUnit();
@@ -61,10 +60,9 @@ public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
 						if (node.getNodeType() == TexAst.NodeType.LABEL) {
 							TexAstNode current = node;
 							do {
-								final List<Object> attachments= current.getAttachments();
-								for (final Object attachment : attachments) {
-									if (attachment instanceof TexLabelAccess) {
-										final TexLabelAccess access = (TexLabelAccess) attachment;
+								for (final Object attachment : current.getAttachments()) {
+									if (attachment instanceof TexNameAccess) {
+										final TexNameAccess access = (TexNameAccess) attachment;
 										if (access.getNameNode() == node) {
 											return access;
 										}
@@ -85,17 +83,14 @@ public class LtxOpenDeclarationHandler extends AbstractOpenDeclarationHandler {
 	
 	@Override
 	public boolean execute(final ISourceEditor editor, final IRegion selection) {
-		final TexLabelAccess access = searchAccess(editor, selection);
+		final TexNameAccess access= searchAccess(editor, selection);
 		if (access != null) {
-			final List<? extends TexLabelAccess> all = access.getAllInUnit();
-			for (final TexLabelAccess cand : all) {
-				if (cand.isWriteAccess()) {
-					final TexAstNode node = cand.getNode();
-					editor.selectAndReveal(node.getOffset(), node.getLength());
-					return true;
-				}
+			final OpenDeclaration open= new OpenDeclaration();
+			final TexNameAccess declAccess= open.selectAccess(access.getAllInUnit());
+			if (declAccess != null) {
+				open.open(editor, declAccess);
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

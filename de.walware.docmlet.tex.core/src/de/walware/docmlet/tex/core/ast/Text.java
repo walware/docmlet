@@ -26,9 +26,9 @@ public class Text extends TexAstNode {
 		
 		private final String text;
 		
-		Num(final TexAstNode parent, final int startOffset, final int stopOffset,
+		Num(final TexAstNode parent, final int beginOffset, final int endOffset,
 				final String text) {
-			super(parent, startOffset, stopOffset);
+			super(parent, beginOffset, endOffset);
 			this.text= text;
 		}
 		
@@ -40,8 +40,8 @@ public class Text extends TexAstNode {
 	}
 	
 	
-	Text(final TexAstNode parent, final int startOffset, final int stopOffset) {
-		super(parent, startOffset, stopOffset);
+	Text(final TexAstNode parent, final int beginOffset, final int endOffset) {
+		super(parent, beginOffset, endOffset);
 	}
 	
 	

@@ -43,7 +43,7 @@ public abstract class Environment extends ContainerNode {
 			this.status= ITexAstStatusConstants.STATUS2_MATH_NOT_CLOSED;
 			this.endNode= new Dummy();
 			this.endNode.texParent= this;
-			this.endNode.startOffset= this.endNode.stopOffset= this.stopOffset= getChild(this.children.length).stopOffset;
+			this.endNode.beginOffset= this.endNode.endOffset= this.endOffset= getChild(this.children.length).endOffset;
 		}
 		
 	}
@@ -68,7 +68,7 @@ public abstract class Environment extends ContainerNode {
 			this.status= ITexAstStatusConstants.STATUS2_ENV_NOT_CLOSED;
 			this.endNode= new Dummy();
 			this.endNode.texParent= this;
-			this.endNode.startOffset= this.endNode.stopOffset= this.stopOffset= getChild(this.children.length).stopOffset;
+			this.endNode.beginOffset= this.endNode.endOffset= this.endOffset= getChild(this.children.length).endOffset;
 		}
 		
 	}
@@ -81,7 +81,7 @@ public abstract class Environment extends ContainerNode {
 	Environment(final TexAstNode parent, final ControlNode beginNode) {
 		this.texParent= parent;
 		this.beginNode= beginNode;
-		this.startOffset= beginNode.startOffset;
+		this.beginOffset= beginNode.beginOffset;
 	}
 	
 	
@@ -166,9 +166,9 @@ public abstract class Environment extends ContainerNode {
 	
 	
 	@Override
-	void setEndNode(final int stopOffset, final TexAstNode endNode) {
+	void setEndNode(final int endOffset, final TexAstNode endNode) {
 		this.endNode= endNode;
-		this.stopOffset= endNode.stopOffset;
+		this.endOffset= endNode.endOffset;
 	}
 	
 }

@@ -237,7 +237,7 @@
       </handler>
       <handler
             commandId="org.eclipse.jdt.ui.edit.text.java.open.editor"
-            class="de.walware.docmlet.tex.ui.sourceediting.LtxOpenDeclarationHandler">
+            class="de.walware.docmlet.tex.ui.actions.LtxOpenDeclarationHandler">
          <activeWhen>
             <with variable="activePartId">
                <equals

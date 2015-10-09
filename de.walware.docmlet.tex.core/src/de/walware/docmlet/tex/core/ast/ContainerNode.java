@@ -21,12 +21,12 @@ abstract class ContainerNode extends TexAstNode {
 	ContainerNode() {
 	}
 	
-	ContainerNode(final TexAstNode parent, final int startOffset, final int stopOffset) {
-		super(parent, startOffset, stopOffset);
+	ContainerNode(final TexAstNode parent, final int beginOffset, final int endOffset) {
+		super(parent, beginOffset, endOffset);
 	}
 	
 	
-	abstract void setEndNode(int stopOffset, final TexAstNode endNode);
+	abstract void setEndNode(int endOffset, final TexAstNode endNode);
 	
 	abstract void setMissingEnd();
 	

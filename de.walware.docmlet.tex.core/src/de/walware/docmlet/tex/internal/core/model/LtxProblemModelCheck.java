@@ -17,19 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.walware.ecommons.MessageBuilder;
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.IProblem;
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.core.impl.Problem;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 import de.walware.ecommons.ltk.core.model.ISourceUnit;
-import de.walware.ecommons.text.ILineInformation;
+import de.walware.ecommons.text.core.ILineInformation;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
 import de.walware.docmlet.tex.core.model.TexModel;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 
 
 public class LtxProblemModelCheck {
@@ -73,21 +74,21 @@ public class LtxProblemModelCheck {
 	
 	
 	private void checkLabels(final ILtxModelInfo model) {
-		final ITexLabelSet labelSet = model.getLabels();
-		final List<String> labels = labelSet.getAccessLabels();
+		final INameAccessSet<TexNameAccess> labelSet = model.getLabels();
+		final List<String> labels = labelSet.getNames();
 		ITER_LABELS: for (final String label : labels) {
 			if (label != null && label.length() > 0) {
-				final List<TexLabelAccess> all = labelSet.getAllAccessOf(label);
-				for (final TexLabelAccess access : all) {
+				final ImList<TexNameAccess> accessList= labelSet.getAllInUnit(label);
+				for (final TexNameAccess access : accessList) {
 					if (access.isWriteAccess()) {
 						continue ITER_LABELS;
 					}
 				}
-				for (final TexLabelAccess access : all) {
+				for (final TexNameAccess access : accessList) {
 					final TexAstNode nameNode = access.getNameNode();
 					addProblem(fLevelRefUndefined, STATUS2_LABEL_UNDEFINED,
 							fMessageBuilder.bind(ProblemMessages.Labels_UndefinedRef_message, access.getDisplayName()),
-							nameNode.getOffset(), nameNode.getStopOffset() );
+							nameNode.getOffset(), nameNode.getEndOffset() );
 				}
 			}
 		}

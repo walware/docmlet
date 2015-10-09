@@ -22,8 +22,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
-import de.walware.docmlet.tex.ui.sourceediting.LtxOpenDeclarationHandler;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
+import de.walware.docmlet.tex.ui.actions.LtxOpenDeclarationHandler;
 
 
 public class TexElementHyperlinkDetector extends AbstractHyperlinkDetector {
@@ -36,15 +36,20 @@ public class TexElementHyperlinkDetector extends AbstractHyperlinkDetector {
 	@Override
 	public IHyperlink[] detectHyperlinks(final ITextViewer textViewer,
 			final IRegion region, final boolean canShowMultipleHyperlinks) {
-		final List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		final ISourceEditor editor = (ISourceEditor) getAdapter(ISourceEditor.class);
-		if (editor != null) {
-			final TexLabelAccess access = LtxOpenDeclarationHandler.searchAccess(editor, region);
+		final ISourceEditor editor= (ISourceEditor) getAdapter(ISourceEditor.class);
+		if (editor == null) {
+			return null;
+		}
+		
+		final List<IHyperlink> hyperlinks = new ArrayList<>(4);
+		
+		{	final TexNameAccess access = LtxOpenDeclarationHandler.searchAccess(editor, region);
 			if (access != null) {
 				hyperlinks.add(new OpenTexElementHyperlink(editor,
 						(ITexSourceUnit) editor.getSourceUnit(), access));
 			}
 		}
+		
 		if (!hyperlinks.isEmpty()) {
 			return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 		}

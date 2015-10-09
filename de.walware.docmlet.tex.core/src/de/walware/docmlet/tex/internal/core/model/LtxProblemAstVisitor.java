@@ -31,7 +31,7 @@ import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.core.impl.Problem;
 import de.walware.ecommons.ltk.core.model.ISourceUnit;
-import de.walware.ecommons.text.ILineInformation;
+import de.walware.ecommons.text.core.ILineInformation;
 
 import de.walware.docmlet.tex.core.ast.Comment;
 import de.walware.docmlet.tex.core.ast.ControlNode;
@@ -123,7 +123,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					fMessageBuilder.bind(ProblemMessages.Ast_Env_NotClosed_message,
 							limit(node.getText(), ENV_LABEL_LIMIT) ),
-					beginNode.getOffset(), beginNode.getStopOffset() );
+					beginNode.getOffset(), beginNode.getEndOffset() );
 			break; }
 		case STATUS2_MATH_NOT_CLOSED: {
 			final TexAstNode beginNode = node.getBeginNode();
@@ -140,7 +140,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 			if (c != null) {
 				addProblem(IProblem.SEVERITY_ERROR, code,
 						fMessageBuilder.bind(ProblemMessages.Ast_Math_NotClosed_message, c),
-						beginNode.getOffset(), beginNode.getStopOffset() );
+						beginNode.getOffset(), beginNode.getEndOffset() );
 			}
 			break; }
 		}
@@ -156,18 +156,18 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 			addProblem(IProblem.SEVERITY_ERROR, code, (node.getText() == "begin") ? //$NON-NLS-1$
 					ProblemMessages.Ast_Env_MissingName_Begin_message :
 					ProblemMessages.Ast_Env_MissingName_End_message,
-					node.getOffset(), node.getStopOffset() );
+					node.getOffset(), node.getEndOffset() );
 			break;
 		case STATUS2_ENV_NOT_OPENED:
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					fMessageBuilder.bind(ProblemMessages.Ast_Env_NotOpened_message,
 							limit(node.getChild(0).getChild(0).getText(), ENV_LABEL_LIMIT) ),
-					node.getOffset(), node.getStopOffset() );
+					node.getOffset(), node.getEndOffset() );
 			break;
 		case STATUS2_VERBATIM_INLINE_C_MISSING:
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					ProblemMessages.Ast_Verbatim_MissingSep_message,
-					node.getStopOffset()-1, node.getStopOffset() );
+					node.getEndOffset()-1, node.getEndOffset() );
 			break;
 		}
 		
@@ -204,7 +204,7 @@ public class LtxProblemAstVisitor extends TexAstVisitor {
 			addProblem(IProblem.SEVERITY_ERROR, code,
 					fMessageBuilder.bind(ProblemMessages.Ast_Verbatim_NotClosed_message,
 							new String(fCurrentText.substring(node.getOffset()-1, node.getOffset())) ),
-					node.getStopOffset()-1, node.getStopOffset() );
+					node.getEndOffset()-1, node.getEndOffset() );
 			break;
 		}
 	}

@@ -21,8 +21,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
 
 import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.LTKUtil;
 import de.walware.ecommons.ltk.core.model.IModelElement;
+import de.walware.ecommons.ltk.core.model.INameAccessSet;
 import de.walware.ecommons.ltk.core.model.ISourceStructElement;
 import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
@@ -48,10 +50,9 @@ import de.walware.docmlet.tex.core.commands.LtxCommandDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
 import de.walware.docmlet.tex.core.model.ILtxModelInfo;
-import de.walware.docmlet.tex.core.model.ITexLabelSet;
 import de.walware.docmlet.tex.core.model.ITexSourceElement;
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 import de.walware.docmlet.tex.internal.ui.sourceediting.LtxAssistInvocationContext;
 
 
@@ -202,18 +203,18 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 						switch (argDef.getContent()) {
 						case Argument.LABEL_REFLABEL_DEF:
 							if (modelInfo != null) {
-								final ITexLabelSet labels = modelInfo.getLabels();
-								LABELS: for (final String label : labels.getAccessLabels()) {
-									final List<TexLabelAccess> all = labels.getAllAccessOf(label);
+								final INameAccessSet<TexNameAccess> labels = modelInfo.getLabels();
+								LABELS: for (final String label : labels.getNames()) {
+									final ImList<TexNameAccess> accessList= labels.getAllInUnit(label);
 									boolean isDef = false;
-									for (final TexLabelAccess access : all) {
+									for (final TexNameAccess access : accessList) {
 										if (access.isWriteAccess()) {
 											if (isDef(access, offset)) {
 												isDef = true;
 											}
 											else {
 												proposals.add(new TexLabelCompletionProposal(context,
-														offset, all.get(0), 94));
+														offset, accessList.get(0), 94));
 												continue LABELS;
 											}
 										}
@@ -222,27 +223,27 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 										continue LABELS;
 									}
 									proposals.add(new TexLabelCompletionProposal(context,
-											offset, all.get(0), 95));
+											offset, accessList.get(0), 95));
 								}
 							}
 							break;
 						case Argument.LABEL_REFLABEL_REF:
 							if (modelInfo != null) {
-								final ITexLabelSet labels = modelInfo.getLabels();
-								LABELS: for (final String label : labels.getAccessLabels()) {
-									final List<TexLabelAccess> all = labels.getAllAccessOf(label);
-									for (final TexLabelAccess access : all) {
+								final INameAccessSet<TexNameAccess> labels = modelInfo.getLabels();
+								LABELS: for (final String label : labels.getNames()) {
+									final ImList<TexNameAccess> accessList= labels.getAllInUnit(label);
+									for (final TexNameAccess access : accessList) {
 										if (access.isWriteAccess()) {
 											proposals.add(new TexLabelCompletionProposal(context,
-													offset, all.get(0), 95));
+													offset, accessList.get(0), 95));
 											continue LABELS;
 										}
 									}
-									if (all.size() == 1 && isDef(all.get(0), offset)) {
+									if (accessList.size() == 1 && isDef(accessList.get(0), offset)) {
 										continue LABELS;
 									}
 									proposals.add(new TexLabelCompletionProposal(context,
-											offset, all.get(0), 94));
+											offset, accessList.get(0), 94));
 								}
 							}
 						}
@@ -317,7 +318,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 		}
 	}
 	
-	private boolean isDef(final TexLabelAccess access, final int offset) {
+	private boolean isDef(final TexNameAccess access, final int offset) {
 		final TexAstNode nameNode = access.getNameNode();
 		return (nameNode != null
 				&& nameNode.getOffset() <= offset

@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Point;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.CompletionProposalWithOverwrite;
 
-import de.walware.docmlet.tex.core.model.TexLabelAccess;
+import de.walware.docmlet.tex.core.model.TexNameAccess;
 import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.ui.TexUI;
 
@@ -65,7 +65,7 @@ public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
 	}
 	
 	
-	protected final TexLabelAccess fAccess;
+	protected final TexNameAccess fAccess;
 	protected StyledString fDisplayString;
 	
 	private final int fRelevance;
@@ -77,7 +77,7 @@ public class TexLabelCompletionProposal extends CompletionProposalWithOverwrite
 	
 	
 	protected TexLabelCompletionProposal(final AssistInvocationContext context, final int startOffset,
-			final TexLabelAccess access, final int relevance) {
+			final TexNameAccess access, final int relevance) {
 		super(context, startOffset);
 		fAccess = access;
 		fRelevance = relevance;
