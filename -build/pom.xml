@@ -111,6 +111,9 @@
 				
 				<module>../de.walware.docmlet.wikitext.core</module>
 				<module>../de.walware.docmlet.wikitext.ui</module>
+				
+				<module>../de.walware.docmlet.wikitext.commonmark.core</module>
+				<module>../de.walware.docmlet.wikitext.commonmark.ui</module>
 			</modules>
 			
 			<repositories>

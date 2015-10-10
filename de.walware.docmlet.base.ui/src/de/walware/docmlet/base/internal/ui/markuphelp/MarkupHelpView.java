@@ -205,8 +205,7 @@ public class MarkupHelpView extends ViewPart implements IMarkupHelpView {
 	}
 	
 	private void activated(final IEditorPart editor) {
-		final IMarkupHelpContextProvider contextProvider= (IMarkupHelpContextProvider)
-				editor.getAdapter(IMarkupHelpContextProvider.class);
+		final IMarkupHelpContextProvider contextProvider= (IMarkupHelpContextProvider) editor.getAdapter(IMarkupHelpContextProvider.class);
 		if (contextProvider != null) {
 			show(contextProvider.getHelpContentId());
 		}
@@ -282,6 +281,9 @@ public class MarkupHelpView extends ViewPart implements IMarkupHelpView {
 		{	sb.append("table, tr, th, td { font-size: "); //$NON-NLS-1$
 			sb.append(fontData.getHeight());
 			sb.append("pt; }\n"); //$NON-NLS-1$
+		}
+		{	sb.append("h4 { margin-bottom: 0.66em; }"); //$NON-NLS-1$
+			sb.append("pre { margin-top: 0.66em; margin-bottom: 0.66em; }"); //$NON-NLS-1$
 		}
 	}
 	

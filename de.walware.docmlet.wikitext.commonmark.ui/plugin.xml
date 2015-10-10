@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ #=============================================================================#
+ # Copyright (c) 2007-2015 Stephan Wahlbrink (WalWare.de) and others.
+ # All rights reserved. This program and the accompanying materials
+ # are made available under the terms of the Eclipse Public License v1.0
+ # which accompanies this distribution, and is available at
+ # http://www.eclipse.org/legal/epl-v10.html
+ # 
+ # Contributors:
+ #     Stephan Wahlbrink - initial API and implementation
+ #=============================================================================#
+-->
+
+<plugin>
+   
+   <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates markupLanguage="CommonMark&#x2002;[StatET]">
+         
+         <template name="# "
+               description="%templates_H1_description"
+               content="# ${text}\n\n" block="true"/>
+         <template name="## "
+               description="%templates_H2_description"
+               content="## ${text}\n\n" block="true"/>
+         <template name="### "
+               description="%templates_H3_description"
+               content="### ${text}\n\n" block="true"/>
+         <template name="#### "
+               description="%templates_H4_description"
+               content="#### ${text}\n\n" block="true"/>
+         <template name="##### "
+               description="%templates_H5_description"
+               content="##### ${text}\n\n" block="true"/>
+         <template name="###### "
+               description="%templates_H6_description"
+               content="###### ${text}\n\n" block="true"/>
+         
+         <template name="========= "
+               description="%templates_H1_Setext_description"
+               content="\n${text}\n====================\n\n" block="true"/>
+         <template name="--------- "
+               description="%templates_H2_Setext_description"
+               content="\n${text}\n--------------------\n\n" block="true"/>
+         
+         <template name="```"
+               description="%templates_CodeBlock_Fenced_description"
+               content="```\n${text}\n```\n\n" block="true"/>
+         
+         <template name="___"
+               description="%templates_HorizontalRule_description"
+               content="____________________\n\n" block="true"/>
+         
+         <template name="* "
+               description="%templates_BulledList_description"
+               content="* ${text}\n* ${text2}\n\n" block="true"/>
+         <template name="1. "
+               description="%templates_OrderedList_1_description"
+               content="1. ${text}\n2. ${text2}\n\n" block="true"/>
+         <template name="1) "
+               description="%templates_OrderedList_2_description"
+               content="1) ${text}\n2) ${text2}\n\n" block="true"/>
+         
+         
+         <template name="*"
+               description="%templates_Emphasis_description"
+               content="*${text}* $"/>
+         <template name="**"
+               description="%templates_StrongEmphasis_description"
+               content="**${text}** $"/>
+         <template name="_"
+               description="%templates_Emphasis_description"
+               content="_${text}_ $"/>
+         <template name="__"
+               description="%templates_StrongEmphasis_description"
+               content="__${text}__ $"/>
+         
+         <template name="`"
+               description="%templates_CodeSpan_description"
+               content="`${text}` $"/>
+         
+         <template name="&lt;http://example.com&gt;"
+               description="%templates_Link_description"
+               content="&lt;${uri}&gt; $"/>
+         <template name="[link](http://example.com)"
+               description="%templates_Link_description"
+               content="[${text}](${uri}) $"/>
+         <template name="[link](http://example.com &quot;title&quot;)"
+               description="%templates_Link_WithTitle_description"
+               content="[${text}](${uri} &quot;${title}&quot;) $"/>
+         
+         <template name="![image](http://example.com/img.png)"
+               description="%templates_Image_description"
+               content="![${text}](${uri}) $"/>
+         <template name="![image](http://example.com/img.png &quot;title&quot;)"
+               description="%templates_Image_WithTitle_description"
+               content="![${text}](${uri} &quot;${title}&quot;) $"/>
+         
+         <template name="&lt;!-- --&gt;"
+               description="%templates_Comment_description"
+               content="&lt;!-- ${text} --&gt;\n$"/>
+         
+      </templates>
+   </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            markupLanguage="CommonMark&#x2002;[StatET]"
+            resource="help/cheatSheet/CommonMark.html">
+      </content>
+   </extension>
+   
+</plugin>

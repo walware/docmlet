@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: de.walware.docmlet.wikitext.commonmark.ui;singleton:=true
+Bundle-Version: 2.1.0.qualifier
+Bundle-Vendor: WalWare.de
+Bundle-Name: DocMLET Wikitext - CommonMark - UI
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
+ de.walware.ecommons.databinding.core,
+ org.eclipse.ui,
+ de.walware.ecommons.uimisc,
+ de.walware.ecommons.ltk.core,
+ de.walware.docmlet.wikitext.ui;bundle-version="[2.1.0,2.2.0)";visibility:=reexport,
+ de.walware.docmlet.wikitext.commonmark.core;bundle-version="[2.1.0,2.2.0)"
+Export-Package: de.walware.docmlet.wikitext.commonmark.ui
