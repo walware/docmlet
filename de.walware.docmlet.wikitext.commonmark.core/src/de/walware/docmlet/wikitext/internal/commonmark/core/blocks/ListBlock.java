@@ -39,9 +39,21 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceB
 public class ListBlock extends BlockWithNestedBlocks {
 	
 	
-	private static final Pattern PATTERN= Pattern.compile(
+	public static final Pattern PATTERN= Pattern.compile(
 			"([*+-]|([0-9]{1,9})[.)])(?:([ \t]+)(.+)?)?",
 			Pattern.DOTALL );
+	
+	public static int computeItemLineIndent(final Line line, final Matcher matcher) {
+		final int markerEndColumn= line.getColumn(matcher.end(1));
+		if (matcher.start(3) != -1 && matcher.start(4) != -1) {
+			final int contentStartColumn= line.getColumn(matcher.start(4));
+			if (contentStartColumn - markerEndColumn <= 4) {
+				return contentStartColumn - line.getColumn();
+			}
+		}
+		return markerEndColumn + 1 - line.getColumn();
+	}
+	
 	
 	private static enum ListMode {
 		TIGHT, LOOSE, TIGHT_WITH_TRAILING_EMPTY_LINE
@@ -98,7 +110,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 			final Line startLine= lineSequence.getCurrentLine();
 			final ListBlock listBlock= this.listBlockItem.getType();
 			
-			this.itemIdent= calculateLineItemIndent(startLine, listBlock.matcher);
+			this.itemIdent= computeItemLineIndent(startLine, listBlock.matcher);
 			final ListItemLines itemLineSequence= new ListItemLines(lineSequence, builder, blockItem,
 					startLine.getLineNumber(), this.itemIdent );
 			builder.createNestedItems(itemLineSequence, null, itemLineSequence);
@@ -131,18 +143,6 @@ public class ListBlock extends BlockWithNestedBlocks {
 			
 			locator.setBlockEnd(blockItem);
 			builder.endBlock();
-		}
-		
-		
-		private int calculateLineItemIndent(final Line line, final Matcher matcher) {
-			final int markerEndColumn= line.getColumn(matcher.end(1));
-			if (matcher.start(3) != -1 && matcher.start(4) != -1) {
-				final int contentStartColumn= line.getColumn(matcher.start(4));
-				if (contentStartColumn - markerEndColumn <= 4) {
-					return contentStartColumn - line.getColumn();
-				}
-			}
-			return markerEndColumn + 1 - line.getColumn();
 		}
 		
 	}

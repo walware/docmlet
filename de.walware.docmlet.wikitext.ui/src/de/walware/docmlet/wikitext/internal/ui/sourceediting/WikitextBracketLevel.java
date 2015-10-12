@@ -9,7 +9,7 @@
  #     Stephan Wahlbrink - initial API and implementation
  #=============================================================================*/
 
-package de.walware.docmlet.tex.internal.ui.editors;
+package de.walware.docmlet.wikitext.internal.ui.sourceediting;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import org.eclipse.jface.text.link.LinkedPosition;
 
 import de.walware.ecommons.text.ui.BracketLevel;
 
-import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
+import de.walware.docmlet.wikitext.core.source.WikitextHeuristicTokenScanner;
 
 
-public class TexBracketLevel extends BracketLevel {
+public class WikitextBracketLevel extends BracketLevel {
 	
 	
 	public static final class CurlyBracketPosition extends InBracketPosition {
@@ -44,7 +44,7 @@ public class TexBracketLevel extends BracketLevel {
 		
 		@Override
 		protected boolean isEscaped(final int offset) throws BadLocationException {
-			return LtxHeuristicTokenScanner.isEscaped(getDocument(), offset);
+			return WikitextHeuristicTokenScanner.isEscaped(getDocument(), offset);
 		}
 		
 	}
@@ -68,7 +68,7 @@ public class TexBracketLevel extends BracketLevel {
 		
 		@Override
 		protected boolean isEscaped(final int offset) throws BadLocationException {
-			return LtxHeuristicTokenScanner.isEscaped(getDocument(), offset);
+			return WikitextHeuristicTokenScanner.isEscaped(getDocument(), offset);
 		}
 		
 	}
@@ -92,7 +92,7 @@ public class TexBracketLevel extends BracketLevel {
 		
 		@Override
 		protected boolean isEscaped(final int offset) throws BadLocationException {
-			return LtxHeuristicTokenScanner.isEscaped(getDocument(), offset);
+			return WikitextHeuristicTokenScanner.isEscaped(getDocument(), offset);
 		}
 		
 	}
@@ -116,26 +116,26 @@ public class TexBracketLevel extends BracketLevel {
 		
 		@Override
 		protected boolean isEscaped(final int offset) throws BadLocationException {
-			return LtxHeuristicTokenScanner.isEscaped(getDocument(), offset);
+			return WikitextHeuristicTokenScanner.isEscaped(getDocument(), offset);
 		}
 		
-		private int countBackward(int offset) throws BadLocationException {
-			final IDocument document = getDocument();
-			int count = 0;
-			while (offset > 0) {
-				if (document.getChar(offset--) == '$') {
-					count++;
-				}
-			}
-			return count;
-		}
-		
-		@Override
-		public boolean matchesClose(final BracketLevel level, final int offset, final char character)
-				throws BadLocationException {
-			return (super.matchesClose(level, offset, character)
-					&& (getLength() > 0 || countBackward(offset-1) == 2) );
-		}
+//		private int countBackward(int offset) throws BadLocationException {
+//			final IDocument document = getDocument();
+//			int count = 0;
+//			while (offset > 0) {
+//				if (document.getChar(offset--) == '$') {
+//					count++;
+//				}
+//			}
+//			return count;
+//		}
+//		
+//		@Override
+//		public boolean matchesClose(final BracketLevel level, final int offset, final char character)
+//				throws BadLocationException {
+//			return (super.matchesClose(level, offset, character)
+//					&& (getLength() > 0 || countBackward(offset-1) == 2) );
+//		}
 		
 	}
 	
@@ -157,7 +157,7 @@ public class TexBracketLevel extends BracketLevel {
 	}
 	
 	
-	public TexBracketLevel(final IDocument doc, final String partitioning,
+	public WikitextBracketLevel(final IDocument doc, final String partitioning,
 			final List<LinkedPosition> positions, final int mode) {
 		super(doc, partitioning, positions, mode);
 	}

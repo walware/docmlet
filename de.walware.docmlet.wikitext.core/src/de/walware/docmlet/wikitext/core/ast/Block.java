@@ -13,12 +13,50 @@ package de.walware.docmlet.wikitext.core.ast;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+
+import de.walware.ecommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 
 
-public final class Block extends ContainerNode {
+public abstract class Block extends ContainerNode {
+	
+	
+	static final class TextBlock extends Block {
+		
+		
+		private final ImList<? extends IRegion> textRegions;
+		
+		TextBlock(final WikitextAstNode parent, final int offset, final BlockType blockType,
+				final String label, final ImList<? extends IRegion> textRegions) {
+			super(parent, offset, blockType, label);
+			this.textRegions= textRegions;
+		}
+		
+		
+		@Override
+		public ImList<? extends IRegion> getTextRegions() {
+			return this.textRegions;
+		}
+		
+	}
+	
+	static final class Common extends Block {
+		
+		Common(final WikitextAstNode parent, final int offset, final BlockType blockType,
+				final String label) {
+			super(parent, offset, blockType, label);
+		}
+		
+		
+		@Override
+		public ImList<? extends IRegion> getTextRegions() {
+			return null;
+		}
+		
+	}
 	
 	
 	private final BlockType blockType;
@@ -26,7 +64,7 @@ public final class Block extends ContainerNode {
 	private final String label;
 	
 	
-	public Block(final WikitextAstNode parent, final int offset, final BlockType blockType,
+	private Block(final WikitextAstNode parent, final int offset, final BlockType blockType,
 			final String label) {
 		super(parent, offset, offset);
 		
@@ -48,6 +86,8 @@ public final class Block extends ContainerNode {
 	public String getLabel() {
 		return this.label;
 	}
+	
+	public abstract ImList<? extends IRegion> getTextRegions();
 	
 	
 	@Override

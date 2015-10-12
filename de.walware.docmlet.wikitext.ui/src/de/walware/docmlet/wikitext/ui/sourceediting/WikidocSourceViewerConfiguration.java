@@ -43,6 +43,7 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssistComputerRegistry;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssistProcessor;
 import de.walware.ecommons.preferences.PreferencesUtil;
+import de.walware.ecommons.text.ICharPairMatcher;
 import de.walware.ecommons.text.IIndentSettings;
 import de.walware.ecommons.text.core.sections.IDocContentSections;
 import de.walware.ecommons.text.ui.presentation.ITextPresentationConstants;
@@ -50,8 +51,11 @@ import de.walware.ecommons.text.ui.presentation.ITextPresentationConstants;
 import de.walware.docmlet.wikitext.core.IWikitextCoreAccess;
 import de.walware.docmlet.wikitext.core.WikitextCore;
 import de.walware.docmlet.wikitext.core.source.IWikitextDocumentConstants;
+import de.walware.docmlet.wikitext.core.source.MarkupBracketPairMatcher;
+import de.walware.docmlet.wikitext.core.source.WikitextHeuristicTokenScanner;
 import de.walware.docmlet.wikitext.internal.ui.WikitextUIPlugin;
 import de.walware.docmlet.wikitext.internal.ui.sourceediting.DocQuickOutlineInformationProvider;
+import de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupAutoEditStrategy;
 import de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupDamagerRepairer;
 import de.walware.docmlet.wikitext.internal.ui.sourceediting.MarkupDoubleClickStrategy;
 import de.walware.docmlet.wikitext.internal.ui.sourceediting.WikitextContentAssistProcessor;
@@ -72,7 +76,7 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	
 	protected ITextDoubleClickStrategy doubleClickStrategy;
 	
-//	private WikidocAutoEditStrategy autoEditStrategy;
+	private MarkupAutoEditStrategy autoEditStrategy;
 	
 	private IWikitextCoreAccess coreAccess;
 	
@@ -145,18 +149,18 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	@Override
 	public List<ISourceEditorAddon> getAddOns() {
 		final List<ISourceEditorAddon> addons= super.getAddOns();
-//		if (this.autoEditStrategy != null) {
-//			addons.add(this.autoEditStrategy);
-//		}
+		if (this.autoEditStrategy != null) {
+			addons.add(this.autoEditStrategy);
+		}
 		return addons;
 	}
 	
 	@Override
 	public void handleSettingsChanged(final Set<String> groupIds, final Map<String, Object> options) {
 		super.handleSettingsChanged(groupIds, options);
-//		if (this.autoEditStrategy != null) {
-//			this.autoEditStrategy.fSettings.updateSettings();
-//		}
+		if (this.autoEditStrategy != null) {
+			this.autoEditStrategy.getSettings().handleSettingsChanged(groupIds, options);
+		}
 		if (groupIds.contains(WikitextEditingSettings.TEXTSTYLE_CONFIG_QUALIFIER)) {
 			final MarkupTokenScanner scanner= (MarkupTokenScanner) getScanner(
 					IWikitextDocumentConstants.WIKIDOC_DEFAULT_CONTENT_TYPE );
@@ -172,10 +176,11 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	}
 	
 	
-//	@Override
-//	public ICharPairMatcher createPairMatcher() {
-//		return new WikitextBracketPairMatcher();
-//	}
+	@Override
+	public ICharPairMatcher createPairMatcher() {
+		return new MarkupBracketPairMatcher(
+				WikitextHeuristicTokenScanner.create(getDocumentContentInfo()) );
+	}
 	
 	@Override
 	public ITextDoubleClickStrategy getDoubleClickStrategy(final ISourceViewer sourceViewer, final String contentType) {
@@ -212,18 +217,18 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	
 	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(final ISourceViewer sourceViewer, final String contentType) {
-//		if (getSourceEditor() == null) {
+		if (getSourceEditor() == null) {
 			return super.getAutoEditStrategies(sourceViewer, contentType);
-//		}
-//		if (this.autoEditStrategy == null) {
-//			this.autoEditStrategy= createAutoEditStrategy();
-//		}
-//		return new IAutoEditStrategy[] { this.autoEditStrategy };
+		}
+		if (this.autoEditStrategy == null) {
+			this.autoEditStrategy= createAutoEditStrategy();
+		}
+		return new IAutoEditStrategy[] { this.autoEditStrategy };
 	}
 	
-//	protected WikidocAutoEditStrategy createAutoEditStrategy() {
-//		return new WikidocAutoEditStrategy(this.coreAccess, getSourceEditor());
-//	}
+	protected MarkupAutoEditStrategy createAutoEditStrategy() {
+		return new MarkupAutoEditStrategy(this.coreAccess, getSourceEditor());
+	}
 	
 	
 	@Override

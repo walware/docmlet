@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
 
+import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.HardWrapMode;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
 import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.text.ui.settings.AssistPreferences;
@@ -58,11 +59,12 @@ public class WikitextUIPreferenceInitializer extends AbstractPreferenceInitializ
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.MARKOCCURRENCES_ENABLED_PREF, Boolean.TRUE);
 		
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_BYDEFAULT_ENABLED_PREF, Boolean.TRUE);
-		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_TAB_ACTION_PREF, TabAction.INSERT_INDENT_LEVEL);
+		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_TAB_ACTION_PREF, TabAction.CORRECT_INDENT);
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF, Boolean.TRUE);
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, Boolean.TRUE);
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, Boolean.TRUE);
 		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, Boolean.TRUE);
+		PreferencesUtil.setPrefValue(scope, WikitextEditingSettings.SMARTINSERT_HARDWRAP_MODE_PREF, HardWrapMode.MERGE);
 		
 		PreferencesUtil.setPrefValue(scope, WikitextEditorBuild.PROBLEMCHECKING_ENABLED_PREF, Boolean.TRUE);
 		

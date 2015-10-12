@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ICellEditorListener;
@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -60,51 +59,51 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	
 	private class LabelEditing extends EditingSupport {
 		
-		private final TextCellEditor fCellEditor;
+		private final TextCellEditor cellEditor;
 		
-		private final EditableTextList fList;
+		private final EditableTextList list;
 		
-		private Object fLast;
-		private IStatusChangeListener fListener;
+		private Object last;
+		private IStatusChangeListener listener;
 		
 		public LabelEditing(final EditableTextList list) {
 			super(list.getViewer());
-			fList = list;
-			fCellEditor = new TextCellEditor(list.getViewer().getTable());
-			fCellEditor.addListener(new ICellEditorListener() {
+			this.list = list;
+			this.cellEditor = new TextCellEditor(list.getViewer().getTable());
+			this.cellEditor.addListener(new ICellEditorListener() {
 				@Override
 				public void editorValueChanged(final boolean oldValidState, final boolean newValidState) {
-					if (fListener == null) {
-						fListener = fStatusListener.newListener();
+					if (LabelEditing.this.listener == null) {
+						LabelEditing.this.listener = TexCodeStylePreferenceBlock.this.statusListener.newListener();
 					}
 					if (!newValidState) {
-						fListener.statusChanged(new Status(Status.ERROR, TexUI.PLUGIN_ID,
-								fCellEditor.getErrorMessage() ));
+						LabelEditing.this.listener.statusChanged(new Status(Status.ERROR, TexUI.PLUGIN_ID,
+								LabelEditing.this.cellEditor.getErrorMessage() ));
 					}
 					else {
-						fListener.statusChanged(Status.OK_STATUS);
+						LabelEditing.this.listener.statusChanged(Status.OK_STATUS);
 					}
 				}
 				@Override
 				public void applyEditorValue() {
-					fLast = null;
-					if (fListener != null) {
-						fStatusListener.removeListener(fListener);
-						fListener = null;
+					LabelEditing.this.last = null;
+					if (LabelEditing.this.listener != null) {
+						TexCodeStylePreferenceBlock.this.statusListener.removeListener(LabelEditing.this.listener);
+						LabelEditing.this.listener = null;
 					}
 				}
 				@Override
 				public void cancelEditor() {
-					if (fLast == "") { //$NON-NLS-1$
-						fList.applyChange("", null); //$NON-NLS-1$
+					if (LabelEditing.this.last == "") { //$NON-NLS-1$
+						LabelEditing.this.list.applyChange("", null); //$NON-NLS-1$
 					}
-					if (fListener != null) {
-						fStatusListener.removeListener(fListener);
-						fListener = null;
+					if (LabelEditing.this.listener != null) {
+						TexCodeStylePreferenceBlock.this.statusListener.removeListener(LabelEditing.this.listener);
+						LabelEditing.this.listener = null;
 					}
 				}
 			});
-			fCellEditor.setValidator(new ICellEditorValidator() {
+			this.cellEditor.setValidator(new ICellEditorValidator() {
 				@Override
 				public String isValid(final Object value) {
 					final String s = (String) value;
@@ -128,45 +127,45 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 		
 		@Override
 		protected CellEditor getCellEditor(final Object element) {
-			return fCellEditor;
+			return this.cellEditor;
 		}
 		
 		@Override
 		protected Object getValue(final Object element) {
-			fLast = element;
+			this.last = element;
 			return element;
 		}
 		
 		@Override
 		protected void setValue(final Object element, final Object value) {
 			if (value != null) {
-				fList.applyChange(element, (value != "") ? value : null); //$NON-NLS-1$
+				this.list.applyChange(element, (value != "") ? value : null); //$NON-NLS-1$
 			}
 		}
 		
 	}
 	
 	
-	private TexCodeStyleSettings fModel;
+	private TexCodeStyleSettings model;
 	
-	private IndentSettingsUI fStdIndentSettings;
-	private Text fIndentBlockDepthControl;
-	private Text fIndentEnvDepthControl;
-	private EditableTextList fIndentEnvLabelsControl;
+	private IndentSettingsUI stdIndentSettings;
+	private Text indentBlockDepthControl;
+	private Text indentEnvDepthControl;
+	private EditableTextList indentEnvLabelsControl;
 	
-	private final CombineStatusChangeListener fStatusListener;
+	private final CombineStatusChangeListener statusListener;
 	
 	
 	public TexCodeStylePreferenceBlock(final IProject project, final IStatusChangeListener statusListener) {
 		super(project);
-		fStatusListener = new CombineStatusChangeListener(statusListener);
-		setStatusListener(fStatusListener);
+		this.statusListener = new CombineStatusChangeListener(statusListener);
+		setStatusListener(this.statusListener);
 	}
 	
 	
 	@Override
 	protected void createBlockArea(final Composite pageComposite) {
-		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
+		final Map<Preference<?>, String> prefs = new HashMap<>();
 		
 		prefs.put(TexCodeStyleSettings.TAB_SIZE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);
 		prefs.put(TexCodeStyleSettings.INDENT_DEFAULT_TYPE_PREF, TexCodeStyleSettings.INDENT_GROUP_ID);
@@ -179,18 +178,18 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 		
 		setupPreferenceManager(prefs);
 		
-		fModel = new TexCodeStyleSettings(0);
-		fStdIndentSettings = new IndentSettingsUI();
+		this.model = new TexCodeStyleSettings(0);
+		this.stdIndentSettings = new IndentSettingsUI();
 		
 		final Composite mainComposite = new Composite(pageComposite, SWT.NONE);
 		mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		mainComposite.setLayout((LayoutUtil.applyCompositeDefaults(new GridLayout(), 2)));
+		mainComposite.setLayout((LayoutUtil.createCompositeGrid(2)));
 		
 		final TabFolder folder = new TabFolder(mainComposite, SWT.NONE);
 		folder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		{	final TabItem item = new TabItem(folder, SWT.NONE);
-			item.setText(fStdIndentSettings.getGroupLabel());
+			item.setText(this.stdIndentSettings.getGroupLabel());
 			item.setControl(createIndentControls(folder));
 		}
 		{	final TabItem item = new TabItem(folder, SWT.NONE);
@@ -204,16 +203,16 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	
 	private Control createIndentControls(final Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(LayoutUtil.applyTabDefaults(new GridLayout(), 2));
+		composite.setLayout(LayoutUtil.createTabGrid(2));
 		
-		fStdIndentSettings.createControls(composite);
+		this.stdIndentSettings.createControls(composite);
 		LayoutUtil.addSmallFiller(composite, false);
 		
 		final Composite depthComposite = new Composite(composite, SWT.NONE);
 		depthComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		depthComposite.setLayout(LayoutUtil.applyCompositeDefaults(new GridLayout(), 4));
-		fIndentBlockDepthControl = createIndentDepthLine(depthComposite, Messages.CodeStyle_Indent_IndentInBlocks_label);
-		fIndentEnvDepthControl = createIndentDepthLine(depthComposite, Messages.CodeStyle_Indent_IndentInEnvs_label);
+		depthComposite.setLayout(LayoutUtil.createCompositeGrid(4));
+		this.indentBlockDepthControl = createIndentDepthLine(depthComposite, Messages.CodeStyle_Indent_IndentInBlocks_label);
+		this.indentEnvDepthControl = createIndentDepthLine(depthComposite, Messages.CodeStyle_Indent_IndentInEnvs_label);
 		
 		{	final Label label = new Label(depthComposite, SWT.NONE);
 			final GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -221,14 +220,14 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 			label.setLayoutData(gd);
 			label.setText("Environments to be indented:");
 		}
-		fIndentEnvLabelsControl = new EditableTextList();
-		{	final Control control = fIndentEnvLabelsControl.create(depthComposite, new ViewerComparator());
+		this.indentEnvLabelsControl = new EditableTextList();
+		{	final Control control = this.indentEnvLabelsControl.create(depthComposite, new ViewerComparator());
 			final GridData gd = new GridData(SWT.FILL, SWT.FILL, false, true, 3, 1);
 			gd.horizontalIndent = LayoutUtil.defaultIndent();
 			control.setLayoutData(gd);
 			LayoutUtil.addGDDummy(depthComposite, true);
 		}
-		fIndentEnvLabelsControl.getColumn().setEditingSupport(new LabelEditing(fIndentEnvLabelsControl));
+		this.indentEnvLabelsControl.getColumn().setEditingSupport(new LabelEditing(this.indentEnvLabelsControl));
 		
 		LayoutUtil.addSmallFiller(depthComposite, false);
 		
@@ -245,7 +244,7 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 		gd.widthHint = LayoutUtil.hintWidth(textControl, 2);
 		textControl.setLayoutData(gd);
 		final Label typeControl = new Label(composite, SWT.LEFT);
-		typeControl.setText(fStdIndentSettings.getLevelUnitLabel());
+		typeControl.setText(this.stdIndentSettings.getLevelUnitLabel());
 		typeControl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
 		LayoutUtil.addGDDummy(composite);
@@ -255,48 +254,51 @@ public class TexCodeStylePreferenceBlock extends ManagedConfigurationBlock {
 	
 	private Control createLineControls(final Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(LayoutUtil.applyTabDefaults(new GridLayout(), 2));
+		composite.setLayout(LayoutUtil.createTabGrid(2));
 		
-		fStdIndentSettings.addLineWidth(composite);
+		this.stdIndentSettings.addLineWidth(composite);
 		
 		return composite;
 	}
 	
 	@Override
 	protected void addBindings(final DataBindingSupport db) {
-		fStdIndentSettings.addBindings(db, fModel);
+		this.stdIndentSettings.addBindings(db, this.model);
 		
 		db.getContext().bindValue(
-				SWTObservables.observeText(fIndentBlockDepthControl, SWT.Modify),
-				BeansObservables.observeValue(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_BLOCK_DEPTH_PROP),
+				WidgetProperties.text(SWT.Modify).observe(this.indentBlockDepthControl),
+				BeanProperties.value(TexCodeStyleSettings.INDENT_BLOCK_DEPTH_PROP)
+						.observe(db.getRealm(), this.model),
 				new UpdateValueStrategy().setAfterGetValidator(new IntegerValidator(1, 10, Messages.CodeStyle_Indent_IndentInBlocks_error_message)),
 				null );
 		db.getContext().bindValue(
-				SWTObservables.observeText(fIndentEnvDepthControl, SWT.Modify),
-				BeansObservables.observeValue(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_ENV_DEPTH_PROP),
+				WidgetProperties.text(SWT.Modify).observe(this.indentEnvDepthControl),
+				BeanProperties.value(TexCodeStyleSettings.INDENT_ENV_DEPTH_PROP)
+						.observe(db.getRealm(), this.model),
 				new UpdateValueStrategy().setAfterGetValidator(new IntegerValidator(1, 10, Messages.CodeStyle_Indent_IndentInEnvs_error_message)),
 				null );
 		
 		final WritableSet labels = new WritableSet(db.getRealm());
-		fIndentEnvLabelsControl.setInput(labels);
+		this.indentEnvLabelsControl.setInput(labels);
 		db.getContext().bindSet(
 				labels,
-				BeansObservables.observeSet(db.getRealm(), fModel, TexCodeStyleSettings.INDENT_ENV_LABELS_PROP) );
+				BeanProperties.set(TexCodeStyleSettings.INDENT_ENV_LABELS_PROP, String.class)
+						.observe(db.getRealm(), this.model) );
 	}
 	
 	@Override
 	protected void updateControls() {
-		fModel.load(this);
-		fModel.resetDirty();
+		this.model.load(this);
+		this.model.resetDirty();
 		getDataBinding().getContext().updateTargets();  // required for invalid target values
-		fIndentEnvLabelsControl.refresh();
+		this.indentEnvLabelsControl.refresh();
 	}
 	
 	@Override
 	protected void updatePreferences() {
-		if (fModel.isDirty()) {
-			fModel.resetDirty();
-			setPrefValues(fModel.toPreferencesMap());
+		if (this.model.isDirty()) {
+			this.model.resetDirty();
+			setPrefValues(this.model.toPreferencesMap());
 		}
 	}
 	

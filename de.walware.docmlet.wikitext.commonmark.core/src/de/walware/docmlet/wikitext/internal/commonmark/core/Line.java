@@ -16,8 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.regex.Matcher;
 
+import org.eclipse.jface.text.IRegion;
 
-public class Line {
+
+public class Line implements IRegion {
 	
 	
 	private final String text;
@@ -82,6 +84,7 @@ public class Line {
 	 * 
 	 * @return the line offset
 	 */
+	@Override
 	public int getOffset() {
 		return this.offset;
 	}
@@ -91,6 +94,7 @@ public class Line {
 	 * 
 	 * @return the length
 	 */
+	@Override
 	public int getLength() {
 		return this.text.length() + this.lineDelimiter.length();
 	}
@@ -153,11 +157,12 @@ public class Line {
 			throw new IllegalArgumentException("offset= " + offset);
 		}
 		if (length < 0 || length > this.text.length() - offset) {
-			throw new IllegalArgumentException("legth= " + offset);
+			throw new IllegalArgumentException("length= " + length);
 		}
 		final int offsetColumn= getColumn(offset);
 		return new Line(this.lineNumber, this.offset + offset, offsetColumn,
-				this.text.substring(offset, offset + length), this.lineDelimiter );
+				this.text.substring(offset, offset + length),
+				(offset + length == this.text.length()) ? this.lineDelimiter : "" );
 	}
 	
 	public Line segmentByIndent(final int indent) {

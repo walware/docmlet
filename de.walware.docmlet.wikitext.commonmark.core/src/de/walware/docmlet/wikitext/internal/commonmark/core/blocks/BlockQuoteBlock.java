@@ -38,6 +38,17 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 			">([ \t])?.*",
 			Pattern.DOTALL );
 	
+	public static final Pattern PATTERN= PROCESS_PATTERN;
+	
+	public static final int computeContentLineIndent(final Line line, final Matcher matcher) {
+		if (matcher.start(1) != -1) {
+			return line.getColumn(matcher.regionStart() + 2) - line.getColumn();
+		}
+		else {
+			return line.getColumn(matcher.regionStart() + 1) - line.getColumn();
+		}
+	}
+	
 	
 	private static class QuotedBlockLines extends FilterLineSequence {
 		
@@ -78,7 +89,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 				final Matcher matcher;
 				if (line.getIndent() < 4
 						&& (matcher= line.setupIndent(this.matcher)).matches() ) {
-					return line.segmentByIndent(computeIndent(line, matcher));
+					return line.segmentByIndent(computeContentLineIndent(line, matcher));
 				}
 				if (isLazyContinuation(line)) {
 					return line;
@@ -97,15 +108,6 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 				}
 			}
 			return false;
-		}
-		
-		private int computeIndent(final Line line, final Matcher matcher) {
-			if (matcher.start(1) != -1) {
-				return line.getColumn(matcher.regionStart() + 2) - line.getColumn();
-			}
-			else {
-				return line.getColumn(matcher.regionStart() + 1) - line.getColumn();
-			}
 		}
 		
 		private LineSequence createLookAhead(final Line line) {

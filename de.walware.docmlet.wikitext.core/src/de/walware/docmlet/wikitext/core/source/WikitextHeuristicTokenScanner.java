@@ -11,11 +11,24 @@
 
 package de.walware.docmlet.wikitext.core.source;
 
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+
 import de.walware.ecommons.text.BasicHeuristicTokenScanner;
 import de.walware.ecommons.text.core.sections.IDocContentSections;
 
 
 public class WikitextHeuristicTokenScanner extends BasicHeuristicTokenScanner {
+	
+	
+	public static boolean isEscaped(final IDocument document, int offset)
+			throws BadLocationException {
+		boolean escaped= false;
+		while (offset > 0 && document.getChar(--offset) == '\\') {
+			escaped= !escaped;
+		}
+		return escaped;
+	}
 	
 	
 	public static WikitextHeuristicTokenScanner create(final IDocContentSections documentContentInfo) {

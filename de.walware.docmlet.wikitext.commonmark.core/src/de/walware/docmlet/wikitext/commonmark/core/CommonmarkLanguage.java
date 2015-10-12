@@ -31,7 +31,9 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupConfig;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageExtension2;
 import de.walware.docmlet.wikitext.core.markup.MarkupParser2;
+import de.walware.docmlet.wikitext.core.source.IMarkupSourceFormatAdapter;
 import de.walware.docmlet.wikitext.core.source.MarkupEventPrinter;
+import de.walware.docmlet.wikitext.core.source.extdoc.IExtdocMarkupLanguage;
 import de.walware.docmlet.wikitext.internal.commonmark.core.Commonmark;
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkIdGenerationStrategy;
 import de.walware.docmlet.wikitext.internal.commonmark.core.ContentLineSequence;
@@ -41,10 +43,11 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.ProcessingContext;
 import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlockItem;
 import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks;
 import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.InlineParser;
+import de.walware.docmlet.wikitext.internal.commonmark.core.source.CommonmarkSourceFormatAdapter;
 
 
 public class CommonmarkLanguage extends MarkupLanguage implements IMarkupLanguage,
-		IMarkupLanguageExtension2 {
+		IMarkupLanguageExtension2, IExtdocMarkupLanguage {
 	
 	
 	protected static final String COMMONMARK_LANGUAGE_NAME= "CommonMark\u2002[StatET]"; //$NON-NLS-1$
@@ -206,6 +209,16 @@ public class CommonmarkLanguage extends MarkupLanguage implements IMarkupLanguag
 			this.validator= new WikitextProblemReporter();
 		}
 		return this.validator;
+	}
+	
+	private CommonmarkSourceFormatAdapter sourceAdapter;
+	
+	@Override
+	public IMarkupSourceFormatAdapter getSourceFormatAdapter() {
+		if (this.sourceAdapter == null) {
+			this.sourceAdapter= new CommonmarkSourceFormatAdapter();
+		}
+		return this.sourceAdapter;
 	}
 	
 	

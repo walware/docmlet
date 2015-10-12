@@ -49,6 +49,7 @@ import de.walware.docmlet.tex.core.source.LtxBracketPairMatcher;
 import de.walware.docmlet.tex.core.source.LtxDocumentContentInfo;
 import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;
+import de.walware.docmlet.tex.internal.ui.sourceediting.LtxAutoEditStrategy;
 import de.walware.docmlet.tex.internal.ui.sourceediting.LtxContentAssistProcessor;
 import de.walware.docmlet.tex.internal.ui.sourceediting.LtxQuickOutlineInformationProvider;
 import de.walware.docmlet.tex.ui.text.ITexTextStyles;
@@ -131,7 +132,7 @@ public class LtxSourceViewerConfiguration extends SourceEditorViewerConfiguratio
 	public void handleSettingsChanged(final Set<String> groupIds, final Map<String, Object> options) {
 		super.handleSettingsChanged(groupIds, options);
 		if (this.autoEditStrategy != null) {
-			this.autoEditStrategy.editorSettings.updateSettings();
+			this.autoEditStrategy.getSettings().handleSettingsChanged(groupIds, options);
 		}
 	}
 	

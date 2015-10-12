@@ -92,6 +92,19 @@
    </extension>
    
    <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="de.walware.docmlet.wikitext.expressions.isPartActive.WikidocEditor">
+         <with
+               variable="activePart">
+            <instanceof
+                  value="de.walware.docmlet.wikitext.ui.editors.IWikidocEditor">
+            </instanceof>
+         </with>
+      </definition>
+   </extension>
+   
+   <extension
          point="de.walware.ecommons.ltk.advancedContentAssist">
       <category
             id="markup"
@@ -157,6 +170,14 @@
             id="de.walware.docmlet.wikitext.preferencePages.Wikitext"
             name="%preferencePages_Wikitext_name"
             class="de.walware.docmlet.wikitext.internal.ui.config.WikitextBasePreferencePage">
+      </page>
+      <page
+            id="de.walware.docmlet.wikitext.preferencePages.WikitextCodeStyle"
+            category="de.walware.docmlet.wikitext.preferencePages.Wikitext"
+            name="%preferencePages_WikitextCodeStyle_name"
+            class="de.walware.docmlet.wikitext.internal.ui.config.WikitextCodeStylePreferencePage">
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceAppearance"/>
+         <keywordReference id="de.walware.ecommons.ltk.keywords.SourceFormatting"/>
       </page>
       <page
             id="de.walware.docmlet.wikitext.preferencePages.MarkupConfig"

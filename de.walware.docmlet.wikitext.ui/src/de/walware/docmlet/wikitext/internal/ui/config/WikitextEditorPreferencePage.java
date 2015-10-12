@@ -88,6 +88,7 @@ class WikitextEditorConfigurationBlock extends ManagedConfigurationBlock {
 		prefs.put(WikitextEditingSettings.SMARTINSERT_CLOSEPARENTHESIS_ENABLED_PREF, WikitextEditingSettings.SMARTINSERT_GROUP_ID);
 		prefs.put(WikitextEditingSettings.SMARTINSERT_CLOSEMATHDOLLAR_ENABLED_PREF, WikitextEditingSettings.SMARTINSERT_GROUP_ID);
 		prefs.put(WikitextEditingSettings.SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF, WikitextEditingSettings.SMARTINSERT_GROUP_ID);
+		prefs.put(WikitextEditingSettings.SMARTINSERT_HARDWRAP_MODE_PREF, WikitextEditingSettings.SMARTINSERT_GROUP_ID);
 		
 		prefs.put(WikitextEditingSettings.FOLDING_ENABLED_PREF, null);
 		prefs.put(WikitextEditingSettings.FOLDING_RESTORE_STATE_ENABLED_PREF, WikitextEditingSettings.FOLDING_SHARED_GROUP_ID);
@@ -169,7 +170,7 @@ class WikitextEditorConfigurationBlock extends ManagedConfigurationBlock {
 			this.smartInsertTabActionControl.setContentProvider(new ArrayContentProvider());
 			this.smartInsertTabActionControl.setLabelProvider(new SmartInsertSettingsUI.SettingsLabelProvider());
 			this.smartInsertTabActionControl.setInput(new TabAction[] {
-					TabAction.INSERT_TAB_CHAR, TabAction.INSERT_INDENT_LEVEL,
+					TabAction.INSERT_TAB_CHAR, TabAction.INSERT_TAB_LEVEL, TabAction.INSERT_INDENT_LEVEL, TabAction.CORRECT_INDENT,
 			});
 			LayoutUtil.addGDDummy(composite);
 		}
@@ -197,10 +198,6 @@ class WikitextEditorConfigurationBlock extends ManagedConfigurationBlock {
 		this.smartInsertHardWrapTextControl= createSmartInsertOption(composite,
 				Messages.EditorOptions_SmartInsert_HardWrapAuto_label,
 				Messages.EditorOptions_SmartInsert_HardWrapText_label, true );
-		
-//		fSmartInsertCloseSquareBracketsControl= createOption(composite, null, Messages.REditorOptions_SmartInsert_CloseSquare_label, true);
-//		fSmartInsertCloseSpecialControl= createOption(composite, null, Messages.REditorOptions_SmartInsert_ClosePercent_label, true);
-//		fSmartInsertCloseStringsControl= createOption(composite, null, Messages.REditorOptions_SmartInsert_CloseString_label, true);
 		
 		return composite;
 	}

@@ -18,10 +18,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
+import de.walware.ecommons.collections.ImCollections;
+import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.text.core.ILineInformation;
 
@@ -595,13 +599,26 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 				this.maxOffset );
 	}
 	
-	private LabelInfo updatePosition(final LabelInfo labelInfo) {
+	private LabelInfo updateOffsets(final LabelInfo labelInfo) {
 		if (labelInfo == null) {
 			return null;
 		}
 		return new LabelInfo(labelInfo.getLabel(),
 				this.explLocator.computeOffset(labelInfo.getOffset()),
 				this.explLocator.computeOffset(labelInfo.getEndOffset()) );
+	}
+	
+	private ImList<IRegion> updateOffsets(final List<? extends IRegion> regions) {
+		if (regions == null) {
+			return null;
+		}
+		final IRegion[] updated= new IRegion[regions.size()];
+		for (int i= 0; i < updated.length; i++) {
+			final IRegion region= regions.get(i);
+			final int offset= this.explLocator.computeOffset(region.getOffset());
+			updated[i]= new Region(offset, region.getLength());
+		}
+		return ImCollections.newList(updated);
 	}
 	
 	@Override
@@ -637,6 +654,10 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		}
 		this.lastOffset= beginOffset;
 		this.explLocator.setTo(beginOffset);
+		if (attributes instanceof TextBlockAttributes) {
+			final TextBlockAttributes textBlockAttributes= (TextBlockAttributes) attributes;
+			textBlockAttributes.setTextRegions(updateOffsets(textBlockAttributes.getTextRegions()));
+		}
 		this.builder.beginBlock(type, attributes);
 	}
 	
@@ -832,7 +853,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		}
 		if (attributes instanceof ImageByRefAttributes) {
 			final ImageByRefAttributes refAttributes= (ImageByRefAttributes) attributes;
-			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
+			refAttributes.setReferenceLabel(updateOffsets((refAttributes).getReferenceLabel()));
 		}
 		this.explLocator.setTo(beginOffset, endOffset);
 		this.builder.image(attributes, url);
@@ -857,11 +878,11 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 		}
 		if (attributes instanceof LinkRefDefinitionAttributes) {
 			final LinkRefDefinitionAttributes refAttributes= (LinkRefDefinitionAttributes) attributes;
-			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
+			refAttributes.setReferenceLabel(updateOffsets((refAttributes).getReferenceLabel()));
 		}
 		if (attributes instanceof LinkByRefAttributes) {
 			final LinkByRefAttributes refAttributes= (LinkByRefAttributes) attributes;
-			refAttributes.setReferenceLabel(updatePosition((refAttributes).getReferenceLabel()));
+			refAttributes.setReferenceLabel(updateOffsets((refAttributes).getReferenceLabel()));
 		}
 		this.lastOffset= endOffset;
 		this.explLocator.setTo(beginOffset, endOffset);

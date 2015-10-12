@@ -46,6 +46,9 @@ public class WikitextAstVisitor {
 	public void visit(final Label node) throws InvocationTargetException {
 	}
 	
+	public void visit(final Control node) throws InvocationTargetException {
+	}
+	
 	
 	public void visit(final Verbatim node) throws InvocationTargetException {
 	}

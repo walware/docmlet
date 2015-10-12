@@ -23,6 +23,8 @@ public class Messages extends NLS {
 	public static String Proposal_RenameInFile_label;
 	public static String Proposal_RenameInFile_description;
 	
+	public static String CorrectLineWrap_task;
+	
 	
 	static {
 		NLS.initializeMessages(Messages.class.getName(), Messages.class);

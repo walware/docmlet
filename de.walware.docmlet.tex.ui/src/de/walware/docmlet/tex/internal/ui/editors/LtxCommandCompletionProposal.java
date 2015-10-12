@@ -44,6 +44,7 @@ import de.walware.docmlet.tex.core.commands.Argument;
 import de.walware.docmlet.tex.core.commands.IEnvDefinitions;
 import de.walware.docmlet.tex.core.commands.TexCommand;
 import de.walware.docmlet.tex.core.source.LtxHeuristicTokenScanner;
+import de.walware.docmlet.tex.internal.ui.sourceediting.TexBracketLevel;
 import de.walware.docmlet.tex.ui.TexUI;
 import de.walware.docmlet.tex.ui.TexUIResources;
 

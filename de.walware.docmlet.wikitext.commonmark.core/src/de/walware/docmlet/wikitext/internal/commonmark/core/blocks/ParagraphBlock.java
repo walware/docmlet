@@ -15,7 +15,6 @@ package de.walware.docmlet.wikitext.internal.commonmark.core.blocks;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
@@ -23,6 +22,7 @@ import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.collections.ImIdentityList;
 import de.walware.ecommons.collections.ImList;
 
+import de.walware.docmlet.wikitext.core.source.TextBlockAttributes;
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkLocator;
 import de.walware.docmlet.wikitext.internal.commonmark.core.Line;
 import de.walware.docmlet.wikitext.internal.commonmark.core.LineSequence;
@@ -114,7 +114,7 @@ public class ParagraphBlock extends SourceBlock {
 						|| !isEmptyParagraph(inlines) )) {
 			locator.setBlockBegin(blockItem);
 			if (asBlock) {
-				builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+				builder.beginBlock(BlockType.PARAGRAPH, new TextBlockAttributes(lines));
 			}
 			InlineParser.emit(context, inlines, locator, builder);
 			

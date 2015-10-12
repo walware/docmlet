@@ -17,10 +17,13 @@ import de.walware.docmlet.tex.core.model.TexModel;
 
 import de.walware.eutils.yaml.core.model.YamlModel;
 
+import de.walware.docmlet.wikitext.core.WikitextProblemReporter;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
+import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageExtension2;
+import de.walware.docmlet.wikitext.core.source.IMarkupSourceFormatAdapter;
 
 
-public interface IExtdocMarkupLanguage extends IMarkupLanguage {
+public interface IExtdocMarkupLanguage extends IMarkupLanguage, IMarkupLanguageExtension2 {
 	
 	
 	String EMBEDDED_HTML= "Html"; //$NON-NLS-1$
@@ -58,5 +61,10 @@ public interface IExtdocMarkupLanguage extends IMarkupLanguage {
 	IExtdocMarkupLanguage clone();
 	@Override
 	IExtdocMarkupLanguage clone(String scopeKey, int mode);
+	
+	
+	WikitextProblemReporter getProblemReporter();
+	
+	IMarkupSourceFormatAdapter getSourceFormatAdapter();
 	
 }

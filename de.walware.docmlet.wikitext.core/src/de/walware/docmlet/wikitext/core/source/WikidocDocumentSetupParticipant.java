@@ -20,10 +20,6 @@ import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
 public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetupParticipant1 {
 	
 	
-	private static final String[] CONTENT_TYPES= IWikitextDocumentConstants.WIKIDOC_CONTENT_TYPES.toArray(
-			new String[IWikitextDocumentConstants.WIKIDOC_CONTENT_TYPES.size()] );
-	
-	
 	public WikidocDocumentSetupParticipant(final IMarkupLanguage markupLanguage) {
 		this(markupLanguage, false);
 	}
@@ -41,9 +37,9 @@ public class WikidocDocumentSetupParticipant extends MarkupLanguageDocumentSetup
 	
 	@Override
 	protected IMarkupLanguagePartitioner createDocumentPartitioner(final IMarkupLanguage markupLanguage) {
-		return new WikitextPartitioner(
+		return new WikitextPartitioner(getPartitioningId(),
 				new WikitextPartitionNodeScanner(markupLanguage, getMarkupLanguageMode()),
-				CONTENT_TYPES );
+				IWikitextDocumentConstants.WIKIDOC_CONTENT_TYPES );
 	}
 	
 }

@@ -169,7 +169,7 @@ class TexEditorConfigurationBlock extends ManagedConfigurationBlock {
 			this.smartInsertTabActionControl.setContentProvider(new ArrayContentProvider());
 			this.smartInsertTabActionControl.setLabelProvider(new SmartInsertSettingsUI.SettingsLabelProvider());
 			this.smartInsertTabActionControl.setInput(new TabAction[] {
-					TabAction.INSERT_TAB_CHAR, TabAction.INSERT_INDENT_LEVEL,
+					TabAction.INSERT_TAB_CHAR, TabAction.INSERT_TAB_LEVEL, TabAction.INSERT_INDENT_LEVEL,
 			});
 			LayoutUtil.addGDDummy(composite, true);
 		}

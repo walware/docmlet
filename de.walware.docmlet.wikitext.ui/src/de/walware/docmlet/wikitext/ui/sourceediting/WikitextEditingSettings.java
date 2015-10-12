@@ -13,6 +13,7 @@ package de.walware.docmlet.wikitext.ui.sourceediting;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.HardWrapMode;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
 import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.Preference.BooleanPref;
@@ -62,7 +63,9 @@ public class WikitextEditingSettings {
 			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.CloseMathDollar.enabled"); //$NON-NLS-1$
 	
 	public static final Preference<Boolean> SMARTINSERT_HARDWRAP_TEXT_ENABLED_PREF= new BooleanPref(
-			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.HardWrap.enabled"); //$NON-NLS-1$
+			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.HardWrapText.enabled"); //$NON-NLS-1$
+	public static final Preference<HardWrapMode> SMARTINSERT_HARDWRAP_MODE_PREF= new EnumPref<>(
+			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.HardWrap.mode", HardWrapMode.class); //$NON-NLS-1$
 	
 	
 	public static final String TEXTSTYLE_CONFIG_QUALIFIER= WikitextUI.PLUGIN_ID + "/textstyle/Wikitext"; //$NON-NLS-1$

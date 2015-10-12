@@ -32,6 +32,7 @@ import de.walware.docmlet.wikitext.core.source.ImageByRefAttributes;
 import de.walware.docmlet.wikitext.core.source.LabelInfo;
 import de.walware.docmlet.wikitext.core.source.LinkByRefAttributes;
 import de.walware.docmlet.wikitext.core.source.LinkRefDefinitionAttributes;
+import de.walware.docmlet.wikitext.core.source.TextBlockAttributes;
 
 
 public class WikidocParser extends DocumentBuilder {
@@ -196,8 +197,12 @@ public class WikidocParser extends DocumentBuilder {
 				this.embeddedList.add(embedded);
 			}
 		}
+		else if (attributes instanceof TextBlockAttributes) {
+			node= new Block.TextBlock(this.currentNode, this.locator2.getBeginOffset(),
+					type, attributes.getId(), ((TextBlockAttributes) attributes).getTextRegions() );
+		}
 		else {
-			node= new Block(this.currentNode, this.locator2.getBeginOffset(),
+			node= new Block.Common(this.currentNode, this.locator2.getBeginOffset(),
 					type, attributes.getId() );
 		}
 		enterNode(node);
@@ -287,7 +292,7 @@ public class WikidocParser extends DocumentBuilder {
 			}
 			catch (final IllegalArgumentException e) {}
 		}
-		characters(null);
+//		characters(null);
 	}
 	
 	@Override
@@ -370,9 +375,10 @@ public class WikidocParser extends DocumentBuilder {
 	
 	@Override
 	public void lineBreak() {
-		if (this.collectText > 0 && this.currentText != null) {
-			this.textBuilder.append('\n');
-		}
+		finishText();
+		addChildNode(new Control(this.currentNode,
+				this.locator2.getBeginOffset(), this.locator2.getEndOffset(),
+				Control.LINE_BREAK ));
 	}
 	
 	@Override

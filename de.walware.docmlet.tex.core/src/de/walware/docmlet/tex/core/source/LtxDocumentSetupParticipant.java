@@ -23,10 +23,6 @@ import de.walware.ecommons.text.core.treepartitioner.TreePartitioner;
 public class LtxDocumentSetupParticipant extends PartitionerDocumentSetupParticipant {
 	
 	
-	private static final String[] CONTENT_TYPES= ITexDocumentConstants.LTX_CONTENT_TYPES.toArray(
-			new String[ITexDocumentConstants.LTX_CONTENT_TYPES.size()] );
-	
-	
 	private final boolean templateMode;
 	
 	
@@ -46,7 +42,9 @@ public class LtxDocumentSetupParticipant extends PartitionerDocumentSetupPartici
 	
 	@Override
 	protected IDocumentPartitioner createDocumentPartitioner() {
-		return new TreePartitioner(new LtxPartitionNodeScanner(this.templateMode), CONTENT_TYPES);
+		return new TreePartitioner(getPartitioningId(),
+				new LtxPartitionNodeScanner(this.templateMode),
+				ITexDocumentConstants.LTX_CONTENT_TYPES );
 	}
 	
 }

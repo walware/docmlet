@@ -11,6 +11,8 @@
 
 package de.walware.docmlet.wikitext.core.source;
 
+import java.util.List;
+
 import de.walware.ecommons.text.core.treepartitioner.TreePartitioner;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
@@ -20,9 +22,9 @@ public class WikitextPartitioner extends TreePartitioner
 		implements IMarkupLanguagePartitioner {
 	
 	
-	public WikitextPartitioner(final WikitextPartitionNodeScanner scanner,
-			final String[] legalContentTypes) {
-		super(scanner, legalContentTypes);
+	public WikitextPartitioner(final String partitioningId,
+			final WikitextPartitionNodeScanner scanner, final List<String> legalContentTypes) {
+		super(partitioningId, scanner, legalContentTypes);
 	}
 	
 	

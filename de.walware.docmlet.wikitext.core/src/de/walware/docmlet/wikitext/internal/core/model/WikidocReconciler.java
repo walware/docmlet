@@ -42,7 +42,6 @@ import de.walware.docmlet.wikitext.core.ast.SourceComponent;
 import de.walware.docmlet.wikitext.core.ast.WikidocParser;
 import de.walware.docmlet.wikitext.core.ast.WikitextAstInfo;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
-import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageExtension2;
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguageManager1;
 import de.walware.docmlet.wikitext.core.model.EmbeddingReconcileItem;
 import de.walware.docmlet.wikitext.core.model.IWikidocModelInfo;
@@ -50,6 +49,7 @@ import de.walware.docmlet.wikitext.core.model.IWikidocSuModelContainerEmbeddedEx
 import de.walware.docmlet.wikitext.core.model.IWikitextSourceUnit;
 import de.walware.docmlet.wikitext.core.model.WikidocSuModelContainer;
 import de.walware.docmlet.wikitext.core.source.MarkupLanguageDocumentSetupParticipant;
+import de.walware.docmlet.wikitext.core.source.extdoc.IExtdocMarkupLanguage;
 
 
 public class WikidocReconciler {
@@ -156,8 +156,8 @@ public class WikidocReconciler {
 					problemRequestor= adapter.createProblemRequestor();
 					if (problemRequestor != null) {
 						
-						if (data.ast.getMarkupLanguage() instanceof IMarkupLanguageExtension2) {
-							((IMarkupLanguageExtension2) data.ast.getMarkupLanguage()).getProblemReporter()
+						if (data.ast.getMarkupLanguage() instanceof IExtdocMarkupLanguage) {
+							((IExtdocMarkupLanguage) data.ast.getMarkupLanguage()).getProblemReporter()
 									.run(su, data.content, data.newModel,
 											problemRequestor, flags, monitor );
 						}

@@ -184,21 +184,21 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 	 * @see #getBracketType(char)
 	 */
 	public int[] computeBracketBalance(int backwardOffset, int forwardOffset, final int[] initial, final int searchType) {
-		final int[] compute= new int[3];
+		final int[] balance= new int[3];
 		final BracketBalanceCondition condition= new BracketBalanceCondition();
 		int breakType= -1;
 		ITER_BACKWARD : while (--backwardOffset >= 0) {
 			backwardOffset= scanBackward(backwardOffset, -1, condition);
 			if (backwardOffset != NOT_FOUND) {
 				if (condition.open) {
-					compute[condition.type]++;
-					if (condition.type != searchType && compute[condition.type] > 0) {
+					balance[condition.type]++;
+					if (condition.type != searchType && balance[condition.type] > 0) {
 						breakType= condition.type;
 						break ITER_BACKWARD;
 					}
 				}
 				else {
-					compute[condition.type]--;
+					balance[condition.type]--;
 				}
 			}
 			else {
@@ -206,22 +206,22 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 			}
 		}
 		final int bound= this.fDocument.getLength();
-		for (int i= 0; i < compute.length; i++) {
-			if (compute[i] < 0) {
-				compute[i]= 0;
+		for (int i= 0; i < balance.length; i++) {
+			if (balance[i] < 0) {
+				balance[i]= 0;
 			}
-			compute[i]= compute[i]+initial[i];
+			balance[i]+= initial[i];
 		}
 		ITER_FORWARD : while (forwardOffset < bound) {
 			forwardOffset= scanForward(forwardOffset, bound, condition);
 			if (forwardOffset != NOT_FOUND) {
 				if (condition.open) {
-					compute[condition.type]++;
+					balance[condition.type]++;
 				}
 				else {
-					compute[condition.type]--;
+					balance[condition.type]--;
 				}
-				if (breakType >= 0 && compute[breakType] == 0) {
+				if (breakType >= 0 && balance[breakType] == 0) {
 					break ITER_FORWARD;
 				}
 				forwardOffset++;
@@ -230,7 +230,7 @@ public class LtxHeuristicTokenScanner extends BasicHeuristicTokenScanner {
 				break ITER_FORWARD;
 			}
 		}
-		return compute;
+		return balance;
 	}
 	
 }
