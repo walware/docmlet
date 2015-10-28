@@ -13,7 +13,7 @@ package de.walware.docmlet.tex.core.commands;
 
 import static de.walware.docmlet.tex.core.commands.TexCommand.C2_STYLE_MATH;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IMathStylingDefinitions {

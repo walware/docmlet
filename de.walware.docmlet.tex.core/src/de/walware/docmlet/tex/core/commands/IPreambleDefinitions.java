@@ -17,7 +17,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C2_PREAMBLE_MISC;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_PREAMBLE_CONTROLDEF_COMMAND;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_PREAMBLE_CONTROLDEF_ENV;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IPreambleDefinitions {

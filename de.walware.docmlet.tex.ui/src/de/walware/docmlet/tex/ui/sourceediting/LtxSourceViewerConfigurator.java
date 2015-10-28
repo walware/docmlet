@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 
+import de.walware.jcommons.collections.ImCollections;
+
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
 import de.walware.ecommons.preferences.IPreferenceAccess;
 
@@ -36,10 +38,9 @@ public class LtxSourceViewerConfigurator extends SourceEditorViewerConfigurator
 		implements ITexCoreAccess, PropertyChangeListener {
 	
 	
-	private static final Set<String> RESET_GROUP_IDS = new HashSet<String>(Arrays.asList(new String[] {
-			TexCodeStyleSettings.INDENT_GROUP_ID,
-//			TaskTagsPreferences.GROUP_ID,
-	}));
+	private static final Set<String> RESET_GROUP_IDS= new HashSet<>(ImCollections.newList(
+			TexCodeStyleSettings.INDENT_GROUP_ID ));
+//			TaskTagsPreferences.GROUP_ID ));
 	
 	
 	private ITexCoreAccess fSourceCoreAccess;

@@ -32,10 +32,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
-import de.walware.ecommons.collections.CollectionUtils;
-import de.walware.ecommons.collections.IdentityCollection;
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.CollectionUtils;
+import de.walware.jcommons.collections.IdentityCollection;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.ui.actions.ListContributionItem;
 import de.walware.ecommons.ui.actions.SimpleContributionItem;
 import de.walware.ecommons.ui.util.MessageUtil;
@@ -154,12 +156,12 @@ public class RunConfigsDropdownContribution extends ListContributionItem
 			return;
 		}
 		
-		final ILaunchConfiguration[] configs= manager.getAvailableConfigs();
+		final ImList<ILaunchConfiguration> configs= manager.getAvailableConfigs();
 		final Data data= new Data(manager, file);
 		
 		int i= 0;
-		for (int num= 1; i < configs.length; i++, num++) {
-			final ILaunchConfiguration configuration= configs[i];
+		for (int num= 1; i < configs.size(); i++, num++) {
+			final ILaunchConfiguration configuration= configs.get(i);
 			
 			final ImageDescriptor icon= manager.getImageDescriptor(configuration);
 			String mnemonic= null;

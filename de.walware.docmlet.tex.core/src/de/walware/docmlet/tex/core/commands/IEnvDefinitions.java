@@ -28,7 +28,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_ENV_MATH_DISPLA
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_ENV_MATH_INLINE_BEGIN;
 import static de.walware.docmlet.tex.core.commands.TexCommand.VERBATIM_INLINE;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IEnvDefinitions {

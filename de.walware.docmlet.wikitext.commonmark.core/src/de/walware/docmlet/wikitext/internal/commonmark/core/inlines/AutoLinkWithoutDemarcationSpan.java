@@ -15,7 +15,7 @@ package de.walware.docmlet.wikitext.internal.commonmark.core.inlines;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import com.google.common.net.UrlEscapers;
 

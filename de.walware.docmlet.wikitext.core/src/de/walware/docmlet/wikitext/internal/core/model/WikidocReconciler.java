@@ -22,13 +22,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.AbstractDocument;
 
+import de.walware.jcommons.string.InternStringCache;
+
 import de.walware.ecommons.ltk.IModelManager;
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.LTK;
 import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.core.model.IWorkspaceSourceUnit;
 import de.walware.ecommons.ltk.core.util.AstPrinter;
-import de.walware.ecommons.string.InternStringCache;
 
 import de.walware.docmlet.tex.core.model.TexModel;
 

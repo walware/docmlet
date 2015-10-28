@@ -23,7 +23,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.menus.UIElement;
 
-import de.walware.ecommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.ui.actions.AbstractScopeHandler;
 import de.walware.ecommons.ui.util.MessageUtil;
 import de.walware.ecommons.ui.util.UIAccess;
@@ -121,7 +123,7 @@ public class RunActiveConfigScopeHandler extends AbstractScopeHandler implements
 	}
 	
 	@Override
-	public void availableConfigChanged(final ILaunchConfiguration[] configs) {
+	public void availableConfigChanged(final ImList<ILaunchConfiguration> configs) {
 	}
 	
 	@Override

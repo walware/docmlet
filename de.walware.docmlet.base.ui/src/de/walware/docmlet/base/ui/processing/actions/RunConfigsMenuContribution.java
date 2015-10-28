@@ -40,8 +40,10 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
-import de.walware.ecommons.collections.IdentitySet;
-import de.walware.ecommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.IdentitySet;
+import de.walware.jcommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.ui.actions.ListContributionItem;
 import de.walware.ecommons.ui.actions.SimpleContributionItem;
 import de.walware.ecommons.ui.actions.SubMenuContributionItem;
@@ -392,7 +394,7 @@ public class RunConfigsMenuContribution extends ListContributionItem
 			return;
 		}
 		
-		final ILaunchConfiguration[] configs= manager.getAvailableConfigs();
+		final ImList<ILaunchConfiguration> configs= manager.getAvailableConfigs();
 		final Data data= new Data(window, this.util.getServiceLocator(), file, manager);
 		
 		if (getMode() != ActionUtil.ACTIVE_EDITOR_MODE && data.activeConfig != null) {
@@ -402,8 +404,8 @@ public class RunConfigsMenuContribution extends ListContributionItem
 		}
 		
 		int i= 0;
-		for (int num= 1; i < configs.length; i++, num++) {
-			final ILaunchConfiguration configuration= configs[i];
+		for (int num= 1; i < configs.size(); i++, num++) {
+			final ILaunchConfiguration configuration= configs.get(i);
 			
 			final Image image= manager.getImage(configuration);
 			String mnemonic= null;
@@ -422,7 +424,7 @@ public class RunConfigsMenuContribution extends ListContributionItem
 			items.add(item);
 		}
 		
-		if (getMode() == ActionUtil.ACTIVE_EDITOR_MODE || configs.length == 0) {
+		if (getMode() == ActionUtil.ACTIVE_EDITOR_MODE || configs.isEmpty()) {
 			items.add(new ConfigureContribution(data));
 		}
 	}

@@ -16,8 +16,9 @@ import static de.walware.docmlet.tex.core.model.ILtxModelProblemConstants.STATUS
 import java.util.ArrayList;
 import java.util.List;
 
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.MessageBuilder;
-import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.ltk.IProblem;
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.core.SourceContent;

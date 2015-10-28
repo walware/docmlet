@@ -14,7 +14,7 @@ package de.walware.docmlet.wikitext.core.source;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
-import de.walware.ecommons.collections.ImList;;
+import de.walware.jcommons.collections.ImList;
 
 
 public class TextBlockAttributes extends Attributes {

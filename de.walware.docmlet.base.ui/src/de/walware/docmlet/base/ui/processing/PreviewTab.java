@@ -30,7 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
+
 import de.walware.ecommons.databinding.core.observable.WritableEqualityValue;
 import de.walware.ecommons.debug.core.variables.ObservableResourcePathVariable;
 import de.walware.ecommons.debug.core.variables.ResourceVariableResolver;

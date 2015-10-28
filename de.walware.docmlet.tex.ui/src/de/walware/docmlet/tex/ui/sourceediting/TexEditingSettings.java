@@ -51,7 +51,7 @@ public class TexEditingSettings {
 	public static final Preference<Boolean> SMARTINSERT_BYDEFAULT_ENABLED_PREF = new BooleanPref(
 			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.ByDefault.enabled"); //$NON-NLS-1$
 	
-	public static final Preference<TabAction> SMARTINSERT_TAB_ACTION_PREF = new EnumPref<TabAction>(
+	public static final Preference<TabAction> SMARTINSERT_TAB_ACTION_PREF= new EnumPref<>(
 			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.Tab.action", TabAction.class); //$NON-NLS-1$
 	
 	public static final Preference<Boolean> SMARTINSERT_CLOSEBRACKETS_ENABLED_PREF = new BooleanPref(

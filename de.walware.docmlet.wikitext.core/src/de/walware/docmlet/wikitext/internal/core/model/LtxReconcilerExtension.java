@@ -15,10 +15,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.walware.jcommons.string.InternStringCache;
+
 import de.walware.ecommons.ltk.IProblemRequestor;
 import de.walware.ecommons.ltk.ast.IEmbeddingAstNode;
 import de.walware.ecommons.ltk.core.SourceContent;
-import de.walware.ecommons.string.InternStringCache;
 import de.walware.ecommons.text.core.input.StringParserInput;
 
 import de.walware.docmlet.tex.core.TexCore;

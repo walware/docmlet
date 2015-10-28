@@ -15,8 +15,9 @@ import java.util.Map;
 
 import org.eclipse.jface.text.rules.IToken;
 
+import de.walware.jcommons.string.CharArrayString;
+
 import de.walware.ecommons.collections.IntArrayMap;
-import de.walware.ecommons.string.CharArrayString;
 import de.walware.ecommons.text.ui.settings.TextStyleManager;
 
 import de.walware.docmlet.tex.core.parser.LtxLexer;

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts;
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkLocator;

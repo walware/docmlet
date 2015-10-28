@@ -23,8 +23,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.commands.IElementUpdater;
 
-import de.walware.ecommons.collections.CollectionUtils;
-import de.walware.ecommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.CollectionUtils;
+import de.walware.jcommons.collections.ImIdentitySet;
+
 import de.walware.ecommons.ui.actions.WorkbenchScopingHandler;
 
 import de.walware.docmlet.base.ui.DocBaseUI;

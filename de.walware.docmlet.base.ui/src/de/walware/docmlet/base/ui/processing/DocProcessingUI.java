@@ -13,8 +13,8 @@ package de.walware.docmlet.base.ui.processing;
 
 import org.eclipse.core.runtime.content.IContentType;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImIdentitySet;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImIdentitySet;
 
 import de.walware.docmlet.base.internal.ui.DocBaseUIPlugin;
 import de.walware.docmlet.base.internal.ui.processing.DocProcessingRegistry;

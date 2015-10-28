@@ -15,7 +15,7 @@ package de.walware.docmlet.wikitext.internal.commonmark.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 import de.walware.docmlet.wikitext.commonmark.core.ICommonmarkConfig;

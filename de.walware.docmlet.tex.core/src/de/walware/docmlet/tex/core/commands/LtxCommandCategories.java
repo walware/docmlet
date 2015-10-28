@@ -14,7 +14,7 @@ package de.walware.docmlet.tex.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.docmlet.tex.internal.core.Messages;
 

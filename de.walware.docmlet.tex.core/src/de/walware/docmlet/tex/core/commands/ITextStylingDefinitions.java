@@ -16,7 +16,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_STYLE_TEXT_FONT
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_STYLE_TEXT_FONT_O;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_STYLE_TEXT_SIZE_O;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface ITextStylingDefinitions {

@@ -158,7 +158,7 @@ public class TexUIPlugin extends AbstractUIPlugin {
 		
 		util.register(TexUIResources.OBJ_LABEL_IMAGE_ID, ImageRegistryUtil.T_OBJ, "label.png");
 		
-		final Map<String, String> commandMap= new HashMap<String, String>();
+		final Map<String, String> commandMap= new HashMap<>();
 		
 		commandMap.put("S", TexUI.PLUGIN_ID + "/image/obj/c-00a7"); //$NON-NLS-1$ //$NON-NLS-2$
 		commandMap.put("dag", TexUI.PLUGIN_ID + "/image/obj/c-2020"); //$NON-NLS-1$ //$NON-NLS-2$

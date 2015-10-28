@@ -32,8 +32,9 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchPage;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.debug.core.variables.ResourceVariableResolver;
 import de.walware.ecommons.debug.core.variables.ResourceVariables;
 import de.walware.ecommons.io.FileValidator;

@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.Inline;
 

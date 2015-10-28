@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
 
 
 public class SourceBlocks {

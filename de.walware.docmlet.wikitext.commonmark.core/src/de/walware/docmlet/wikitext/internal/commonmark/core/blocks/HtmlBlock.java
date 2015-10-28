@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.core.source.EmbeddingAttributes;
 import de.walware.docmlet.wikitext.core.source.extdoc.IExtdocMarkupLanguage;

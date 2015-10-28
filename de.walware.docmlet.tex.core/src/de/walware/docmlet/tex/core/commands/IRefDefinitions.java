@@ -18,7 +18,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_COUNTER_R
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_REFLABEL_DEF;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_LABEL_REFLABEL_REF;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IRefDefinitions {

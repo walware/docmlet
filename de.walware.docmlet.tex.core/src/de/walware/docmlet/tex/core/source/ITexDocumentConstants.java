@@ -11,9 +11,9 @@
 
 package de.walware.docmlet.tex.core.source;
 
-import java.util.List;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
 
-import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.text.core.IPartitionConstraint;
 
 
@@ -31,10 +31,11 @@ public interface ITexDocumentConstants {
 	String LTX_MATHCOMMENT_CONTENT_TYPE= "Ltx.MathComment"; //$NON-NLS-1$
 	String LTX_VERBATIM_CONTENT_TYPE= "Ltx.Verbatim"; //$NON-NLS-1$
 	
+	
 	/**
 	 * List with all partition content types of LaTeX documents.
 	 */
-	List<String> LTX_CONTENT_TYPES= ImCollections.newList(
+	ImList<String> LTX_CONTENT_TYPES= ImCollections.newList(
 			LTX_DEFAULT_CONTENT_TYPE,
 			LTX_COMMENT_CONTENT_TYPE,
 			LTX_MATH_CONTENT_TYPE,

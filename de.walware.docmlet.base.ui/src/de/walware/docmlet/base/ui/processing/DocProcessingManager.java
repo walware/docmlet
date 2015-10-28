@@ -16,7 +16,6 @@ import static de.walware.docmlet.base.ui.processing.DocProcessingUI.PRODUCE_OUTP
 import static de.walware.docmlet.base.ui.processing.DocProcessingUI.WEAVE_STEP;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -47,12 +46,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import de.walware.jcommons.collections.CopyOnWriteIdentityListSet;
+import de.walware.jcommons.collections.IdentityCollection;
+import de.walware.jcommons.collections.IdentitySet;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.ICommonStatusConstants;
 import de.walware.ecommons.IDisposable;
-import de.walware.ecommons.collections.CopyOnWriteIdentityListSet;
-import de.walware.ecommons.collections.IdentityCollection;
-import de.walware.ecommons.collections.IdentitySet;
-import de.walware.ecommons.collections.ImList;
 import de.walware.ecommons.debug.core.util.OverlayLaunchConfiguration;
 import de.walware.ecommons.debug.ui.config.LaunchConfigUtil;
 import de.walware.ecommons.ui.SharedUIResources;
@@ -87,7 +88,7 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 	public static interface IProcessingListener {
 		
 		public void activeConfigChanged(ILaunchConfiguration config);
-		public void availableConfigChanged(ILaunchConfiguration[] configs);
+		public void availableConfigChanged(ImList<ILaunchConfiguration> configs);
 		
 	}
 	
@@ -97,7 +98,7 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 	private final CopyOnWriteIdentityListSet<IProcessingListener> listenerSet= new CopyOnWriteIdentityListSet<>();
 	
 	private ILaunchConfigurationType configType;
-	private ILaunchConfiguration[] currentConfigs;
+	private ImList<ILaunchConfiguration> currentConfigs;
 	private ILaunchConfiguration activeConfig;
 	
 	private String configImageKey;
@@ -122,10 +123,9 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 		final IDialogSettings settings= getDialogSettings();
 		final String s= settings.get(ACTIVE_CONFIG_KEY);
 		if (s != null && !s.isEmpty()) {
-			final ILaunchConfiguration[] configs= getAvailableConfigs();
-			for (int i= 0; i < configs.length; i++) {
-				if (s.equals(configs[i].getName())) {
-					setActiveConfig(configs[i]);
+			for (final ILaunchConfiguration config : getAvailableConfigs()) {
+				if (s.equals(config.getName())) {
+					setActiveConfig(config);
 					break;
 				}
 			}
@@ -237,10 +237,10 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 				update(true, true, null);
 			}
 			else {
-				final ILaunchConfiguration[] configs= this.currentConfigs;
+				final ImList<ILaunchConfiguration> configs= this.currentConfigs;
 				if (configs != null) {
-					for (int i= 0; i < configs.length; i++) {
-						if (configs[i] == configuration) {
+					for (final ILaunchConfiguration config : configs) {
+						if (config == configuration) {
 							update(true, false, null);
 							break;
 						}
@@ -262,10 +262,10 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 		}
 		if (updateList) {
 			if (!listeners.isEmpty()) {
-				this.currentConfigs= DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(this.configType);
+				final ImList<ILaunchConfiguration> configs= updateAvailableConfigs();
 				for (final IProcessingListener listener : listeners) {
 					try {
-						listener.availableConfigChanged(this.currentConfigs);
+						listener.availableConfigChanged(configs);
 					}
 					catch (final Exception e) {
 						DocBaseUIPlugin.log(new Status(IStatus.ERROR, DocBaseUI.PLUGIN_ID, 0,
@@ -290,6 +290,12 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 		}
 	}
 	
+	private ImList<ILaunchConfiguration> updateAvailableConfigs() throws CoreException {
+		return this.currentConfigs= ImCollections.newList(
+				DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(this.configType),
+				CONFIG_COMPARATOR );
+	}
+	
 	public void addProcessingListener(final IProcessingListener listener) {
 		this.listenerSet.add(listener);
 	}
@@ -302,14 +308,16 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 		return this.configType;
 	}
 	
-	public ILaunchConfiguration[] getAvailableConfigs() {
-		ILaunchConfiguration[] configs= this.currentConfigs;
+	public ImList<ILaunchConfiguration> getAvailableConfigs() {
+		ImList<ILaunchConfiguration> configs= this.currentConfigs;
 		if (configs == null) {
 			try {
-				configs= DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(this.configType);
-				Arrays.sort(configs, CONFIG_COMPARATOR);
-				this.currentConfigs= configs;
-			} catch (final CoreException e) {
+				configs= updateAvailableConfigs();
+			}
+			catch (final CoreException e) {
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, DocBaseUI.PLUGIN_ID,
+						-1, "Loading available configurations failed.", e)); //$NON-NLS-1$
+				configs= ImCollections.emptyList();
 			}
 		}
 		return configs;

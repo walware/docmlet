@@ -19,9 +19,10 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
+import de.walware.jcommons.string.IStringFactory;
+import de.walware.jcommons.string.InternStringFactory;
+
 import de.walware.ecommons.ltk.core.SourceContent;
-import de.walware.ecommons.string.IStringFactory;
-import de.walware.ecommons.string.InternStringFactory;
 import de.walware.ecommons.text.core.util.HtmlUtils;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;

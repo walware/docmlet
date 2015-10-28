@@ -16,8 +16,9 @@ import java.util.List;
 
 import org.eclipse.jface.text.IRegion;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.ltk.IElementName;
 import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.core.model.IEmbeddedForeignElement;

@@ -122,7 +122,7 @@ class TexCommandsConfigurationBlock extends ManagedConfigurationBlock {
 	
 	private final Preference<Set<String>>[] fDetailCheckPrefs = new Preference[DETAIL_CHECK_SIZE];
 	
-	private final Set<String> fEnabled = new HashSet<String>();
+	private final Set<String> fEnabled= new HashSet<>();
 	private final Set<String>[] fDetailCheckEnabled = new HashSet[DETAIL_CHECK_SIZE];
 	
 	
@@ -130,14 +130,14 @@ class TexCommandsConfigurationBlock extends ManagedConfigurationBlock {
 		super(null, statusListener);
 		
 		for (int i = 0; i < DETAIL_CHECK_SIZE; i++) {
-			fDetailCheckEnabled[i] = new HashSet<String>();
+			fDetailCheckEnabled[i]= new HashSet<>();
 		}
 	}
 	
 	
 	@Override
 	public void createBlockArea(final Composite pageComposite) {
-		final Map<Preference<?>, String> prefs = new HashMap<Preference<?>, String>();
+		final Map<Preference<?>, String> prefs= new HashMap<>();
 		
 		prefs.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);
 		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_TEXT] = TexCommandSet.TEXT_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);

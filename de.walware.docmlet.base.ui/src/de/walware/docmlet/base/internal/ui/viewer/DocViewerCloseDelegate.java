@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
+
 import de.walware.ecommons.debug.core.util.LaunchConfigurationCollector;
 import de.walware.ecommons.io.win.DDE;
 import de.walware.ecommons.io.win.DDEClient;

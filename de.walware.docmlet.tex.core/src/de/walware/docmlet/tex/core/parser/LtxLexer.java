@@ -11,7 +11,8 @@
 
 package de.walware.docmlet.tex.core.parser;
 
-import de.walware.ecommons.string.IStringFactory;
+import de.walware.jcommons.string.IStringFactory;
+
 import de.walware.ecommons.text.core.input.TextParserInput;
 
 

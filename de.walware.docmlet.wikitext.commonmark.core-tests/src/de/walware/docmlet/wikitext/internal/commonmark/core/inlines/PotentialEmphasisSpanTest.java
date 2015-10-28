@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts;
 import de.walware.docmlet.wikitext.internal.commonmark.core.Cursor;

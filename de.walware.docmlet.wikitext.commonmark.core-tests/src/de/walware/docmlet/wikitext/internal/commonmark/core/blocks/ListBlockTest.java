@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import com.google.common.base.Joiner;
 

@@ -18,7 +18,7 @@ import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAss
 
 import org.junit.Test;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public class ParagraphBlockTest {

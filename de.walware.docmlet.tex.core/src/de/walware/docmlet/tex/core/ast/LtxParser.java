@@ -23,10 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.string.IStringFactory;
+import de.walware.jcommons.string.StringFactory;
+
 import de.walware.ecommons.ltk.ast.IAstNode;
-import de.walware.ecommons.string.IStringFactory;
-import de.walware.ecommons.string.StringFactory;
 import de.walware.ecommons.text.core.input.TextParserInput;
 
 import de.walware.docmlet.tex.core.ast.TexAst.NodeType;

@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;

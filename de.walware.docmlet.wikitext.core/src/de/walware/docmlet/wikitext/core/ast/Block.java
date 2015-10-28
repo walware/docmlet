@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 

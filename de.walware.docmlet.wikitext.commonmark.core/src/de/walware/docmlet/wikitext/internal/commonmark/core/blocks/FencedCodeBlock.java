@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkLocator;
 import de.walware.docmlet.wikitext.internal.commonmark.core.Line;

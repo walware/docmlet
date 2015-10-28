@@ -13,7 +13,7 @@ package de.walware.docmlet.base.ui.processing;
 
 import java.util.List;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.base.ui.processing.DocProcessingToolConfig.StepConfig;
 

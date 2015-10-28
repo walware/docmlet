@@ -19,8 +19,9 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.rules.Token;
 
+import de.walware.jcommons.string.CharArrayString;
+
 import de.walware.ecommons.collections.IntArrayMap;
-import de.walware.ecommons.string.CharArrayString;
 import de.walware.ecommons.text.core.input.DocumentParserInput;
 import de.walware.ecommons.text.ui.settings.TextStyleManager;
 

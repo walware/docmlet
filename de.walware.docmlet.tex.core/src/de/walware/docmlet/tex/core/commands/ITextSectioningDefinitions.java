@@ -18,7 +18,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C2_SECTIONING_SUBS
 import static de.walware.docmlet.tex.core.commands.TexCommand.C2_SECTIONING_SUBSUBSECTION;
 import static de.walware.docmlet.tex.core.commands.TexCommand.SECTIONING;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface ITextSectioningDefinitions {

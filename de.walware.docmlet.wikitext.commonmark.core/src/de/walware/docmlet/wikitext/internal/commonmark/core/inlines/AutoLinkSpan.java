@@ -17,7 +17,7 @@ import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonRegex.C
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import com.google.common.net.UrlEscapers;
 

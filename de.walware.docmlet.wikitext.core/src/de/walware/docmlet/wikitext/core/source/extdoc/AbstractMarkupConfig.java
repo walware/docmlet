@@ -13,7 +13,7 @@ package de.walware.docmlet.wikitext.core.source.extdoc;
 
 import java.util.List;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupConfig;
 

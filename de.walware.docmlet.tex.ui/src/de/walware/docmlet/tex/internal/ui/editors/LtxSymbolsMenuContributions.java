@@ -145,7 +145,7 @@ public class LtxSymbolsMenuContributions extends CompoundContributionItem {
 			}
 		};
 		final List<Category> categories = fCategories.getCategories();
-		final List<IContributionItem> items = new ArrayList<IContributionItem>(categories.size()+10);
+		final List<IContributionItem> items= new ArrayList<>(categories.size()+10);
 		int sep = 0;
 		for (final Category category : categories) {
 			final int current = (category.getCommands().get(0).getType() & TexCommand.MASK_C2);

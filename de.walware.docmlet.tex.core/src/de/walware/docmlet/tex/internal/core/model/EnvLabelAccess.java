@@ -11,7 +11,7 @@
 
 package de.walware.docmlet.tex.internal.core.model;
 
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.tex.core.ast.TexAstNode;
 import de.walware.docmlet.tex.core.model.TexElementName;

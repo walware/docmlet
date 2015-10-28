@@ -26,7 +26,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_R
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_RELSTD;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_MATHSYMBOL_OP_ROOTFRAC;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IMathSymbolDefinitions {

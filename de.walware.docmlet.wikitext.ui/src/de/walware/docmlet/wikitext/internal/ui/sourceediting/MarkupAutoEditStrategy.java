@@ -35,7 +35,8 @@ import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.text.edits.TextEdit;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
+
 import de.walware.ecommons.ltk.ast.AstSelection;
 import de.walware.ecommons.ltk.ast.IAstNode;
 import de.walware.ecommons.ltk.core.SourceContent;

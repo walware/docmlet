@@ -18,9 +18,9 @@ import java.util.List;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImIdentityList;
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImIdentityList;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.core.source.TextBlockAttributes;
 import de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkLocator;

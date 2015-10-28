@@ -33,8 +33,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import de.walware.jcommons.collections.IdentityCollection;
+
 import de.walware.ecommons.ICommonStatusConstants;
-import de.walware.ecommons.collections.IdentityCollection;
 import de.walware.ecommons.debug.core.model.AbstractProcess;
 import de.walware.ecommons.runtime.core.util.EnrichProgressMonitor;
 

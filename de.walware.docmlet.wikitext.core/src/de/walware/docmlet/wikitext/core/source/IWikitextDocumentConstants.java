@@ -11,9 +11,9 @@
 
 package de.walware.docmlet.wikitext.core.source;
 
-import java.util.List;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
 
-import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.text.core.IPartitionConstraint;
 
 import de.walware.eutils.yaml.core.source.IYamlDocumentConstants;
@@ -39,15 +39,15 @@ public interface IWikitextDocumentConstants {
 	/**
 	 * List with all partition content types of Wikitext documents.
 	 */
-	List<String> WIKIDOC_CONTENT_TYPES= ImCollections.newList(
+	ImList<String> WIKIDOC_CONTENT_TYPES= ImCollections.newList(
 			WIKIDOC_DEFAULT_CONTENT_TYPE,
 			WIKIDOC_HTML_DEFAULT_CONTENT_TYPE,
 			WIKIDOC_HTML_COMMENT_CONTENT_TYPE );
 	
-	List<String> YAML_CHUNK_CONTENT_TYPES= ImCollections.newList(
+	ImList<String> YAML_CHUNK_CONTENT_TYPES= ImCollections.newList(
 			WIKIDOC_YAML_CHUNK_CONTENT_TYPE );
 	
-	List<String> WIKIDOC_EXT_CONTENT_TYPES= ImCollections.concatList(
+	ImList<String> WIKIDOC_EXT_CONTENT_TYPES= ImCollections.concatList(
 			WIKIDOC_CONTENT_TYPES,
 			YAML_CHUNK_CONTENT_TYPES,
 			IYamlDocumentConstants.YAML_CONTENT_TYPES );

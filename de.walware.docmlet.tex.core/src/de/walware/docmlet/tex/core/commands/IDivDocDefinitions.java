@@ -21,7 +21,7 @@ import static de.walware.docmlet.tex.core.commands.TexCommand.C3_DOCUMENT_ELEMEN
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_DOCUMENT_INDEX_DEF;
 import static de.walware.docmlet.tex.core.commands.TexCommand.C3_DOCUMENT_INDEX_GEN;
 
-import de.walware.ecommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImCollections;
 
 
 public interface IDivDocDefinitions {

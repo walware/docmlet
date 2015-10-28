@@ -39,9 +39,9 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.osgi.util.NLS;
 
-import de.walware.ecommons.collections.CopyOnWriteIdentityListSet;
-import de.walware.ecommons.collections.ImCollections;
-import de.walware.ecommons.collections.ImList;
+import de.walware.jcommons.collections.CopyOnWriteIdentityListSet;
+import de.walware.jcommons.collections.ImCollections;
+import de.walware.jcommons.collections.ImList;
 
 import de.walware.docmlet.wikitext.core.WikitextCore;
 import de.walware.docmlet.wikitext.core.markup.IMarkupConfig;
@@ -230,10 +230,6 @@ public class MarkupLanguageManager1 extends MarkupLanguageManager
 				synchronized (this) {
 					projects= this.projectsToDispose;
 					this.projectsToDispose= null;
-				}
-				
-				if (projects == null) {
-					return;
 				}
 				
 				if (projects != null) {
