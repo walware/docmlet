@@ -17,6 +17,7 @@ import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNode;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScan;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScan.BreakException;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScanner;
+import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeType;
 import de.walware.ecommons.text.core.treepartitioner.WrappedPartitionScan;
 
 import de.walware.docmlet.wikitext.core.markup.IMarkupLanguage;
@@ -115,7 +116,7 @@ public class WikitextWeavePartitionNodeScanner extends WikitextPartitionNodeScan
 		super.endBlock();
 	}
 	
-	protected void endEmbeddingBlock(final WikitextPartitionNodeType type,
+	protected void endEmbeddingBlock(final ITreePartitionNodeType type,
 			final EmbeddingAttributes attributes) {
 		throw new IllegalStateException();
 	}
@@ -144,7 +145,7 @@ public class WikitextWeavePartitionNodeScanner extends WikitextPartitionNodeScan
 		super.endSpan();
 	}
 	
-	protected void endEmbeddingSpan(final WikitextPartitionNodeType type,
+	protected void endEmbeddingSpan(final ITreePartitionNodeType type,
 			final EmbeddingAttributes attributes) {
 		throw new IllegalStateException();
 	}

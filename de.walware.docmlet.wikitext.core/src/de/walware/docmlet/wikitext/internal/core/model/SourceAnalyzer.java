@@ -401,6 +401,10 @@ public class SourceAnalyzer extends WikitextAstVisitor {
 	
 	@Override
 	public void visit(final Embedded node) throws InvocationTargetException {
+		if (node.getForeignNode() == null) {
+			super.visit(node);
+			return;
+		}
 		if ((node.getEmbedDescr() & 0b0_00000011) == Embedded.EMBED_INLINE) {
 			if (this.titleDoBuild) {
 				this.titleBuilder.append(this.input, node.getOffset(), node.getEndOffset());

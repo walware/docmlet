@@ -41,8 +41,6 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	
 	/** The current node */
 	private ITreePartitionNode node;
-	/** The current node type */
-	private WikitextPartitionNodeType type;
 	
 	private int beginOffset;
 	private int endOffset;
@@ -152,7 +150,6 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 		final ITreePartitionNode beginNode= getScan().getBeginNode();
 		if (beginNode.getType() instanceof WikitextPartitionNodeType) {
 			this.node= beginNode;
-			this.type= (WikitextPartitionNodeType) beginNode.getType();
 		}
 		else {
 			this.node= beginNode;
@@ -165,23 +162,15 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 		return this.beginOffset;
 	}
 	
-	protected final void initNode(final ITreePartitionNode node, final WikitextPartitionNodeType type) {
+	protected final void initNode(final ITreePartitionNode node) {
 		if (this.node != null) {
 			throw new IllegalStateException();
 		}
 		this.node= node;
-		this.type= type;
 	}
 	
-	protected final void addNode(final WikitextPartitionNodeType type, final int offset) {
+	protected final void addNode(final ITreePartitionNodeType type, final int offset) {
 		this.node= this.scan.add(type, this.node, offset);
-		this.type= type;
-	}
-	
-	protected final void addNode(final ITreePartitionNodeType type, final WikitextPartitionNodeType wikitextType,
-			final int offset) {
-		this.node= this.scan.add(type, this.node, offset);
-		this.type= wikitextType;
 	}
 	
 	protected final ITreePartitionNode getNode() {
@@ -191,16 +180,14 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	protected final void exitNode(final int offset) {
 		this.scan.expand(this.node, offset, true);
 		this.node= this.node.getParent();
-		this.type= (WikitextPartitionNodeType) this.node.getType();
 	}
 	
 	protected final void exitNode() {
 		this.node= this.node.getParent();
-		this.type= (WikitextPartitionNodeType) this.node.getType();
 	}
 	
-	protected final WikitextPartitionNodeType getType() {
-		return this.type;
+	protected final ITreePartitionNodeType getType() {
+		return this.node.getType();
 	}
 	
 	
@@ -247,7 +234,7 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 	
 	@Override
 	public void beginBlock(final BlockType type, final Attributes attributes) {
-		if (this.ignoreCounter > 0  || ignore(type)) {
+		if (this.ignoreCounter > 0 || ignore(type)) {
 			this.ignoreCounter++;
 			return;
 		}
@@ -263,7 +250,9 @@ public class WikitextPartitionNodeScanner extends DocumentBuilder
 		case TABLE_ROW:
 			return true;
 		default:
-			return (this.type.getBlockType() == BlockType.QUOTE);
+			return (this.node != null
+					&& this.node.getType() instanceof WikitextPartitionNodeType
+					&& ((WikitextPartitionNodeType) this.node.getType()).getBlockType() == BlockType.QUOTE );
 		}
 	}
 	

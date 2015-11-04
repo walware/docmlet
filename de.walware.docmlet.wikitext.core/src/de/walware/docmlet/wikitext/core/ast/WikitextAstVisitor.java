@@ -60,6 +60,7 @@ public class WikitextAstVisitor {
 	}
 	
 	public void visit(final Embedded node) throws InvocationTargetException {
+		node.acceptInWikitextChildren(this);
 	}
 	
 }

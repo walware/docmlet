@@ -15,6 +15,7 @@ import java.util.List;
 
 import de.walware.ecommons.collections.ImCollections;
 import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeScanner;
+import de.walware.ecommons.text.core.treepartitioner.ITreePartitionNodeType;
 
 import de.walware.docmlet.tex.core.source.LtxPartitionNodeScanner;
 import de.walware.docmlet.tex.core.source.LtxPartitionNodeType;
@@ -41,8 +42,6 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 			new HtmlPartitionNodeType.Default(),
 			new HtmlPartitionNodeType.Default() );
 	private static final HtmlPartitionNodeType HTML_COMMENT_HTML_TYPE= HtmlPartitionNodeType.COMMENT;
-	
-	private static final WikitextPartitionNodeType HTML_CHUNK_WIKITEXT_TYPE= new WikitextPartitionNodeType();
 	
 	
 	private static final WikitextPartitionNodeType YAML_CHUNK_WIKITEXT_TYPE= new WikitextPartitionNodeType();
@@ -100,12 +99,12 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 			final HtmlPartitionNodeType htmlType= ((attributes.getEmbedDescr() & IExtdocMarkupLanguage.EMBEDDED_HTML_COMMENT_FLAG) != 0) ?
 					HTML_COMMENT_HTML_TYPE : HTML_DEFAULT_HTML_TYPES.get(
 							(attributes.getEmbedDescr() & IExtdocMarkupLanguage.EMBEDDED_HTML_DISTINCT_MASK) >> IExtdocMarkupLanguage.EMBEDDED_HTML_DISTINCT_SHIFT);
-			addNode(htmlType, HTML_CHUNK_WIKITEXT_TYPE, getEventBeginOffset());
+			addNode(htmlType, getEventBeginOffset());
 			return;
 		}
 		if (type == BlockType.CODE
 				&& attributes.getForeignType() == IExtdocMarkupLanguage.EMBEDDED_YAML) {
-			addNode(YAML_CHUNK_WIKITEXT_TYPE, YAML_CHUNK_WIKITEXT_TYPE, getEventBeginOffset());
+			addNode(YAML_CHUNK_WIKITEXT_TYPE, getEventBeginOffset());
 			setEmbedded(getNode(), attributes);
 			return;
 		}
@@ -114,13 +113,13 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	
 	
 	@Override
-	protected void endEmbeddingBlock(final WikitextPartitionNodeType type, final EmbeddingAttributes attributes) {
+	protected void endEmbeddingBlock(final ITreePartitionNodeType type, final EmbeddingAttributes attributes) {
 		if (type == YAML_CHUNK_WIKITEXT_TYPE) {
 			executeForeignScanner(getYamlScanner());
 			exitNode(getEventEndOffset());
 			return;
 		}
-		if (type == HTML_CHUNK_WIKITEXT_TYPE) {
+		if (type instanceof HtmlPartitionNodeType) {
 			exitNode(getEventEndOffset());
 			return;
 		}
@@ -131,7 +130,7 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	protected void beginEmbeddingSpan(final SpanType type, final EmbeddingAttributes attributes) {
 		if (type == SpanType.CODE
 				&& attributes.getForeignType() == IExtdocMarkupLanguage.EMBEDDED_LTX) {
-			addNode(TEX_BASE_TEX_TYPE, TEX_MATH_WIKITEXT_TYPE, getEventBeginOffset());
+			addNode(TEX_BASE_TEX_TYPE, getEventBeginOffset());
 			setEmbedded(getNode(), attributes);
 			return;
 		}
@@ -139,8 +138,8 @@ public class WikidocPartitionNodeScanner extends WikitextWeavePartitionNodeScann
 	}
 	
 	@Override
-	protected void endEmbeddingSpan(final WikitextPartitionNodeType type, final EmbeddingAttributes attributes) {
-		if (type == TEX_MATH_WIKITEXT_TYPE) {
+	protected void endEmbeddingSpan(final ITreePartitionNodeType type, final EmbeddingAttributes attributes) {
+		if (type == TEX_BASE_TEX_TYPE) {
 			executeForeignScanner(getLtxScanner());
 			exitNode(getEventEndOffset());
 			return;

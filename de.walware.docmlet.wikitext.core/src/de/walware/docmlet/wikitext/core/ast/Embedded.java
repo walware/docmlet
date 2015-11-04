@@ -20,7 +20,7 @@ import de.walware.ecommons.ltk.ast.IEmbeddingAstNode;
 import de.walware.docmlet.wikitext.core.ast.WikitextAst.NodeType;
 
 
-public class Embedded extends WikitextAstNode implements IEmbeddingAstNode {
+public class Embedded extends ContainerNode implements IEmbeddingAstNode {
 	
 	
 	private final String foreignType;
@@ -67,41 +67,21 @@ public class Embedded extends WikitextAstNode implements IEmbeddingAstNode {
 		return this.foreignNode;
 	}
 	
-	@Override
-	public boolean hasChildren() {
-		return false;
-	}
-	
-	@Override
-	public int getChildCount() {
-		return 0;
-	}
-	
-	@Override
-	public WikitextAstNode getChild(final int index) {
-		throw new IndexOutOfBoundsException();
-	}
-	
-	@Override
-	public int getChildIndex(final IAstNode element) {
-		return -1;
-	}
-	
 	
 	@Override
 	public void acceptInChildren(final ICommonAstVisitor visitor) throws InvocationTargetException {
+		// ambiguous! (at moment HTML => no foreignNode)
 		if (this.foreignNode != null) {
 			this.foreignNode.accept(visitor);
+		}
+		else {
+			super.acceptInChildren(visitor);
 		}
 	}
 	
 	@Override
 	public void acceptInWikitext(final WikitextAstVisitor visitor) throws InvocationTargetException {
 		visitor.visit(this);
-	}
-	
-	@Override
-	public void acceptInWikitextChildren(final WikitextAstVisitor visitor) throws InvocationTargetException {
 	}
 	
 }
