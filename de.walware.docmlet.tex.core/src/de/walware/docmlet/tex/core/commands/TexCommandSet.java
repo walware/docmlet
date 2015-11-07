@@ -22,9 +22,9 @@ import java.util.Set;
 
 import de.walware.jcommons.collections.ImCollections;
 
-import de.walware.ecommons.preferences.IPreferenceAccess;
-import de.walware.ecommons.preferences.Preference;
-import de.walware.ecommons.preferences.Preference.StringSetPref;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.Preference;
+import de.walware.ecommons.preferences.core.Preference.StringSetPref;
 
 import de.walware.docmlet.tex.core.TexCore;
 
@@ -47,8 +47,6 @@ public class TexCommandSet {
 			QUALIFIER, "LtxCommands.TextEnvs.include"); //$NON-NLS-1$
 	public static final Preference<Set<String>> MATH_ENVS_INCLUDE_PREF = new StringSetPref(
 			QUALIFIER, "LtxCommands.MathEnvs.include"); //$NON-NLS-1$
-	
-	public static final String GROUP_ID = "Ltx/Ltx.commands"; //$NON-NLS-1$
 	
 	private static final Map<String, TexCommand> LTX_INTERN_ENVS = new IdentityHashMap<>();
 	

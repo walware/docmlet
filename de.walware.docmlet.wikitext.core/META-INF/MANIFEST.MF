@@ -21,6 +21,8 @@ Import-Package: com.ibm.icu.text;version="4.4.2.2",
  de.walware.ecommons,
  de.walware.ecommons.collections;version="1.1.0",
  de.walware.ecommons.preferences,
+ de.walware.ecommons.preferences.core,
+ de.walware.ecommons.preferences.core.util,
  de.walware.ecommons.resources;version="0.10.0",
  de.walware.jcommons.collections;version="1.0",
  de.walware.jcommons.string;version="1.0"
@@ -30,4 +32,5 @@ Export-Package: de.walware.docmlet.wikitext.core,
  de.walware.docmlet.wikitext.core.model,
  de.walware.docmlet.wikitext.core.refactoring,
  de.walware.docmlet.wikitext.core.source,
- de.walware.docmlet.wikitext.core.source.extdoc
+ de.walware.docmlet.wikitext.core.source.extdoc,
+ de.walware.docmlet.wikitext.core.util

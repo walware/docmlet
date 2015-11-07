@@ -16,6 +16,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
 Import-Package: com.ibm.icu.text;version="4.4.2.2",
  de.walware.ecommons,
  de.walware.ecommons.preferences,
+ de.walware.ecommons.preferences.core,
+ de.walware.ecommons.preferences.core.util,
  de.walware.ecommons.resources;version="0.10.0",
  de.walware.jcommons.collections;version="1.0",
  de.walware.jcommons.string;version="1.0"
@@ -25,4 +27,5 @@ Export-Package: de.walware.docmlet.tex.core,
  de.walware.docmlet.tex.core.model,
  de.walware.docmlet.tex.core.parser,
  de.walware.docmlet.tex.core.refactoring,
- de.walware.docmlet.tex.core.source
+ de.walware.docmlet.tex.core.source,
+ de.walware.docmlet.tex.core.util

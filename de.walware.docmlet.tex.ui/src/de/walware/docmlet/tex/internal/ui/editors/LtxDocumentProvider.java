@@ -25,10 +25,9 @@ import de.walware.ecommons.ltk.core.model.ISourceUnit;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceAnnotationModel;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceDocumentProvider;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceProblemAnnotation;
-import de.walware.ecommons.preferences.IPreferenceAccess;
 import de.walware.ecommons.preferences.PreferencesUtil;
 import de.walware.ecommons.preferences.SettingsChangeNotifier;
-import de.walware.ecommons.preferences.SettingsChangeNotifier.ChangeListener;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 import de.walware.docmlet.tex.core.model.ITexSourceUnit;
 import de.walware.docmlet.tex.core.model.TexModel;
@@ -72,7 +71,7 @@ public class LtxDocumentProvider extends SourceDocumentProvider<ITexSourceUnit>
 	}
 	
 	
-	private ChangeListener fEditorPrefListener;
+	private SettingsChangeNotifier.ChangeListener fEditorPrefListener;
 	
 	private boolean fHandleTemporaryProblems;
 	

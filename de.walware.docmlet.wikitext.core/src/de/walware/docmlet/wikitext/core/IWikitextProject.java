@@ -13,7 +13,7 @@ package de.walware.docmlet.wikitext.core;
 
 import org.eclipse.core.resources.IProject;
 
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 
 public interface IWikitextProject extends IPreferenceAccess {

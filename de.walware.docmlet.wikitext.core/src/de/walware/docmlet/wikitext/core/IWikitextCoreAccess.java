@@ -11,7 +11,7 @@
 
 package de.walware.docmlet.wikitext.core;
 
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 
 public interface IWikitextCoreAccess {

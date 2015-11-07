@@ -15,9 +15,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.HardWrapMode;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
-import de.walware.ecommons.preferences.Preference;
-import de.walware.ecommons.preferences.Preference.BooleanPref;
-import de.walware.ecommons.preferences.Preference.EnumPref;
+import de.walware.ecommons.preferences.core.Preference;
+import de.walware.ecommons.preferences.core.Preference.BooleanPref;
+import de.walware.ecommons.preferences.core.Preference.EnumPref;
 import de.walware.ecommons.text.ui.settings.AssistPreferences;
 
 import de.walware.docmlet.wikitext.internal.ui.WikitextUIPlugin;
@@ -38,7 +38,7 @@ public class WikitextEditingSettings {
 	public static final BooleanPref FOLDING_ENABLED_PREF= new BooleanPref(
 			EDITOR_OPTIONS_QUALIFIER, "Folding.enabled"); //$NON-NLS-1$
 	
-	public static final String FOLDING_SHARED_GROUP_ID= "wikitext/editor/folding.shared"; //$NON-NLS-1$
+	public static final String FOLDING_SHARED_GROUP_ID= "Wikitext/editor/folding.shared"; //$NON-NLS-1$
 	
 	public static final BooleanPref FOLDING_RESTORE_STATE_ENABLED_PREF= new BooleanPref(
 			EDITOR_OPTIONS_QUALIFIER, "Folding.RestoreState.enabled"); //$NON-NLS-1$
@@ -47,7 +47,7 @@ public class WikitextEditingSettings {
 			EDITOR_OPTIONS_QUALIFIER, "MarkOccurrences.enabled"); //$NON-NLS-1$
 	
 	
-	public static final String SMARTINSERT_GROUP_ID= "wikitext/editor/smartinsert"; //$NON-NLS-1$
+	public static final String SMARTINSERT_GROUP_ID= "Wikitext/editor/smartinsert"; //$NON-NLS-1$
 	
 	public static final Preference<Boolean> SMARTINSERT_BYDEFAULT_ENABLED_PREF= new BooleanPref(
 			EDITOR_OPTIONS_QUALIFIER, "SmartInsert.ByDefault.enabled"); //$NON-NLS-1$

@@ -21,11 +21,10 @@ import org.osgi.framework.BundleContext;
 
 import de.walware.ecommons.ICommonStatusConstants;
 import de.walware.ecommons.IDisposable;
-import de.walware.ecommons.preferences.PreferencesUtil;
+import de.walware.ecommons.preferences.core.util.PreferenceUtils;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCore;
-import de.walware.docmlet.tex.core.TexCoreAccess;
 import de.walware.docmlet.tex.internal.core.model.LtxModelManager;
 
 
@@ -56,10 +55,10 @@ public class TexCorePlugin extends Plugin {
 	
 	private List<IDisposable> disposables;
 	
-	private LtxModelManager ltxModelManager;
+	private TexCoreAccess workbenchCoreAccess;
+	private TexCoreAccess defaultsCoreAccess;
 	
-	private volatile TexCoreAccess workbenchAccess;
-	private volatile TexCoreAccess defaultsAccess;
+	private LtxModelManager ltxModelManager;
 	
 	
 	public TexCorePlugin() {
@@ -72,6 +71,9 @@ public class TexCorePlugin extends Plugin {
 		instance = this;
 		
 		this.disposables= new ArrayList<>();
+		
+		this.workbenchCoreAccess= new TexCoreAccess(
+				PreferenceUtils.getInstancePrefs() );
 		
 		this.ltxModelManager= new LtxModelManager();
 		this.disposables.add(ltxModelManager);
@@ -88,6 +90,15 @@ public class TexCorePlugin extends Plugin {
 				this.started= false;
 				
 				this.ltxModelManager= null;
+			}
+			
+			if (this.workbenchCoreAccess != null) {
+				this.workbenchCoreAccess.dispose();
+				this.workbenchCoreAccess= null;
+			}
+			if (this.defaultsCoreAccess != null) {
+				this.defaultsCoreAccess.dispose();
+				this.defaultsCoreAccess= null;
 			}
 			
 			for (final IDisposable listener : this.disposables) {
@@ -119,33 +130,16 @@ public class TexCorePlugin extends Plugin {
 	}
 	
 	public ITexCoreAccess getWorkbenchAccess() {
-		ITexCoreAccess access= this.workbenchAccess;
-		if (access == null) {
-			synchronized (this) {
-				access= this.workbenchAccess;
-				if (access == null) {
-					checkStarted();
-					access= this.workbenchAccess= new TexCoreAccess(
-							PreferencesUtil.getInstancePrefs() );
-				}
-			}
-		}
-		return access;
+		return this.workbenchCoreAccess;
 	}
 	
-	public ITexCoreAccess getDefaultsAccess() {
-		ITexCoreAccess access= this.defaultsAccess;
-		if (access == null) {
-			synchronized (this) {
-				access= this.defaultsAccess;
-				if (access == null) {
-					checkStarted();
-					access= this.defaultsAccess= new TexCoreAccess(
-							PreferencesUtil.getDefaultPrefs() );
-				}
-			}
+	public synchronized ITexCoreAccess getDefaultsAccess() {
+		if (this.defaultsCoreAccess == null) {
+			checkStarted();
+			this.defaultsCoreAccess= new TexCoreAccess(
+					PreferenceUtils.getDefaultPrefs() );
 		}
-		return access;
+		return this.defaultsCoreAccess;
 	}
 	
 }

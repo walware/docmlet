@@ -21,11 +21,10 @@ import org.osgi.framework.BundleContext;
 
 import de.walware.ecommons.ICommonStatusConstants;
 import de.walware.ecommons.IDisposable;
-import de.walware.ecommons.preferences.PreferencesUtil;
+import de.walware.ecommons.preferences.core.util.PreferenceUtils;
 
 import de.walware.docmlet.wikitext.core.IWikitextCoreAccess;
 import de.walware.docmlet.wikitext.core.WikitextCore;
-import de.walware.docmlet.wikitext.core.WikitextCoreAccess;
 import de.walware.docmlet.wikitext.internal.core.model.WikitextModelManager;
 
 
@@ -58,8 +57,8 @@ public class WikitextCorePlugin extends Plugin {
 	
 	private WikitextModelManager wikitextModelManager;
 	
-	private volatile WikitextCoreAccess workbenchAccess;
-	private volatile WikitextCoreAccess defaultsAccess;
+	private WikitextCoreAccess workbenchCoreAccess;
+	private WikitextCoreAccess defaultsCoreAccess;
 	
 	
 	public WikitextCorePlugin() {
@@ -72,6 +71,9 @@ public class WikitextCorePlugin extends Plugin {
 		instance= this;
 		
 		this.disposables= new ArrayList<>();
+		
+		this.workbenchCoreAccess= new WikitextCoreAccess(
+				PreferenceUtils.getInstancePrefs() );
 		
 		this.wikitextModelManager= new WikitextModelManager();
 		this.disposables.add(this.wikitextModelManager);
@@ -88,6 +90,15 @@ public class WikitextCorePlugin extends Plugin {
 				this.started= false;
 				
 				this.wikitextModelManager= null;
+			}
+			
+			if (this.workbenchCoreAccess != null) {
+				this.workbenchCoreAccess.dispose();
+				this.workbenchCoreAccess= null;
+			}
+			if (this.defaultsCoreAccess != null) {
+				this.defaultsCoreAccess.dispose();
+				this.defaultsCoreAccess= null;
 			}
 			
 			for (final IDisposable listener : this.disposables) {
@@ -118,34 +129,20 @@ public class WikitextCorePlugin extends Plugin {
 		return this.wikitextModelManager;
 	}
 	
-	public IWikitextCoreAccess getWorkbenchAccess() {
-		IWikitextCoreAccess access= this.workbenchAccess;
-		if (access == null) {
-			synchronized (this) {
-				access= this.workbenchAccess;
-				if (access == null) {
-					checkStarted();
-					access= this.workbenchAccess= new WikitextCoreAccess(
-							PreferencesUtil.getInstancePrefs() );
-				}
-			}
+	public synchronized IWikitextCoreAccess getWorkbenchAccess() {
+		if (this.workbenchCoreAccess == null) {
+			checkStarted();
 		}
-		return access;
+		return this.workbenchCoreAccess;
 	}
 	
-	public IWikitextCoreAccess getDefaultsAccess() {
-		IWikitextCoreAccess access= this.defaultsAccess;
-		if (access == null) {
-			synchronized (this) {
-				access= this.defaultsAccess;
-				if (access == null) {
-					checkStarted();
-					access= this.defaultsAccess= new WikitextCoreAccess(
-							PreferencesUtil.getDefaultPrefs() );
-				}
-			}
+	public synchronized IWikitextCoreAccess getDefaultsAccess() {
+		if (this.defaultsCoreAccess == null) {
+			checkStarted();
+			this.defaultsCoreAccess= new WikitextCoreAccess(
+					PreferenceUtils.getDefaultPrefs() );
 		}
-		return access;
+		return this.defaultsCoreAccess;
 	}
 	
 }

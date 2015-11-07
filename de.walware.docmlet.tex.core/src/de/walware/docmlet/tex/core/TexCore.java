@@ -37,9 +37,10 @@ public class TexCore {
 		LTX_CONTENT_TYPE= contentTypeManager.getContentType(LTX_CONTENT_ID);
 	}
 	
+	public static final ITexCoreAccess WORKBENCH_ACCESS= TexCorePlugin.getInstance().getWorkbenchAccess();
 	
 	public static ITexCoreAccess getWorkbenchAccess() {
-		return TexCorePlugin.getInstance().getWorkbenchAccess();
+		return WORKBENCH_ACCESS;
 	}
 	
 	public static ITexCoreAccess getDefaultsAccess() {

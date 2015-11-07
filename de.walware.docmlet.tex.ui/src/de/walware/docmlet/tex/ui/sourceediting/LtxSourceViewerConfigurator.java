@@ -12,7 +12,6 @@
 package de.walware.docmlet.tex.ui.sourceediting;
 
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +21,7 @@ import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import de.walware.jcommons.collections.ImCollections;
 
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
 import de.walware.docmlet.tex.core.TexCodeStyleSettings;

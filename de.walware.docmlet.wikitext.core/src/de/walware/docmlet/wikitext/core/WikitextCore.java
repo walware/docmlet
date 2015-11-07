@@ -40,8 +40,10 @@ public class WikitextCore {
 	}
 	
 	
+	public static final IWikitextCoreAccess WORKBENCH_ACCESS= WikitextCorePlugin.getInstance().getWorkbenchAccess();
+	
 	public static IWikitextCoreAccess getWorkbenchAccess() {
-		return WikitextCorePlugin.getInstance().getWorkbenchAccess();
+		return WORKBENCH_ACCESS;
 	}
 	
 	public static IWikitextCoreAccess getDefaultsAccess() {

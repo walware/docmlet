@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 
-import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.PreferencesUtil;
+import de.walware.ecommons.preferences.core.Preference;
 
 import de.walware.docmlet.tex.core.TexCodeStyleSettings;
 import de.walware.docmlet.tex.core.commands.TexCommandSet;

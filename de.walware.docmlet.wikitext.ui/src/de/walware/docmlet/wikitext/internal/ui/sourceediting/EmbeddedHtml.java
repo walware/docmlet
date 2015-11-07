@@ -13,7 +13,7 @@ package de.walware.docmlet.wikitext.internal.ui.sourceediting;
 
 import org.eclipse.swt.graphics.RGB;
 
-import de.walware.ecommons.preferences.Preference;
+import de.walware.ecommons.preferences.core.Preference;
 import de.walware.ecommons.preferences.ui.RGBPref;
 
 import de.walware.docmlet.wikitext.ui.WikitextUI;

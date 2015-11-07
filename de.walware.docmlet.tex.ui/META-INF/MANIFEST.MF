@@ -23,6 +23,7 @@ Import-Package: de.walware.ecommons,
  de.walware.ecommons.collections;version="1.1.0",
  de.walware.ecommons.databinding;version="0.10.0",
  de.walware.ecommons.preferences,
+ de.walware.ecommons.preferences.core,
  de.walware.jcommons.collections;version="1.0",
  de.walware.jcommons.string;version="1.0",
  org.apache.commons.collections.primitives;version="1.0.0"

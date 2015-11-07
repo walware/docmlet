@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 import de.walware.docmlet.wikitext.core.IWikitextCoreAccess;
 import de.walware.docmlet.wikitext.core.WikitextCodeStyleSettings;

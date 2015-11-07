@@ -11,7 +11,7 @@
 
 package de.walware.docmlet.wikitext.ui.editors;
 
-import de.walware.ecommons.preferences.Preference.BooleanPref;
+import de.walware.ecommons.preferences.core.Preference.BooleanPref;
 
 import de.walware.docmlet.wikitext.ui.sourceediting.WikitextEditingSettings;
 

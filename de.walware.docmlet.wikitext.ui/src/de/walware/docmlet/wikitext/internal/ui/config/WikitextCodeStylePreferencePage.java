@@ -55,7 +55,7 @@ public class WikitextCodeStylePreferencePage extends PropertyAndPreferencePage {
 	
 	@Override
 	protected boolean hasProjectSpecificSettings(final IProject project) {
-		return ((ManagedConfigurationBlock) this.fBlock).hasProjectSpecificOptions(project);
+		return ((ManagedConfigurationBlock) getBlock()).hasProjectSpecificOptions(project);
 	}
 	
 }

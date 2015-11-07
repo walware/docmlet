@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
 
 import de.walware.ecommons.IStatusChangeListener;
 import de.walware.ecommons.databinding.jface.DataBindingSupport;
-import de.walware.ecommons.preferences.Preference;
+import de.walware.ecommons.preferences.core.Preference;
 import de.walware.ecommons.preferences.ui.ConfigurationBlock;
 import de.walware.ecommons.preferences.ui.ConfigurationBlockPreferencePage;
 import de.walware.ecommons.preferences.ui.ManagedConfigurationBlock;
@@ -139,9 +139,9 @@ class TexCommandsConfigurationBlock extends ManagedConfigurationBlock {
 	public void createBlockArea(final Composite pageComposite) {
 		final Map<Preference<?>, String> prefs= new HashMap<>();
 		
-		prefs.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);
-		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_TEXT] = TexCommandSet.TEXT_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);
-		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_MATH] = TexCommandSet.MATH_COMMANDS_INCLUDE_PREF, TexCommandSet.GROUP_ID);
+		prefs.put(TexCommandSet.MASTER_COMMANDS_INCLUDE_PREF, null);
+		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_TEXT]= TexCommandSet.TEXT_COMMANDS_INCLUDE_PREF, null);
+		prefs.put(fDetailCheckPrefs[DETAIL_CHECK_ASSIST_MATH]= TexCommandSet.MATH_COMMANDS_INCLUDE_PREF, null);
 		
 		setupPreferenceManager(prefs);
 		

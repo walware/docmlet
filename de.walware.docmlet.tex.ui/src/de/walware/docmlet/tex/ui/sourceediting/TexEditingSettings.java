@@ -14,9 +14,9 @@ package de.walware.docmlet.tex.ui.sourceediting;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings.TabAction;
-import de.walware.ecommons.preferences.Preference;
-import de.walware.ecommons.preferences.Preference.BooleanPref;
-import de.walware.ecommons.preferences.Preference.EnumPref;
+import de.walware.ecommons.preferences.core.Preference;
+import de.walware.ecommons.preferences.core.Preference.BooleanPref;
+import de.walware.ecommons.preferences.core.Preference.EnumPref;
 import de.walware.ecommons.text.ui.settings.AssistPreferences;
 
 import de.walware.docmlet.tex.internal.ui.TexUIPlugin;

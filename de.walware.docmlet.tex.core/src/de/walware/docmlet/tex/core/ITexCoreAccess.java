@@ -11,7 +11,7 @@
 
 package de.walware.docmlet.tex.core;
 
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 
 import de.walware.docmlet.tex.core.commands.TexCommandSet;
 

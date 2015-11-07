@@ -30,9 +30,9 @@ import org.eclipse.osgi.util.NLS;
 
 import de.walware.jcommons.collections.ImCollections;
 
-import de.walware.ecommons.preferences.IPreferenceAccess;
-import de.walware.ecommons.preferences.Preference;
 import de.walware.ecommons.preferences.PreferencesUtil;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.Preference;
 
 import de.walware.docmlet.wikitext.core.WikitextCore;
 import de.walware.docmlet.wikitext.core.markup.IMarkupConfig;

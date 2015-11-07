@@ -55,7 +55,7 @@ import de.walware.jcommons.collections.ImList;
 import de.walware.ecommons.ICommonStatusConstants;
 import de.walware.ecommons.IDisposable;
 import de.walware.ecommons.debug.core.util.OverlayLaunchConfiguration;
-import de.walware.ecommons.debug.ui.config.LaunchConfigUtil;
+import de.walware.ecommons.debug.ui.config.LaunchConfigUtils;
 import de.walware.ecommons.ui.SharedUIResources;
 import de.walware.ecommons.ui.util.DialogUtil;
 import de.walware.ecommons.ui.util.MessageUtil;
@@ -75,7 +75,7 @@ public class DocProcessingManager extends DocProcessingRegistry.TypeElement
 		implements ILaunchConfigurationListener, IDisposable {
 	
 	
-	private static final Comparator<ILaunchConfiguration> CONFIG_COMPARATOR= new LaunchConfigUtil.LaunchConfigurationComparator();
+	private static final Comparator<ILaunchConfiguration> CONFIG_COMPARATOR= new LaunchConfigUtils.LaunchConfigurationComparator();
 	
 	private static final String ACTIVE_CONFIG_KEY= "activeConfig"; //$NON-NLS-1$
 	

@@ -43,7 +43,7 @@ import de.walware.ecommons.ltk.core.SourceContent;
 import de.walware.ecommons.ltk.ui.sourceediting.AbstractAutoEditStrategy;
 import de.walware.ecommons.ltk.ui.sourceediting.ISmartInsertSettings;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
-import de.walware.ecommons.preferences.IPreferenceAccess;
+import de.walware.ecommons.preferences.core.IPreferenceAccess;
 import de.walware.ecommons.text.IIndentSettings;
 import de.walware.ecommons.text.IndentUtil;
 import de.walware.ecommons.text.IndentUtil.ILineIndent;
