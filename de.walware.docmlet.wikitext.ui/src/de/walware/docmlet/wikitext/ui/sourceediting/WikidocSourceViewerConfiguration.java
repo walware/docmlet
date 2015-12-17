@@ -263,7 +263,11 @@ public class WikidocSourceViewerConfiguration extends SourceEditorViewerConfigur
 	
 	@Override
 	protected IQuickAssistProcessor createQuickAssistProcessor() {
-		return new WikidocQuickAssistProcessor(getSourceEditor());
+		final ISourceEditor editor= getSourceEditor();
+		if (editor != null) {
+			return new WikidocQuickAssistProcessor(editor);
+		}
+		return null;
 	}
 	
 	

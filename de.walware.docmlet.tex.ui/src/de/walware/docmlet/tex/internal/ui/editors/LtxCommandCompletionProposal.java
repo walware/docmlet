@@ -65,8 +65,9 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 		@Override
 		public StyledString getStyledDisplayString() {
 			if (fDisplayString == null) {
-				final StyledString s = new StyledString(fCommand.getControlWord());
-				s.append(" – " + fCommand.getDescription(), StyledString.QUALIFIER_STYLER);
+				final StyledString s= new StyledString(fCommand.getControlWord());
+				s.append(QUALIFIER_SEPARATOR, StyledString.QUALIFIER_STYLER);
+				s.append(fCommand.getDescription(), StyledString.QUALIFIER_STYLER);
 				fDisplayString = s;
 			}
 			return fDisplayString;
@@ -486,9 +487,9 @@ public class LtxCommandCompletionProposal extends CompletionProposalWithOverwrit
 		
 		model.forceInstall();
 		
-		final TexBracketLevel level = new TexBracketLevel(data.getDocument(),
-				context.getEditor().getDocumentContentInfo().getPartitioning(), linked,
-				TexBracketLevel.AUTODELETE );
+		final TexBracketLevel level= new TexBracketLevel(model,
+				data.getDocument(), context.getEditor().getDocumentContentInfo(),
+				linked, TexBracketLevel.AUTODELETE );
 		
 		/* create UI */
 		final LinkedModeUI ui = new LinkedModeUI(model, data.getViewer());

@@ -247,7 +247,11 @@ public class LtxSourceViewerConfiguration extends SourceEditorViewerConfiguratio
 	
 	@Override
 	protected IQuickAssistProcessor createQuickAssistProcessor() {
-		return new LtxQuickAssistProcessor(getSourceEditor());
+		final ISourceEditor editor= getSourceEditor();
+		if (editor != null) {
+			return new LtxQuickAssistProcessor(editor);
+		}
+		return null;
 	}
 	
 	

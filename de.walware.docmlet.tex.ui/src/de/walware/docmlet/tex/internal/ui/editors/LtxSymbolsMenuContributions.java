@@ -31,6 +31,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import de.walware.ecommons.text.core.util.TextUtils;
 import de.walware.ecommons.ui.actions.SubMenuContributionItem;
 import de.walware.ecommons.ui.util.UIAccess;
 
@@ -106,8 +107,15 @@ public class LtxSymbolsMenuContributions extends CompoundContributionItem {
 					return;
 				}
 				try {
-					final LtxAssistInvocationContext context = new LtxAssistInvocationContext(texEditor, selection.x, true, new NullProgressMonitor());
-					final LtxCommandCompletionProposal proposal = new LtxCommandCompletionProposal(context, context.getInvocationOffset(), command);
+					final String contentType= TextUtils.getContentType(viewer.getDocument(),
+									texEditor.getDocumentContentInfo(), selection.x,
+									selection.y == 0 );
+					
+					final LtxAssistInvocationContext context= new LtxAssistInvocationContext(texEditor,
+							selection.x, contentType,
+							true, new NullProgressMonitor() );
+					final LtxCommandCompletionProposal proposal = new LtxCommandCompletionProposal(
+							context, context.getInvocationOffset(), command );
 					proposal.apply(viewer, (char) 0, 1, context.getInvocationOffset());
 					selection = proposal.getSelection(viewer.getDocument());
 					if (selection != null) {

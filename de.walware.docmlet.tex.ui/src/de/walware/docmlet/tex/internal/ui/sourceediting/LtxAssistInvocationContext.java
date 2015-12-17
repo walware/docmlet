@@ -35,10 +35,11 @@ public class LtxAssistInvocationContext extends AssistInvocationContext {
 	private int fInvoArgIdx = -2;
 	
 	
-	public LtxAssistInvocationContext(final ISourceEditor editor, final int offset,
+	public LtxAssistInvocationContext(final ISourceEditor editor,
+			final int offset, final String contentType,
 			final boolean isProposal, final IProgressMonitor monitor) {
-		super(editor, offset, (isProposal) ? IModelManager.MODEL_FILE : IModelManager.NONE,
-				monitor);
+		super(editor, offset, contentType,
+				(isProposal) ? IModelManager.MODEL_FILE : IModelManager.NONE, monitor );
 	}
 	
 	

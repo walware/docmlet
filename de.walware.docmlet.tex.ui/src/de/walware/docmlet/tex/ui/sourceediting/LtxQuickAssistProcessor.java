@@ -17,7 +17,6 @@ import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IQuickAssistComputer;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.QuickAssistProcessor;
 
@@ -38,15 +37,16 @@ public class LtxQuickAssistProcessor extends QuickAssistProcessor {
 	
 	@Override
 	protected AssistInvocationContext createContext(final IQuickAssistInvocationContext invocationContext,
+			final String contentType,
 			final IProgressMonitor monitor) {
-		return new LtxAssistInvocationContext(getEditor(), invocationContext.getOffset(),
-				true, monitor);
+		return new LtxAssistInvocationContext(getEditor(),
+				invocationContext.getOffset(), contentType,
+				true, monitor );
 	}
 	
 	@Override
 	protected void addModelAssistProposals(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals,
-			final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		this.refactoringComputer.computeAssistProposals(context, proposals, monitor);
 	}
 	

@@ -19,7 +19,6 @@ import de.walware.jcommons.collections.ImList;
 
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IQuickAssistComputer;
 
 import de.walware.docmlet.wikitext.core.ast.WikitextAst;
@@ -36,8 +35,7 @@ public class WikitextQuickRenameComputer implements IQuickAssistComputer {
 	
 	@Override
 	public IStatus computeAssistProposals(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals,
-			final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		if (!(context.getAstSelection().getCovering() instanceof WikitextAstNode)) {
 			return Status.OK_STATUS;
 		}
@@ -70,7 +68,7 @@ public class WikitextQuickRenameComputer implements IQuickAssistComputer {
 	
 	protected void addAccessAssistProposals(final AssistInvocationContext context,
 			final WikitextNameAccess access,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals) {
+			final AssistProposalCollector proposals) {
 		final ImList<? extends WikitextNameAccess> accessList= access.getAllInUnit();
 		
 		proposals.add(new WikitextLinkedNamesAssistProposal(WikitextLinkedNamesAssistProposal.IN_FILE, context, access));

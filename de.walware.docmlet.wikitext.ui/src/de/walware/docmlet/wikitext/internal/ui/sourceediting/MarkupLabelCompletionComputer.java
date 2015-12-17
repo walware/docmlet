@@ -29,7 +29,6 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistInformationProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IContentAssistComputer;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.SimpleCompletionProposal;
 
@@ -137,7 +136,7 @@ public class MarkupLabelCompletionComputer implements IContentAssistComputer, IM
 	
 	@Override
 	public IStatus computeCompletionProposals(final AssistInvocationContext context, final int mode,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals, final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		final IMarkupLanguage markupLanguage= this.markupLanguage;
 		final IMarkupCompletionExtension ext= (this.completionExtension != null) ? this.completionExtension : this;
 		final IWikidocModelInfo modelInfo= (IWikidocModelInfo) context.getModelInfo();
@@ -156,9 +155,16 @@ public class MarkupLabelCompletionComputer implements IContentAssistComputer, IM
 		return Status.OK_STATUS;
 	}
 	
+	@Override
+	public IStatus computeInformationProposals(final AssistInvocationContext context,
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
+		return null;
+	}
+	
+	
 	private void addLabelProposals(final AssistInvocationContext context,
 			final CompletionType type, final INameAccessSet<WikitextNameAccess> labels,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals) {
+			final AssistProposalCollector proposals) {
 		for (final String label : labels.getNames()) {
 			if (label.startsWith(type.getLookupPrefix())) {
 				final ImList<WikitextNameAccess> accessList= labels.getAllInUnit(label);
@@ -195,12 +201,6 @@ public class MarkupLabelCompletionComputer implements IContentAssistComputer, IM
 	private boolean isCurrent(final WikitextAstNode node, final int offset) {
 		return (node != null
 				&& node.getOffset() <= offset && node.getEndOffset() >= offset);
-	}
-	
-	@Override
-	public IStatus computeContextInformation(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistInformationProposal> proposals, final IProgressMonitor monitor) {
-		return null;
 	}
 	
 	

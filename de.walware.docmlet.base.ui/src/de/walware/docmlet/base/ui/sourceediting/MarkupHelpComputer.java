@@ -139,8 +139,7 @@ public class MarkupHelpComputer implements IQuickAssistComputer {
 	
 	@Override
 	public IStatus computeAssistProposals(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals,
-			final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		final IMarkupHelpContextProvider contextProvider= (IMarkupHelpContextProvider) context.getEditor().getAdapter(IMarkupHelpContextProvider.class);
 		if (contextProvider != null) {
 			proposals.add(new ShowHelpProposal(context.getEditor()));

@@ -21,10 +21,11 @@ import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 public class WikitextAssistInvocationContext extends AssistInvocationContext {
 	
 	
-	public WikitextAssistInvocationContext(final ISourceEditor editor, final int offset,
+	public WikitextAssistInvocationContext(final ISourceEditor editor,
+			final int offset, final String contentType,
 			final boolean isProposal, final IProgressMonitor monitor) {
-		super(editor, offset, (isProposal) ? IModelManager.MODEL_FILE : IModelManager.NONE,
-				monitor);
+		super(editor, offset, contentType,
+				(isProposal) ? IModelManager.MODEL_FILE : IModelManager.NONE, monitor );
 	}
 	
 	

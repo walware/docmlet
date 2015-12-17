@@ -655,8 +655,8 @@ public class MarkupAutoEditStrategy extends AbstractAutoEditStrategy {
 		
 		model.forceInstall();
 		
-		final WikitextBracketLevel level= new WikitextBracketLevel(
-				getDocument(), getDocumentContentInfo().getPartitioning(),
+		final WikitextBracketLevel level= new WikitextBracketLevel(model,
+				getDocument(), getDocumentContentInfo(),
 				ImCollections.newList(position), (mode & 0xffff0000) );
 		
 		/* create UI */

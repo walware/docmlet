@@ -32,8 +32,6 @@ import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.ContentAssist;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistInformationProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IContentAssistComputer;
 
 import de.walware.docmlet.tex.core.ITexCoreAccess;
@@ -123,7 +121,7 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 	
 	@Override
 	public IStatus computeCompletionProposals(final AssistInvocationContext context, final int mode,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals, final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		final String prefix = context.getIdentifierPrefix();
 		final ILtxModelInfo modelInfo= (context.getModelInfo() instanceof ILtxModelInfo) ?
 				(ILtxModelInfo) context.getModelInfo() : null;
@@ -256,9 +254,16 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 		return Status.OK_STATUS;
 	}
 	
+	@Override
+	public IStatus computeInformationProposals(final AssistInvocationContext context,
+			final AssistProposalCollector tenders, final IProgressMonitor monitor) {
+		return null;
+	}
+	
+	
 	private void addCommands(final AssistInvocationContext context, final String prefix,
 			final List<TexCommand> commands, final Collection<TexCommand> commands2,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals) {
+			final AssistProposalCollector proposals) {
 		final int offset = context.getInvocationOffset() - prefix.length() + 1;
 		final int length = prefix.length() - 1;
 		for (final TexCommand command : commands) {
@@ -279,7 +284,8 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 	
 	private void addEnvs(final AssistInvocationContext context, final String prefix,
 			final List<TexCommand> envs, final Collection<TexCommand> envs2,
-			final List<String> prefered, final AssistProposalCollector<IAssistCompletionProposal> proposals) {
+			final List<String> prefered,
+			final AssistProposalCollector proposals) {
 		final int offset = context.getInvocationOffset() - prefix.length();
 		final int length = prefix.length();
 		final List<String> addedPrefered = new ArrayList<>(prefered.size());
@@ -324,13 +330,6 @@ public abstract class LtxElementsCompletionComputer implements IContentAssistCom
 		return (nameNode != null
 				&& nameNode.getOffset() <= offset
 				&& nameNode.getOffset() + nameNode.getLength() >= offset);
-	}
-	
-	
-	@Override
-	public IStatus computeContextInformation(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistInformationProposal> tenders, final IProgressMonitor monitor) {
-		return null;
 	}
 	
 }

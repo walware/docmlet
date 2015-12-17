@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditor;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistInvocationContext;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.AssistProposalCollector;
-import de.walware.ecommons.ltk.ui.sourceediting.assist.IAssistCompletionProposal;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.IQuickAssistComputer;
 import de.walware.ecommons.ltk.ui.sourceediting.assist.QuickAssistProcessor;
 
@@ -40,8 +39,7 @@ public class WikidocQuickAssistProcessor extends QuickAssistProcessor {
 	
 	@Override
 	protected void addModelAssistProposals(final AssistInvocationContext context,
-			final AssistProposalCollector<IAssistCompletionProposal> proposals,
-			final IProgressMonitor monitor) {
+			final AssistProposalCollector proposals, final IProgressMonitor monitor) {
 		this.refactoringComputer.computeAssistProposals(context, proposals, monitor);
 		this.helpComputer.computeAssistProposals(context, proposals, monitor);
 	}

@@ -33,13 +33,15 @@ public class WikitextContentAssistProcessor extends ContentAssistProcessor {
 	@Override
 	protected AssistInvocationContext createCompletionProposalContext(final int offset,
 			final IProgressMonitor monitor) {
-		return new WikitextAssistInvocationContext(getEditor(), offset, true, monitor);
+		return new WikitextAssistInvocationContext(getEditor(), offset, getContentType(),
+				true, monitor );
 	}
 	
 	@Override
 	protected AssistInvocationContext createContextInformationContext(final int offset,
 			final IProgressMonitor monitor) {
-		return new WikitextAssistInvocationContext(getEditor(), offset, false, monitor);
+		return new WikitextAssistInvocationContext(getEditor(), offset, getContentType(),
+				false, monitor );
 	}
 	
 	@Override

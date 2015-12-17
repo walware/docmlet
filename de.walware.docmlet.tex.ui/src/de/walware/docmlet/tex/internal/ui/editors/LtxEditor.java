@@ -13,13 +13,11 @@ package de.walware.docmlet.tex.internal.ui.editors;
 
 import java.util.List;
 
-import org.eclipse.core.commands.IHandler2;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 
 import de.walware.jcommons.collections.ImCollections;
@@ -29,11 +27,9 @@ import de.walware.ecommons.ltk.ast.AstSelection;
 import de.walware.ecommons.ltk.core.model.ISourceUnitModelInfo;
 import de.walware.ecommons.ltk.ui.sourceediting.AbstractMarkOccurrencesProvider;
 import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditorAddon;
-import de.walware.ecommons.ltk.ui.sourceediting.ISourceEditorCommandIds;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditor1;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditor1OutlinePage;
 import de.walware.ecommons.ltk.ui.sourceediting.SourceEditorViewerConfigurator;
-import de.walware.ecommons.ltk.ui.sourceediting.actions.SpecificContentAssistHandler;
 import de.walware.ecommons.ltk.ui.sourceediting.folding.FoldingEditorAddon;
 
 import de.walware.docmlet.tex.core.TexCore;
@@ -163,17 +159,6 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxTextStyles"); //$NON-NLS-1$
 		pageIds.add("de.walware.docmlet.tex.preferencePages.LtxEditorTemplates"); //$NON-NLS-1$
 		pageIds.add("de.walware.docmlet.tex.preferencePages.TexCodeStyle"); //$NON-NLS-1$
-	}
-	
-	@Override
-	protected void createActions() {
-		super.createActions();
-		final IHandlerService handlerService = (IHandlerService) getServiceLocator().getService(IHandlerService.class);
-		
-		{	final IHandler2 handler = new SpecificContentAssistHandler(this,
-							TexUIPlugin.getInstance().getTexEditorContentAssistRegistry() );
-			handlerService.activateHandler(ISourceEditorCommandIds.SPECIFIC_CONTENT_ASSIST_COMMAND_ID, handler);
-		}
 	}
 	
 	@Override

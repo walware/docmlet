@@ -15,8 +15,10 @@ import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedPosition;
 
+import de.walware.ecommons.text.core.sections.IDocContentSections;
 import de.walware.ecommons.text.ui.BracketLevel;
 
 import de.walware.docmlet.wikitext.core.source.WikitextHeuristicTokenScanner;
@@ -157,9 +159,10 @@ public class WikitextBracketLevel extends BracketLevel {
 	}
 	
 	
-	public WikitextBracketLevel(final IDocument doc, final String partitioning,
+	public WikitextBracketLevel(final LinkedModeModel model,
+			final IDocument document, final IDocContentSections docContentSections,
 			final List<LinkedPosition> positions, final int mode) {
-		super(doc, partitioning, positions, mode);
+		super(model, document, docContentSections, positions, mode);
 	}
 	
 }

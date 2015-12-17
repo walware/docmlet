@@ -222,7 +222,7 @@ public class LtxAutoEditStrategy extends AbstractAutoEditStrategy {
 	
 	
 	@Override
-	protected char isCustomizeKey(KeyEvent event) {
+	protected char isCustomizeKey(final KeyEvent event) {
 		switch (event.character) {
 		case '{':
 		case '(':
@@ -247,8 +247,8 @@ public class LtxAutoEditStrategy extends AbstractAutoEditStrategy {
 	}
 	
 	@Override
-	protected void doCustomizeKeyCommand(char ch, DocumentCommand command,
-			TreePartition partition) throws Exception {
+	protected void doCustomizeKeyCommand(final char ch, final DocumentCommand command,
+			final TreePartition partition) throws Exception {
 		final String contentType= partition.getType();
 		final int cEnd= command.offset+command.length;
 		int linkedModeType= -1;
@@ -368,7 +368,7 @@ public class LtxAutoEditStrategy extends AbstractAutoEditStrategy {
 	}
 	
 	@Override
-	protected void doCustomizeOtherCommand(DocumentCommand command, TreePartition partition)
+	protected void doCustomizeOtherCommand(final DocumentCommand command, final TreePartition partition)
 			throws Exception {
 		final String contentType= partition.getType();
 		
@@ -590,8 +590,8 @@ public class LtxAutoEditStrategy extends AbstractAutoEditStrategy {
 		
 		model.forceInstall();
 		
-		final TexBracketLevel level= new TexBracketLevel(
-				getDocument(), getDocumentContentInfo().getPartitioning(),
+		final TexBracketLevel level= new TexBracketLevel(model,
+				getDocument(), getDocumentContentInfo(),
 				ImCollections.newList(position), (mode & 0xffff0000) );
 		
 		/* create UI */
