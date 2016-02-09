@@ -25,10 +25,10 @@ public class EmbeddedHtml {
 	public static final String QUALIFIER= WikitextUI.PLUGIN_ID;
 	
 	public static final String HTML_COMMENT_COLOR_KEY= "html_ts_Comment.Font.color"; //$NON-NLS-1$
-	public static final Preference<RGB> HTML_COMMENT_COLOR= new RGBPref(QUALIFIER, HTML_COMMENT_COLOR_KEY);
+	public static final Preference<RGB> HTML_COMMENT_COLOR_PREF= new RGBPref(QUALIFIER, HTML_COMMENT_COLOR_KEY);
 	
 	public static final String HTML_BACKGROUND_COLOR_KEY= "html_ts_Default.Background.color"; //$NON-NLS-1$
-	public static final Preference<RGB> HTML_BACKGROUND_COLOR= new RGBPref(QUALIFIER, HTML_BACKGROUND_COLOR_KEY);
+	public static final Preference<RGB> HTML_BACKGROUND_COLOR_PREF= new RGBPref(QUALIFIER, HTML_BACKGROUND_COLOR_KEY);
 	
 	
 }

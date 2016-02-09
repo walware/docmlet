@@ -11,17 +11,27 @@
 
 package de.walware.docmlet.wikitext.internal.ui.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
 import de.walware.ecommons.IStatusChangeListener;
+import de.walware.ecommons.databinding.jface.DataBindingSupport;
+import de.walware.ecommons.preferences.core.Preference;
+import de.walware.ecommons.preferences.ui.ColorSelectorObservableValue;
 import de.walware.ecommons.preferences.ui.ConfigurationBlock;
 import de.walware.ecommons.preferences.ui.ConfigurationBlockPreferencePage;
 import de.walware.ecommons.preferences.ui.ManagedConfigurationBlock;
 import de.walware.ecommons.ui.util.LayoutUtil;
+
+import de.walware.docmlet.wikitext.internal.ui.sourceediting.EmbeddedHtml;
 
 
 public class WikitextBasePreferencePage extends ConfigurationBlockPreferencePage {
@@ -42,6 +52,10 @@ public class WikitextBasePreferencePage extends ConfigurationBlockPreferencePage
 class WikitextBaseConfigurationBlock extends ManagedConfigurationBlock {
 	
 	
+	private ColorSelector htmlBackgroundColorSelector;
+	private ColorSelector htmlCommentColorSelector;
+	
+	
 	public WikitextBaseConfigurationBlock(final IStatusChangeListener statusListener) {
 		super(null, statusListener);
 	}
@@ -49,25 +63,71 @@ class WikitextBaseConfigurationBlock extends ManagedConfigurationBlock {
 	
 	@Override
 	public void createBlockArea(final Composite pageComposite) {
-		{	final Composite composite= createEditorInfo(pageComposite);
+		final Map<Preference<?>, String> prefs= new HashMap<>();
+		
+		prefs.put(EmbeddedHtml.HTML_BACKGROUND_COLOR_PREF, null);
+		prefs.put(EmbeddedHtml.HTML_COMMENT_COLOR_PREF, null);
+		
+		setupPreferenceManager(prefs);
+		
+		{	final Composite composite= createEditorGroup(pageComposite);
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		}
+		
+		initBindings();
+		updateControls();
 	}
 	
-	private Composite createEditorInfo(final Composite composite) {
-		final Group group= new Group(composite, SWT.NONE);
-		group.setLayout(LayoutUtil.createGroupGrid(1));
-		group.setText(Messages.Base_Editors_label + ':');
+	private Composite createEditorGroup(final Composite parent) {
+		final Group composite= new Group(parent, SWT.NONE);
+		composite.setLayout(LayoutUtil.createGroupGrid(2));
+		composite.setText(Messages.Base_Editors_label + ':');
 		
-		final Link link= addLinkControl(group, Messages.Base_Editors_SeeAlso_info +
-				"\n   • All <a href=\"org.eclipse.ui.preferencePages.GeneralTextEditor\">Text Editors</a> (Eclipse, StatET)" +
-				"\n   • <a href=\"org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage\">Wikitext Syntax Hightlighting</a> (Mylyn)" +
-				"\n   • <a href=\"org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.WikiTextTemplatePreferencePage\">Wikitext User Templates</a> (Mylyn)" );
-		final GridData gd= new GridData(SWT.FILL, SWT.FILL, true, false);
-		applyWrapWidth(gd);
-		link.setLayoutData(gd);
+		{	final Link link= addLinkControl(composite, Messages.Base_Editors_SeeAlso_info +
+					"\n   • All <a href=\"org.eclipse.ui.preferencePages.GeneralTextEditor\">Text Editors</a> (Eclipse, StatET)" +
+					"\n   • <a href=\"org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage\">Wikitext Syntax Hightlighting</a> (Mylyn)" +
+					"\n   • <a href=\"org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.WikiTextTemplatePreferencePage\">Wikitext User Templates</a> (Mylyn)" );
+			final GridData gd= new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+			applyWrapWidth(gd);
+			link.setLayoutData(gd);
+		}
 		
-		return group;
+		LayoutUtil.addSmallFiller(composite, false);
+		{	final Label label= new Label(composite, SWT.NONE);
+			label.setText("Supplementary preferences:");
+			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		}
+		
+		{	final Label label= new Label(composite, SWT.NONE);
+			label.setText("Background color for &HTML ranges:");
+			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+			
+			final ColorSelector selector= new ColorSelector(composite);
+			selector.getButton().setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+			this.htmlBackgroundColorSelector= selector;
+		}
+		{	final Label label= new Label(composite, SWT.NONE);
+			label.setText("Text color for HTML c&omments:");
+			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+			
+			final ColorSelector selector= new ColorSelector(composite);
+			selector.getButton().setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+			this.htmlCommentColorSelector= selector;
+		}
+		return composite;
+	}
+	
+	
+	@Override
+	protected void addBindings(final DataBindingSupport db) {
+		db.getContext().bindValue(
+				new ColorSelectorObservableValue(this.htmlBackgroundColorSelector),
+				createObservable(EmbeddedHtml.HTML_BACKGROUND_COLOR_PREF),
+				null, null );
+		db.getContext().bindValue(
+				new ColorSelectorObservableValue(this.htmlCommentColorSelector),
+				createObservable(EmbeddedHtml.HTML_COMMENT_COLOR_PREF),
+				null, null );
 	}
 	
 }

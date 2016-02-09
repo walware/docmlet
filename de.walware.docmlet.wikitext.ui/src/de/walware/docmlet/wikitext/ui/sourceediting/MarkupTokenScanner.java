@@ -484,8 +484,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 	}
 	
 	
-	private final RGB htmlCommentColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_COMMENT_COLOR);
-	private final RGB htmlDefaultColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_BACKGROUND_COLOR);
+	private final RGB htmlCommentColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_COMMENT_COLOR_PREF);
+	private final RGB htmlBackgroundColor= PreferencesUtil.getInstancePrefs().getPreferenceValue(EmbeddedHtml.HTML_BACKGROUND_COLOR_PREF);
 	
 	private FontState createHtmlFontState(final FontState parentState,
 			final EmbeddingAttributes attributes) {
@@ -497,8 +497,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 			}
 		}
 		else {
-			if (this.htmlDefaultColor != null) {
-				fontState.setBackground(this.htmlDefaultColor);
+			if (this.htmlBackgroundColor != null) {
+				fontState.setBackground(this.htmlBackgroundColor);
 			}
 		}
 		
