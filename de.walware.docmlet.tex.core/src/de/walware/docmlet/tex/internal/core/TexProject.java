@@ -15,8 +15,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
-import de.walware.ecommons.resources.AbstractProjectNature;
-import de.walware.ecommons.resources.ProjectUtil;
+import de.walware.ecommons.resources.core.AbstractProjectNature;
+import de.walware.ecommons.resources.core.ProjectUtils;
 
 import de.walware.docmlet.tex.core.ITexProject;
 import de.walware.docmlet.tex.core.TexProjects;
@@ -46,7 +46,7 @@ public class TexProject extends AbstractProjectNature implements ITexProject {
 		final IProject project= getProject();
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
-		changed|= ProjectUtil.addBuilder(description, TexProjectBuilder.BUILDER_ID);
+		changed|= ProjectUtils.addBuilder(description, TexProjectBuilder.BUILDER_ID);
 		
 		if (changed) {
 			project.setDescription(description, null);
@@ -58,7 +58,7 @@ public class TexProject extends AbstractProjectNature implements ITexProject {
 		final IProject project= getProject();
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
-		changed|= ProjectUtil.removeBuilder(description, TexProjectBuilder.BUILDER_ID);
+		changed|= ProjectUtils.removeBuilder(description, TexProjectBuilder.BUILDER_ID);
 		
 		if (changed) {
 			project.setDescription(description, null);

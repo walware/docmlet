@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.util.NLS;
 
-import de.walware.ecommons.resources.ProjectUtil;
+import de.walware.ecommons.resources.core.ProjectUtils;
 
 import de.walware.docmlet.wikitext.internal.core.Messages;
 import de.walware.docmlet.wikitext.internal.core.WikitextProject;
@@ -48,7 +48,7 @@ public class WikitextProjects {
 		
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
-		changed|= ProjectUtil.addNature(description, WIKITEXT_NATURE_ID);
+		changed|= ProjectUtils.addNature(description, WIKITEXT_NATURE_ID);
 		m.worked(2);
 		
 		if (changed) {

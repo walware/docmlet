@@ -81,8 +81,8 @@ public class WikidocReconciler {
 		
 	}
 	
-	private static final boolean DEBUG_LOG_AST= "true".equalsIgnoreCase( //$NON-NLS-1$
-			Platform.getDebugOption("de.walware.docmlet.wikitext/debug/Reconciler/logAst")); //$NON-NLS-1$
+	private static final boolean DEBUG_LOG_AST= Boolean.parseBoolean(
+			Platform.getDebugOption("de.walware.docmlet.wikitext/debug/Reconciler/logAst") ); //$NON-NLS-1$
 	
 	
 	private final Map<IMarkupLanguage, IMarkupLanguage> languages= new HashMap<>();

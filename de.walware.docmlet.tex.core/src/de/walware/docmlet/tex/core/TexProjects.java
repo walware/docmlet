@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.util.NLS;
 
-import de.walware.ecommons.resources.ProjectUtil;
+import de.walware.ecommons.resources.core.ProjectUtils;
 
 import de.walware.docmlet.tex.internal.core.Messages;
 import de.walware.docmlet.tex.internal.core.TexProject;
@@ -48,7 +48,7 @@ public class TexProjects {
 		
 		final IProjectDescription description= project.getDescription();
 		boolean changed= false;
-		changed|= ProjectUtil.addNature(description, TEX_NATURE_ID);
+		changed|= ProjectUtils.addNature(description, TEX_NATURE_ID);
 		m.worked(2);
 		
 		if (changed) {

@@ -56,8 +56,8 @@ public class CommonmarkLanguage extends MarkupLanguage implements IMarkupLanguag
 	public static final int MARKDOWN_COMPAT_MODE=            1 << 16;
 	
 	
-	private static final boolean DEBUG_LOG_EVENTS= "true".equalsIgnoreCase( //$NON-NLS-1$
-			Platform.getDebugOption("de.walware.docmlet.wikitext.commonmark/debug/Parser/logEvents")); //$NON-NLS-1$
+	private static final boolean DEBUG_LOG_EVENTS= Boolean.parseBoolean(
+			Platform.getDebugOption("de.walware.docmlet.wikitext.commonmark/debug/Parser/logEvents") ); //$NON-NLS-1$
 	
 	
 	private /*final*/ String scope;
