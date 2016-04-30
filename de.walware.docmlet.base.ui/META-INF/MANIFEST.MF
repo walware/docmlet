@@ -7,8 +7,8 @@ Bundle-Name: DocMLET Shared - UI
 Bundle-Activator: de.walware.docmlet.base.internal.ui.DocBaseUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11",
  de.walware.ecommons.databinding.core,
  de.walware.ecommons.debug.core,
  org.eclipse.ui,
@@ -21,13 +21,13 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.ui.ide,
  de.walware.ecommons.debug.ui,
  org.eclipse.core.filesystem
-Import-Package: com.ibm.icu.text;version="4.4.2.2",
+Import-Package: com.ibm.icu.text;version="54.1",
  de.walware.ecommons,
  de.walware.ecommons.databinding;version="0.10.0",
  de.walware.ecommons.io,
  de.walware.ecommons.io.win;version="1.2.0",
  de.walware.ecommons.preferences,
- de.walware.ecommons.resources;version="0.10.0",
+ de.walware.ecommons.resources.core;version="0.10.0",
  de.walware.ecommons.runtime.core.util,
  de.walware.ecommons.ui.util,
  de.walware.ecommons.variables.core,

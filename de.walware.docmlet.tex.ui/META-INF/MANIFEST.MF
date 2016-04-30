@@ -7,7 +7,7 @@ Bundle-Name: DocMLET TeX - UI
 Bundle-Activator: de.walware.docmlet.tex.internal.ui.TexUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.filesystem,
  org.eclipse.core.databinding,
