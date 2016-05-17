@@ -14,6 +14,8 @@ package de.walware.docmlet.base.ui.processing;
 import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.swt.SWT;
@@ -86,7 +88,14 @@ public abstract class DocProcessingOperationSettings {
 	
 	void initBindings() {
 		final DataBindingContext dbc= this.tab.getDataBindingContext();
-		this.bindings= new DataBindingSubContext(dbc);
+		this.bindings= new DataBindingSubContext(dbc, new IChangeListener() {
+			@Override
+			public void handleChange(final ChangeEvent event) {
+				if (DocProcessingOperationSettings.this.isSelected) {
+					DocProcessingOperationSettings.this.tab.scheduleNotifyListeners();
+				}
+			}
+		});
 		this.bindings.run(new Runnable() {
 			@Override
 			public void run() {

@@ -216,7 +216,7 @@ public abstract class DocProcessingConfigStepTab extends LaunchConfigTabWithDbc
 		this.operationSettingsAttrName= getAttrQualifier() + '/' + DocProcessingConfig.STEP_OPERATION_SETTINGS_ATTR_KEY;
 		
 		final Realm realm= getRealm();
-		this.stepEnabledValue= new WritableValue(realm, Boolean.TRUE, Boolean.TYPE);
+		this.stepEnabledValue= new WritableValue(realm, true, Boolean.TYPE);
 		this.stepEnabledValue.addValueChangeListener(this);
 		this.operationValue= new WritableValue(realm, this.nullOperationItem, OperationItem.class);
 		this.operationValue.addValueChangeListener(this);
