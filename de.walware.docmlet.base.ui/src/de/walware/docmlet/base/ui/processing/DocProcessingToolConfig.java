@@ -233,7 +233,7 @@ public abstract class DocProcessingToolConfig {
 						file.getFullPath().toString() ));
 				VariableUtils.add(variables,
 						ResourceVariables.getSingleResourceVariables(),
-						new ResourceVariableResolver(this.inputFileUtil) );
+						new ResourceVariableResolver(this.inputFileUtil, ResourceVariableResolver.EXISTS_NEVER) );
 			}
 		}
 		
