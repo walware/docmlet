@@ -53,7 +53,7 @@
                content="____________________\n\n" block="true"/>
          
          <template name="* "
-               description="%templates_BulledList_description"
+               description="%templates_BulletList_description"
                content="* ${text}\n* ${text2}\n\n" block="true"/>
          <template name="1. "
                description="%templates_OrderedList_1_description"
