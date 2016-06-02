@@ -131,7 +131,7 @@ public class FencedCodeBlock extends SourceBlock {
 			final String language= context.getHelper().replaceEscaping(codeBlockItem.infoText);
 			codeAttributes.setCssClass("language-" + language);
 		}
-		locator.setBlockEnd(blockItem);
+		locator.setBlockBegin(blockItem);
 		builder.beginBlock(BlockType.CODE, codeAttributes);
 		
 		final int startIndent= startLine.getIndent();
