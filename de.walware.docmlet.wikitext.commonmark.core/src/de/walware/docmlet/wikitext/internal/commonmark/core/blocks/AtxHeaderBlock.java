@@ -37,11 +37,11 @@ public class AtxHeaderBlock extends SourceBlock {
 	
 	
 	private static final Pattern START_PATTERN= Pattern.compile(
-			"#{1,6}(?:[ \t].*)?",
+			"#{1,6}(?:\\ .*)?",
 			Pattern.DOTALL );
 	
 	private static final Pattern PATTERN= Pattern.compile(
-			"(#{1,6})(?:[ \t]+?(.+?))??(?:[ \t]+#+)?",
+			"(#{1,6})(?:\\ \\ ??(.+?))??(?:\\ +#+)?\\ *",
 			Pattern.DOTALL );
 	
 	

@@ -126,6 +126,14 @@ public class CommonmarkLanguageTest {
 				"[text](http://example.com/page.html#someId)");
 	}
 	
+	@Test
+	public void linksByDef() {
+		assertContent("<p><a href=\"/url\" title=\"title\">foo</a></p>", "[foo][bar]\n\n[bar]: /url \"title\"");
+		assertContent("<p><a href=\"/url\" title=\"title\">foo</a></p>", "[foo][]\n\n[foo]: /url \"title\"");
+		// No link
+		assertContent("<p><a href=\"/url\" title=\"title\">foo</a> []</p>", "[foo] []\n\n[foo]: /url \"title\"");
+	}
+	
 	private void assertEvents(String content, DocumentBuilderEvent... events) {
 		assertEvents(content, true, events);
 	}

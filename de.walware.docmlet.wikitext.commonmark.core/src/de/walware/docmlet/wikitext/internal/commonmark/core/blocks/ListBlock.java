@@ -98,7 +98,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 				final Matcher matcher;
 				return ((matcher= startLine.setupIndent(listBlock.matcher)).matches()
 						&& (listBlock.bulletType(startLine, matcher) == this.listBlockItem.bulletType)
-						&& !listBlock.horizontalRuleBlock.canStart(startLine) );
+						&& !listBlock.thematicBreakBlock.canStart(startLine) );
 			}
 			return false;
 		}
@@ -246,7 +246,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 	
 	private final Matcher matcher= PATTERN.matcher("");
 	
-	private final HorizontalRuleBlock horizontalRuleBlock= new HorizontalRuleBlock();
+	private final ThematicBreakBlock thematicBreakBlock= new ThematicBreakBlock();
 	
 	
 	@Override

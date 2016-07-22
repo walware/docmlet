@@ -21,13 +21,13 @@ import org.junit.Test;
 import com.google.common.base.Strings;
 
 
-public class HorizontalRuleBlockTest {
+public class ThematicBreakBlockTest {
 	
 	
-	private final HorizontalRuleBlock block = new HorizontalRuleBlock();
+	private final ThematicBreakBlock block = new ThematicBreakBlock();
 	
 	
-	public HorizontalRuleBlockTest() {
+	public ThematicBreakBlockTest() {
 	}
 	
 	

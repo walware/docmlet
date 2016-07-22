@@ -52,7 +52,7 @@ import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 public class CommonMarkSpecTest {
 	
 	
-	private static final String SPEC_VERSION = "0.22";
+	private static final String SPEC_VERSION = "0.23";
 	
 	private static final URI COMMONMARK_SPEC_URI = URI.create(
 			String.format("https://raw.githubusercontent.com/jgm/CommonMark/%s/spec.txt", SPEC_VERSION) );
@@ -88,7 +88,7 @@ public class CommonMarkSpecTest {
 	private final int lineNumber;
 	
 	
-	public CommonMarkSpecTest(String heading, int lineNumber, Expectation expectation) {
+	public CommonMarkSpecTest(String heading, int num, int lineNumber, Expectation expectation) {
 		this.heading = heading;
 		this.lineNumber = lineNumber;
 		this.expectation = expectation;
@@ -119,7 +119,7 @@ public class CommonMarkSpecTest {
 	}
 	
 	
-	@Parameters (name= "{index} {0} : lineNumber= {1}")
+	@Parameters (name= "{index}: {0} - {1}, lineNumber= {2}")
 	public static List<Object[]> parameters() {
 		List<Object[]> parameters = new ArrayList<>();
 		
@@ -135,13 +135,15 @@ public class CommonMarkSpecTest {
 			LocationTrackingReader reader = new LocationTrackingReader(new StringReader(spec));
 			String heading = "unspecified";
 			String line;
+			int num= 1;
 			while ((line = reader.readLine()) != null) {
 				line = line.replace('→', '\t');
 				if (line.trim().equals(".")) {
 					int testLineNumber = reader.getLineNumber();
 					Expectation expectation = readExpectation(reader);
 					parameters.add(
-							new Object[] { heading, testLineNumber + 1, expectation });
+							new Object[] { heading, num, testLineNumber + 1, expectation });
+					num++;
 				}
 				Matcher headingMatcher = headingPattern.matcher(line);
 				if (headingMatcher.matches()) {

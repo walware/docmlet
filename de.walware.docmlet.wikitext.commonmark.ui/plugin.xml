@@ -49,7 +49,7 @@
                content="```\n${text}\n```\n\n" block="true"/>
          
          <template name="___"
-               description="%templates_HorizontalRule_description"
+               description="%templates_ThematicBreak_description"
                content="____________________\n\n" block="true"/>
          
          <template name="* "

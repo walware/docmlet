@@ -47,7 +47,7 @@ public class PotentialBracketRegex {
 	private static final String REFERENCE_NAME_REGEX= "(?:\\\\.|[^\\]]){0,1000}";
 	
 	private static final Pattern REFERENCE_LABEL_PATTERN= Pattern.compile(
-			"(\\s*\\[(" + REFERENCE_NAME_REGEX + ")\\]).*",
+			"(\\[(" + REFERENCE_NAME_REGEX + ")\\]).*",
 			Pattern.DOTALL );
 	
 	private static final Pattern REFERENCE_NAME_PATTERN= Pattern.compile(REFERENCE_NAME_REGEX,

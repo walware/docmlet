@@ -23,7 +23,7 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.AtxHeaderBloc
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.BlockQuoteBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.EmptyBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.FencedCodeBlock;
-import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.HorizontalRuleBlock;
+import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ThematicBreakBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.HtmlBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.IndentedCodeBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ListBlock;
@@ -59,7 +59,7 @@ public class Commonmark {
 		return new SourceBlocks(
 				new BlockQuoteBlock(),
 				new AtxHeaderBlock(),
-				new HorizontalRuleBlock(),
+				new ThematicBreakBlock(),
 				new ListBlock(),
 				new SetextHeaderBlock(),
 				new FencedCodeBlock(),
@@ -93,7 +93,7 @@ public class Commonmark {
 		return new SourceBlocks(
 				new BlockQuoteBlock(),
 				new AtxHeaderBlock(),
-				new HorizontalRuleBlock(),
+				new ThematicBreakBlock(),
 				new ListBlock(),
 				new SetextHeaderBlock(),
 				new FencedCodeBlock(),

@@ -26,7 +26,10 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlockItem;
 import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceBlockBuilder;
 
 
-public class HorizontalRuleBlock extends SourceBlock {
+/**
+ * CM Thematic Break (= Horizontal Rule)
+ */
+public class ThematicBreakBlock extends SourceBlock {
 	
 	
 	private static final Pattern PATTERN= Pattern.compile(
@@ -37,7 +40,7 @@ public class HorizontalRuleBlock extends SourceBlock {
 	private final Matcher matcher= PATTERN.matcher("");
 	
 	
-	public HorizontalRuleBlock() {
+	public ThematicBreakBlock() {
 	}
 	
 	
@@ -54,7 +57,7 @@ public class HorizontalRuleBlock extends SourceBlock {
 	
 	@Override
 	public void createItem(final SourceBlockBuilder builder, final LineSequence lineSequence) {
-		final SourceBlockItem<HorizontalRuleBlock> blockItem= new SourceBlockItem<>(this, builder);
+		final SourceBlockItem<ThematicBreakBlock> blockItem= new SourceBlockItem<>(this, builder);
 		
 		lineSequence.advance();
 	}
