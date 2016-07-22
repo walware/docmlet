@@ -68,7 +68,7 @@
    <extension
          point="org.eclipse.core.resources.natures"
          id="de.walware.docmlet.tex.natures.Tex"
-         name="TeX\u2002[StatET]">
+         name="TeX&#x2002;[StatET]">
       <runtime>
          <run class="de.walware.docmlet.tex.internal.core.TexProject"/>
       </runtime>
@@ -79,7 +79,7 @@
    <extension
          point="org.eclipse.core.resources.builders"
          id="de.walware.docmlet.tex.builders.Tex"
-         name="TeX Builder\u2002[StatET]">
+         name="TeX Builder&#x2002;[StatET]">
       <builder
             hasNature="true">
          <run class="de.walware.docmlet.tex.internal.core.builder.TexProjectBuilder"/>

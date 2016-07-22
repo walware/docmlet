@@ -49,7 +49,7 @@
    <extension
          point="org.eclipse.core.resources.natures"
          id="de.walware.docmlet.wikitext.natures.Wikitext"
-         name="Wikitext\u2002[StatET]">
+         name="Wikitext&#x2002;[StatET]">
       <runtime>
          <run class="de.walware.docmlet.wikitext.internal.core.WikitextProject"/>
       </runtime>
@@ -60,7 +60,7 @@
    <extension
          point="org.eclipse.core.resources.builders"
          id="de.walware.docmlet.wikitext.builders.Wikitext"
-         name="Wikitext Builder\u2002[StatET]">
+         name="Wikitext Builder&#x2002;[StatET]">
       <builder
             hasNature="true">
          <run class="de.walware.docmlet.wikitext.internal.core.builder.WikitextProjectBuilder"/>
