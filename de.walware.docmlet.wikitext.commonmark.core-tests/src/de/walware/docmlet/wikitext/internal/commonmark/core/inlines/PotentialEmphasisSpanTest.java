@@ -154,7 +154,7 @@ public class PotentialEmphasisSpanTest extends AbstractSourceSpanTest {
 	private Cursor createCursor(String markup, int offset) {
 		TextSegment segment = new TextSegment(ImCollections.newList(new Line(1, 0, 0, markup, "\n")));
 		Cursor cursor = new Cursor(segment);
-		cursor.advance(offset);
+		cursor.advance(segment.toTextOffset(offset));
 		return cursor;
 	}
 	

@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.walware.jcommons.collections.ImCollections;
@@ -23,6 +24,24 @@ import de.walware.jcommons.collections.ImList;
 
 
 public class TextSegment {
+	
+	
+	private static String computeText(final List<Line> lines) {
+		final StringBuilder text= new StringBuilder(lines.size() * 32);
+		
+		final Iterator<Line> iter= lines.iterator();
+		if (iter.hasNext()) {
+			Line line= iter.next();
+			while (iter.hasNext()) {
+				text.append(line.getTextContent(false));
+				text.append('\n');
+				line= iter.next();
+			}
+			text.append(line.getTextContent(true));
+		}
+		
+		return text.toString();
+	}
 	
 	
 	private final ImList<Line> lines;
@@ -50,18 +69,6 @@ public class TextSegment {
 	}
 	
 	
-	private static String computeText(final List<Line> lines) {
-		final StringBuilder text= new StringBuilder(lines.size() * 32);
-		for (final Line line : lines) {
-			if (text.length() > 0) {
-				text.append('\n');
-			}
-			text.append(line.getText());
-		}
-		return text.toString();
-	}
-	
-	
 	public String getText() {
 		return this.text;
 	}
@@ -72,40 +79,40 @@ public class TextSegment {
 	
 	public int offsetOf(final int textOffset) {
 		checkArgument(textOffset >= 0);
-		int textOffsetOfLine = 0;
-		int remainder = textOffset;
+		int contentOffsetOfLine= 0;
+		int remainder= textOffset;
 		for (final Line line : this.lines) {
-			textOffsetOfLine = line.getOffset();
-			final int linePlusSeparatorLength = line.getText().length() + 1;
+			contentOffsetOfLine= line.getTextContentOffset();
+			final int linePlusSeparatorLength= line.getText().length() + 1;
 			if (linePlusSeparatorLength > remainder) {
 				break;
 			}
-			remainder -= linePlusSeparatorLength;
+			remainder-= linePlusSeparatorLength;
 		}
-		return textOffsetOfLine + remainder;
+		return contentOffsetOfLine + remainder;
 	}
 	
 	public int toTextOffset(final int documentOffset) {
-		int textOffset = 0;
+		int textOffset= 0;
 		for (final Line line : this.lines) {
-			final int lineRelativeOffset = documentOffset - line.getOffset();
-			final int linePlusSeparatorLength = line.getText().length() + 1;
+			final int lineRelativeOffset= documentOffset - line.getTextContentOffset();
+			final int linePlusSeparatorLength= line.getText().length() + 1;
 			if (lineRelativeOffset >= 0 && lineRelativeOffset < linePlusSeparatorLength) {
 				return textOffset + lineRelativeOffset;
 			}
-			textOffset += linePlusSeparatorLength;
+			textOffset+= linePlusSeparatorLength;
 		}
 		throw new IllegalArgumentException();
 	}
 	
 	public Line getLineAtOffset(final int textOffset) {
-		final int documentOffset = offsetOf(textOffset);
-		Line previous = null;
+		final int documentOffset= offsetOf(textOffset);
+		Line previous= null;
 		for (final Line line : this.lines) {
 			if (line.getOffset() > documentOffset) {
 				break;
 			}
-			previous = line;
+			previous= line;
 		}
 		return checkNotNull(previous);
 	}

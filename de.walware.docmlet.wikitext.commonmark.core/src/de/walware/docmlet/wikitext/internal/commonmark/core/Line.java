@@ -22,11 +22,11 @@ import org.eclipse.jface.text.IRegion;
 public class Line implements IRegion {
 	
 	
-	private final String text;
-	
 	private final int offset;
 	
 	private final int column;
+	
+	private final String text;
 	
 	private int indentColumns= -1;
 	private int indentLength= -1;
@@ -133,6 +133,17 @@ public class Line implements IRegion {
 	}
 	
 	
+	public String getTextContent(final boolean trimEnd) {
+		return (trimEnd) ?
+				this.text.substring(this.indentLength, computeTrimEnd()) :
+				this.text.substring(this.indentLength);
+	}
+	
+	public int getTextContentOffset() {
+		return this.offset + this.indentLength;
+	}
+	
+	
 	/**
 	 * Provides the 0-based line number.
 	 * 
@@ -217,7 +228,7 @@ public class Line implements IRegion {
 				idx++;
 				continue;
 			case '\t':
-				column += 4 - (column % 4);
+				column+= 4 - (column % 4);
 				idx++;
 				continue;
 			default:
@@ -239,7 +250,7 @@ public class Line implements IRegion {
 			final char c= text.charAt(idx);
 			switch (c) {
 			case '\t':
-				column += 4 - (column % 4);
+				column+= 4 - (column % 4);
 				if (column - this.column > indent) {
 					return idx;
 				}
@@ -270,7 +281,7 @@ public class Line implements IRegion {
 			final char c= text.charAt(idx);
 			switch (c) {
 			case '\t':
-				column += 4 - (column % 4);
+				column+= 4 - (column % 4);
 				idx++;
 				continue;
 			default:

@@ -15,10 +15,15 @@ package de.walware.docmlet.wikitext.internal.commonmark.core.blocks;
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertCanStart;
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertCannotStart;
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertContent;
+import static org.junit.Assert.assertEquals;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
 import org.junit.Test;
 
 import de.walware.jcommons.collections.ImCollections;
+
+import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 
 
 public class ParagraphBlockTest {
@@ -51,6 +56,35 @@ public class ParagraphBlockTest {
 			assertContent("<p>p1 first p1 second p1 third</p><p>p2 first</p>",
 					"p1 first" + newline + "p1 second" + newline + "p1 third" + newline + newline + "p2 first");
 		}
+	}
+	
+	@Test
+	public void trim() {
+		// remove of indent from content
+		new MarkupParser(new CommonmarkLanguage(), new NoOpDocumentBuilder() {
+			
+			int i;
+			String[] expected= { "aaa", "\n", "bbb", "\n", "ccc" };
+			
+			@Override
+			public void characters(String text) {
+				assertEquals(expected[i++], text);
+			}
+			
+		}).parse("   aaa\n      bbb\n\tccc");
+		
+		// remove of final spaces from content
+		new MarkupParser(new CommonmarkLanguage(), new NoOpDocumentBuilder() {
+			
+			int i;
+			String[] expected= { "aaa", "\n", "bbb" };
+			
+			@Override
+			public void characters(String text) {
+				assertEquals(expected[i++], text);
+			}
+			
+		}).parse("   aaa\n      bbb   ");
 	}
 	
 }

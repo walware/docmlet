@@ -30,14 +30,13 @@ public class StringCharactersSpanTest extends AbstractSourceSpanTest {
 		assertInline(Characters.class, 0, 1, createCursor("``one"));
 		assertInline(Characters.class, 0, 1, createCursor("__two"));
 		assertInline(Characters.class, 0, 1, createCursor("***three"));
-		assertInline(Characters.class, 0, 1, createCursor("   \nb"));
 		assertInline(Characters.class, 0, 3, createCursor("one`"));
 		assertInline(Characters.class, 0, 3, createCursor("one\ntwo"));
-		assertInline(Characters.class, 0, 4, createCursor(" one *two"));
-		assertInline(Characters.class, 0, 8, createCursor(" one two *three"));
-		assertInline(Characters.class, 0, 8, createCursor(" one two \\[ab"));
-		assertInline(Characters.class, 0, 8, createCursor(" one two !"));
-		assertInline(Characters.class, 0, 8, createCursor(" one two <"));
+		assertInline(Characters.class, 1, 3, createCursor(" one *two"));
+		assertInline(Characters.class, 1, 7, createCursor(" one two *three"));
+		assertInline(Characters.class, 1, 7, createCursor(" one two \\[ab"));
+		assertInline(Characters.class, 1, 7, createCursor(" one two !"));
+		assertInline(Characters.class, 1, 7, createCursor(" one two <"));
 	}
 	
 }
