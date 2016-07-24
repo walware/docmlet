@@ -41,11 +41,12 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 	public static final Pattern PATTERN= PROCESS_PATTERN;
 	
 	public static final int computeContentLineIndent(final Line line, final Matcher matcher) {
-		if (matcher.start(1) != -1) {
-			return line.getColumn(matcher.regionStart() + 2) - line.getColumn();
+		final int spaceOffset= matcher.start(1);
+		if (spaceOffset != -1) {
+			return line.getColumn(spaceOffset) + 1 - line.getColumn();
 		}
 		else {
-			return line.getColumn(matcher.regionStart() + 1) - line.getColumn();
+			return line.getColumn(matcher.regionStart()) + 1 - line.getColumn();
 		}
 	}
 	

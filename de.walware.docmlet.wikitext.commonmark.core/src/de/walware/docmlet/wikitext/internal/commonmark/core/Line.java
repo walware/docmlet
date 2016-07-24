@@ -45,6 +45,11 @@ public class Line implements IRegion {
 	}
 	
 	
+	private static final String[] SPACES= new String[] {
+			"", " ", "  ", "   ", "    "
+	};
+	
+	
 	private final int offset;
 	
 	private final int column;
@@ -164,6 +169,16 @@ public class Line implements IRegion {
 	
 	public int getTextContentOffset() {
 		return this.offset + this.indentLength;
+	}
+	
+	public String getCodeContent() {
+		if (this.text.isEmpty()
+				|| this.indentLength == 0
+				|| this.column % 4 == 0
+				|| this.text.charAt(0) != '\t') {
+			return this.text;
+		}
+		return SPACES[this.column % 4] + this.text.substring(1);
 	}
 	
 	

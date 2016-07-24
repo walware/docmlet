@@ -95,7 +95,7 @@ public class IndentedCodeBlock extends SourceBlock {
 			if (line.getIndent() >= 4) {
 				final Line codeSegment= line.segmentByIndent(4);
 				locator.setLine(codeSegment);
-				builder.characters(codeSegment.getText());
+				builder.characters(codeSegment.getCodeContent());
 				builder.characters("\n");
 			}
 			else {
