@@ -52,10 +52,14 @@ import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 public class CommonMarkSpecTest {
 	
 	
-	private static final String SPEC_VERSION = "0.23";
+	private static final String SPEC_VERSION = "0.24";
 	
 	private static final URI COMMONMARK_SPEC_URI = URI.create(
 			String.format("https://raw.githubusercontent.com/jgm/CommonMark/%s/spec.txt", SPEC_VERSION) );
+	
+	private static final String CASE_START= "```````````````````````````````` example";
+	private static final String CASE_SEP= ".";
+	private static final String CASE_END= "````````````````````````````````";
 	
 	
 	private static final List<String> HEADING_EXCLUSIONS = ImCollections.newList();
@@ -138,7 +142,7 @@ public class CommonMarkSpecTest {
 			int num= 1;
 			while ((line = reader.readLine()) != null) {
 				line = line.replace('→', '\t');
-				if (line.trim().equals(".")) {
+				if (line.trim().equals(CASE_START)) {
 					int testLineNumber = reader.getLineNumber();
 					Expectation expectation = readExpectation(reader);
 					parameters.add(
@@ -156,17 +160,17 @@ public class CommonMarkSpecTest {
 	}
 	
 	private static Expectation readExpectation(LocationTrackingReader reader) throws IOException {
-		String input = readUntilDelimiter(reader);
-		String expected = readUntilDelimiter(reader);
+		String input = readUntilDelimiter(reader, CASE_SEP);
+		String expected = readUntilDelimiter(reader, CASE_END);
 		return new Expectation(input, expected);
 	}
 	
-	private static String readUntilDelimiter(LocationTrackingReader reader) throws IOException {
+	private static String readUntilDelimiter(LocationTrackingReader reader, String end) throws IOException {
 		List<String> lines = new ArrayList<>();
 		String line;
 		while ((line = reader.readLine()) != null) {
 			line = line.replace('→', '\t');
-			if (line.trim().equals(".")) {
+			if (line.trim().equals(end)) {
 				break;
 			}
 			lines.add(line);

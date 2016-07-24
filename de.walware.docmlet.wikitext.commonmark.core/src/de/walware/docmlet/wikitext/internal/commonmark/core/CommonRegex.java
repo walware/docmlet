@@ -55,7 +55,7 @@ public class CommonRegex {
 			Pattern.DOTALL );
 	
 	
-	public static final String CNTRL_OR_SPACE= "\\x00-\\x20\\x7F";
+	public static final String CTRL_OR_SPACE= "\\x00-\\x20\\x7F";
 	
 //	public static final String LINE_END= "\n|\r\n?|$";
 	public static final String LINE_END= "\n|$";

@@ -11,7 +11,7 @@
 
 package de.walware.docmlet.wikitext.internal.commonmark.core.inlines;
 
-import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonRegex.CNTRL_OR_SPACE;
+import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonRegex.CTRL_OR_SPACE;
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonRegex.LINE_END;
 
 import java.util.regex.Matcher;
@@ -26,10 +26,10 @@ public class PotentialBracketRegex {
 	
 	static final String TITLE_REGEX= D_QUOTED_TITLE_REGEX + "|" + S_QUOTED_TITLE_REGEX + "|" + PARENS_TITLE_REGEX;
 	
-	static final String BRACKETS_URI_REGEX= "<((?:\\\\[^\r\n]|[^<>\r\n]|)*)>";
+	static final String BRACKETS_URI_REGEX= "<((?:\\\\[^ \r\n]|[^ \r\n<>]|)*)>";
 	
-	private static final String INNER_PARENS_REGEX= "\\((?:\\\\[^" + CNTRL_OR_SPACE + "]|[^" + CNTRL_OR_SPACE + "()])*\\)";
-	static final String NOBRACKET_URI_REGEX= "((?:\\\\[^" + CNTRL_OR_SPACE + "]|[^" + CNTRL_OR_SPACE + "()]|" + INNER_PARENS_REGEX + ")+)";
+	private static final String INNER_PARENS_REGEX= "\\((?:\\\\[^" + CTRL_OR_SPACE + "]|[^" + CTRL_OR_SPACE + "()])*\\)";
+	static final String NOBRACKET_URI_REGEX= "((?:\\\\[^" + CTRL_OR_SPACE + "]|[^" + CTRL_OR_SPACE + "()]|" + INNER_PARENS_REGEX + ")+)";
 	
 	static final String URI_M2_REGEX= "(?:" + BRACKETS_URI_REGEX + "|" + NOBRACKET_URI_REGEX + ")";
 	

@@ -42,13 +42,14 @@ public class PotentialBracketCloseDelimiterTest {
 	@Test
 	public void bracketUriPart() {
 		Pattern pattern = Pattern.compile(PotentialBracketRegex.BRACKETS_URI_REGEX);
-		assertTrue(pattern.matcher("<one two>").matches());
+		assertTrue(pattern.matcher("<one+two>").matches());
 		assertTrue(pattern.matcher("<>").matches());
 		assertFalse(pattern.matcher("<one two").matches());
-		assertFalse(pattern.matcher("<one two>>").matches());
-		Matcher matcher = pattern.matcher("<one two\\>>");
+		assertFalse(pattern.matcher("<one+two").matches());
+		assertFalse(pattern.matcher("<one+two>>").matches());
+		Matcher matcher = pattern.matcher("<one+two\\>>");
 		assertTrue(matcher.matches());
-		assertEquals("one two\\>", matcher.group(1));
+		assertEquals("one+two\\>", matcher.group(1));
 	}
 	
 	@Test
@@ -97,9 +98,9 @@ public class PotentialBracketCloseDelimiterTest {
 		assertEquals("/uri", matcher.group(2));
 		assertEquals("\"a title\"", matcher.group(3));
 		
-		matcher.reset("(</uri to here> (one two (three (four\\)\\)))");
+		matcher.reset("(</uri+to-here> (one two (three (four\\)\\)))");
 		assertTrue(matcher.matches());
-		assertEquals("/uri to here", matcher.group(1));
+		assertEquals("/uri+to-here", matcher.group(1));
 		assertEquals("(one two (three (four\\)\\))", matcher.group(3));
 		
 		assertMatch(2, "one(two\\(three\\))", matcher, "(one(two\\(three\\)))");

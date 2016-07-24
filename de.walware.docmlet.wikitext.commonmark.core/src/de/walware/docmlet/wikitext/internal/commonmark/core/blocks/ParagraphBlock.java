@@ -40,9 +40,24 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.ReferenceDef
 public class ParagraphBlock extends SourceBlock {
 	
 	
-	public static final ImIdentityList<Class<? extends SourceBlock>> DEFAULT_INTERRUPT_EXCLUSIONS= ImCollections.<Class<? extends SourceBlock>>newIdentityList(
-			IndentedCodeBlock.class,
-			SetextHeaderBlock.class );
+	public static final ImIdentityList<Class<? extends SourceBlock>> DEFAULT_INTERRUPT_EXCLUSIONS= ImCollections.newIdentityList(
+			IndentedCodeBlock.class );
+	
+	
+	protected static class ParagraphSourceBlockItem<TBlock extends ParagraphBlock> extends SourceBlockItem<TBlock> {
+		
+		public ParagraphSourceBlockItem(final TBlock type, final SourceBlockBuilder builder) {
+			super(type, builder);
+		}
+		
+		
+		@Override
+		public boolean isParagraph() {
+			return true;
+		}
+		
+	}
+	
 	
 	private final Collection<Class<? extends SourceBlock>> interruptExclusions;
 	
@@ -64,7 +79,7 @@ public class ParagraphBlock extends SourceBlock {
 	
 	@Override
 	public void createItem(final SourceBlockBuilder builder, final LineSequence lineSequence) {
-		final SourceBlockItem<ParagraphBlock> blockItem= new SourceBlockItem<>(this, builder);
+		final SourceBlockItem<ParagraphBlock> blockItem= new ParagraphSourceBlockItem<>(this, builder);
 		
 		lineSequence.advance();
 		while (true) {

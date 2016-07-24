@@ -131,7 +131,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 			
 			for (final SourceBlockItem<?> contentBlockItem : blockItem.getNested()) {
 				if (listMode == ListBlock.ListMode.TIGHT
-						&& contentBlockItem.getType() instanceof ParagraphBlock) {
+						&& contentBlockItem.isParagraph()) {
 					((ParagraphBlock) contentBlockItem.getType())
 							.emit(context, contentBlockItem, false, locator, builder);
 				}
@@ -215,14 +215,14 @@ public class ListBlock extends BlockWithNestedBlocks {
 				return line.segmentByIndent(this.indent);
 			}
 			if (isLazyContinuation(line)) {
-				return line;
+				return line.lazy();
 			}
 			return null;
 		}
 		
 		private boolean isLazyContinuation(final Line line) {
 			final SourceBlockItem<?> currentItem= this.builder.getCurrentItem();
-			if (currentItem.getType() instanceof ParagraphBlock) {
+			if (currentItem.isParagraph()) {
 				if (!(this.blockItem.getType().canStart(line)
 						|| ((ParagraphBlock) currentItem.getType()).isAnotherBlockStart(
 								createLookAhead(line), this.builder.getSourceBlocks() ))) {

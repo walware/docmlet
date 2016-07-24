@@ -13,7 +13,6 @@
 package de.walware.docmlet.wikitext.internal.commonmark.core.blocks;
 
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertCanStart;
-import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertCannotStart;
 import static de.walware.docmlet.wikitext.internal.commonmark.core.CommonmarkAsserts.assertContent;
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +26,7 @@ import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 public class SetextHeaderBlockTest {
 	
 	
-	private final SetextHeaderBlock block = new SetextHeaderBlock();
+	private final SetextHeaderOrParagraphBlock block = new SetextHeaderOrParagraphBlock();
 	
 	
 	@Test
@@ -36,17 +35,17 @@ public class SetextHeaderBlockTest {
 		assertCanStart(block, "Heading\n=");
 		assertCanStart(block, "Heading\n  =");
 		assertCanStart(block, "Heading\n   =");
-		assertCannotStart(block, "Heading\n    =");
+//		assertCannotStart(block, "Heading\n    =");
 		assertCanStart(block, "Heading\n=====");
 		assertCanStart(block, "Heading Text\n-----");
-		assertCannotStart(block, "Heading\n\n=====");
+//		assertCannotStart(block, "Heading\n\n=====");
 		assertCanStart(block, "   Heading\n=====");
-		assertCannotStart(block, "    Heading\n=====");
+//		assertCannotStart(block, "    Heading\n=====");
 		
 		// Bug 472404:
-		assertCannotStart(block, "\tHeading\n=");
-		assertCannotStart(block, "Heading\n\t=");
-		assertCannotStart(block, "Heading\n=-");
+//		assertCannotStart(block, "\tHeading\n=");
+//		assertCannotStart(block, "Heading\n\t=");
+//		assertCannotStart(block, "Heading\n=-");
 	}
 	
 	@Test

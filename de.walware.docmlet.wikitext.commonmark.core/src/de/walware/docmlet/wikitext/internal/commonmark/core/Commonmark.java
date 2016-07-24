@@ -23,12 +23,12 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.AtxHeaderBloc
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.BlockQuoteBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.EmptyBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.FencedCodeBlock;
-import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ThematicBreakBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.HtmlBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.IndentedCodeBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ListBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ParagraphBlock;
-import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.SetextHeaderBlock;
+import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.SetextHeaderOrParagraphBlock;
+import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.ThematicBreakBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.AutoLinkSpan;
 import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.AutoLinkWithoutDemarcationSpan;
 import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.BackslashEscapeSpan;
@@ -61,11 +61,10 @@ public class Commonmark {
 				new AtxHeaderBlock(),
 				new ThematicBreakBlock(),
 				new ListBlock(),
-				new SetextHeaderBlock(),
 				new FencedCodeBlock(),
 				new IndentedCodeBlock(),
 				new HtmlBlock(),
-				new ParagraphBlock(),
+				new SetextHeaderOrParagraphBlock(),
 				new EmptyBlock() );
 	}
 	
@@ -95,11 +94,10 @@ public class Commonmark {
 				new AtxHeaderBlock(),
 				new ThematicBreakBlock(),
 				new ListBlock(),
-				new SetextHeaderBlock(),
 				new FencedCodeBlock(),
 				new IndentedCodeBlock(),
 				new HtmlBlock(),
-				new ParagraphBlock(interruptParagraphExclusions),
+				new SetextHeaderOrParagraphBlock(interruptParagraphExclusions),
 				new EmptyBlock() );
 	}
 	

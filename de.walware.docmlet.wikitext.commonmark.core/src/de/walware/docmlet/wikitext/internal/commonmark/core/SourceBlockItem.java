@@ -21,10 +21,10 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceB
 import de.walware.docmlet.wikitext.internal.commonmark.core.blocks.BlockWithNestedBlocks;
 
 
-public class SourceBlockItem<T extends SourceBlock> {
+public class SourceBlockItem<TBlock extends SourceBlock> {
 	
 	
-	private final T type;
+	private final TBlock type;
 	
 	private final SourceBlockItem<?> parent;
 	private final List<SourceBlockItem<?>> nested;
@@ -32,13 +32,13 @@ public class SourceBlockItem<T extends SourceBlock> {
 	private ImList<Line> lines;
 	
 	
-	public SourceBlockItem(final T type, final SourceBlockBuilder builder) {
+	public SourceBlockItem(final TBlock type, final SourceBlockBuilder builder) {
 		this.type= type;
 		this.parent= builder.getCurrentItem();
 		
 		this.nested= (type instanceof BlockWithNestedBlocks) ?
-				new ArrayList<SourceBlockItem<?>>() :
-				ImCollections.<SourceBlockItem<?>>emptyList();
+				new ArrayList<>() :
+				ImCollections.emptyList();
 		if (this.parent != null) {
 			this.parent.nested.add(this);
 		}
@@ -46,7 +46,7 @@ public class SourceBlockItem<T extends SourceBlock> {
 	}
 	
 	
-	public T getType() {
+	public TBlock getType() {
 		return this.type;
 	}
 	
@@ -65,6 +65,11 @@ public class SourceBlockItem<T extends SourceBlock> {
 	
 	void setLines(final ImList<Line> lines) {
 		this.lines= lines;
+	}
+	
+	
+	public boolean isParagraph() {
+		return false;
 	}
 	
 	

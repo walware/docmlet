@@ -22,6 +22,29 @@ import org.eclipse.jface.text.IRegion;
 public class Line implements IRegion {
 	
 	
+	private static class LazyLine extends Line {
+		
+		
+		public LazyLine(final int lineNumber, final int offset, final int column,
+				final String text, final String lineDelimiter,
+				final int indentColumns, final int indentLength) {
+			super(lineNumber, offset, column, text, lineDelimiter, indentColumns, indentLength);
+		}
+		
+		
+		@Override
+		public boolean isLazy() {
+			return true;
+		}
+		
+		@Override
+		public LazyLine lazy() {
+			return this;
+		}
+		
+	}
+	
+	
 	private final int offset;
 	
 	private final int column;
@@ -192,6 +215,16 @@ public class Line implements IRegion {
 			return new Line(this.lineNumber, this.offset + indentLength, this.column + indent,
 					this.text.substring(indentLength), this.lineDelimiter );
 		}
+	}
+	
+	
+	public boolean isLazy() {
+		return false;
+	}
+	
+	public Line lazy() {
+		return new LazyLine(this.lineNumber, this.offset, this.column,
+				this.text, this.lineDelimiter, this.indentColumns, this.indentLength );
 	}
 	
 	

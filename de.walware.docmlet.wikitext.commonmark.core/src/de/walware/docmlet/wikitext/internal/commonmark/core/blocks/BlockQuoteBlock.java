@@ -92,7 +92,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 					return line.segmentByIndent(computeContentLineIndent(line, matcher));
 				}
 				if (isLazyContinuation(line)) {
-					return line;
+					return line.lazy();
 				}
 			}
 			return null;
@@ -100,7 +100,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		
 		private boolean isLazyContinuation(final Line line) {
 			final SourceBlockItem<?> currentItem= this.builder.getCurrentItem();
-			if (currentItem.getType() instanceof ParagraphBlock) {
+			if (currentItem.isParagraph()) {
 				final LineSequence lookAhead= createLookAhead(line);
 				if (!((ParagraphBlock) currentItem.getType()).isAnotherBlockStart(
 						lookAhead, this.builder.getSourceBlocks())) {
