@@ -91,7 +91,7 @@ public class SourceBlocksTest {
 		return new SourceBlock() {
 			
 			@Override
-			public boolean canStart(LineSequence lineSequence) {
+			public boolean canStart(LineSequence lineSequence, SourceBlockItem<?> currentBlockItem) {
 				return lineSequence.getCurrentLine() != null
 						&& lineSequence.getCurrentLine().getText().startsWith(startString);
 			}

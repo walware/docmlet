@@ -37,11 +37,11 @@ public class AtxHeaderBlock extends SourceBlock {
 	
 	
 	private static final Pattern START_PATTERN= Pattern.compile(
-			"#{1,6}(?:\\ .*)?",
+			"#{1,6}(?:[ \t].*)?",
 			Pattern.DOTALL );
 	
 	private static final Pattern PATTERN= Pattern.compile(
-			"(#{1,6})(?:\\ \\ ??(.+?))??(?:\\ +#+)?\\ *",
+			"(#{1,6})(?:[ \t]??(.+?))??(?:\\ +#+)?\\ *",
 			Pattern.DOTALL );
 	
 	
@@ -55,7 +55,7 @@ public class AtxHeaderBlock extends SourceBlock {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line currentLine= lineSequence.getCurrentLine();
 		return (currentLine != null
 				&& !currentLine.isBlank() && currentLine.getIndent() < 4

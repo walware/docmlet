@@ -26,12 +26,27 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceB
 public class EmptyBlock extends SourceBlock {
 	
 	
+	private static class EmptyBlockItem extends SourceBlockItem<EmptyBlock> {
+		
+		public EmptyBlockItem(final EmptyBlock type, final SourceBlockBuilder builder) {
+			super(type, builder);
+		}
+		
+		
+		@Override
+		public boolean isEmpty() {
+			return true;
+		}
+		
+	}
+	
+	
 	public EmptyBlock() {
 	}
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line startLine= lineSequence.getCurrentLine();
 		return (startLine != null
 				&& startLine.isBlank() );
@@ -39,7 +54,7 @@ public class EmptyBlock extends SourceBlock {
 	
 	@Override
 	public void createItem(final SourceBlockBuilder builder, final LineSequence lineSequence) {
-		final SourceBlockItem<EmptyBlock> blockItem= new SourceBlockItem<>(this, builder);
+		final SourceBlockItem<EmptyBlock> blockItem= new EmptyBlockItem(this, builder);
 		
 		advanceBlankLines(lineSequence);
 	}

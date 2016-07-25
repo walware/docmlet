@@ -40,8 +40,7 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.inlines.ReferenceDef
 public class ParagraphBlock extends SourceBlock {
 	
 	
-	public static final ImIdentityList<Class<? extends SourceBlock>> DEFAULT_INTERRUPT_EXCLUSIONS= ImCollections.newIdentityList(
-			IndentedCodeBlock.class );
+	public static final ImIdentityList<Class<? extends SourceBlock>> DEFAULT_INTERRUPT_EXCLUSIONS= ImCollections.newIdentityList();
 	
 	
 	protected static class ParagraphSourceBlockItem<TBlock extends ParagraphBlock> extends SourceBlockItem<TBlock> {
@@ -72,7 +71,7 @@ public class ParagraphBlock extends SourceBlock {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line line= lineSequence.getCurrentLine();
 		return (line != null && !line.isBlank());
 	}
@@ -86,7 +85,7 @@ public class ParagraphBlock extends SourceBlock {
 			final Line line= lineSequence.getCurrentLine();
 			if (line != null
 					&& !line.isBlank()
-					&& !isAnotherBlockStart(lineSequence, builder.getSourceBlocks()) ) {
+					&& !isAnotherBlockStart(lineSequence, builder.getSourceBlocks(), blockItem) ) {
 				lineSequence.advance();
 				continue;
 			}
@@ -152,12 +151,10 @@ public class ParagraphBlock extends SourceBlock {
 		return true;
 	}
 	
-	boolean isAnotherBlockStart(final LineSequence lineSequence, final SourceBlocks sourceBlocks) {
-		final SourceBlock block= sourceBlocks.selectBlock(lineSequence);
+	boolean isAnotherBlockStart(final LineSequence lineSequence, final SourceBlocks sourceBlocks,
+			final SourceBlockItem<?> currentBlockItem) {
+		final SourceBlock block= sourceBlocks.selectBlock(lineSequence, currentBlockItem);
 		if (block != null && !(block instanceof ParagraphBlock)) {
-			if (block instanceof HtmlBlock) {
-				return ((HtmlBlock) block).canInterruptParagraph();
-			}
 			if (!this.interruptExclusions.contains(block.getClass())) {
 				return true;
 			}

@@ -87,7 +87,7 @@ public class SetextHeaderOrParagraphBlock extends ParagraphBlock {
 					lineSequence.advance();
 					break;
 				}
-				if (!isAnotherBlockStart(lineSequence, builder.getSourceBlocks()) ) {
+				if (!isAnotherBlockStart(lineSequence, builder.getSourceBlocks(), typedBlockItem) ) {
 					lineSequence.advance();
 					continue;
 				}

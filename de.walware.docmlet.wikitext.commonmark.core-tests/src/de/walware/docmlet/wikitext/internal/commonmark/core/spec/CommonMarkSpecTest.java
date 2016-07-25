@@ -52,7 +52,7 @@ import de.walware.docmlet.wikitext.commonmark.core.CommonmarkLanguage;
 public class CommonMarkSpecTest {
 	
 	
-	private static final String SPEC_VERSION = "0.25";
+	private static final String SPEC_VERSION = "0.26";
 	
 	private static final URI COMMONMARK_SPEC_URI = URI.create(
 			String.format("https://raw.githubusercontent.com/jgm/CommonMark/%s/spec.txt", SPEC_VERSION) );

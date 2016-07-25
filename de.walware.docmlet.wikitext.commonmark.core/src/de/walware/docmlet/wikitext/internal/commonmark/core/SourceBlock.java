@@ -54,7 +54,7 @@ public abstract class SourceBlock {
 	}
 	
 	
-	public abstract boolean canStart(LineSequence lineSequence);
+	public abstract boolean canStart(LineSequence lineSequence, SourceBlockItem<?> currentBlockItem);
 	
 	public abstract void createItem(SourceBlockBuilder builder, LineSequence lineSequence);
 	

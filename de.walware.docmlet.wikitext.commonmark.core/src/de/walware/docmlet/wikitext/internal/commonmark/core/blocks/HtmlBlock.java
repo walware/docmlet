@@ -115,15 +115,16 @@ public class HtmlBlock extends SourceBlock {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line currentLine= lineSequence.getCurrentLine();
+		final Matcher matcher;
 		return (currentLine != null
 				&& !currentLine.isBlank() && currentLine.getIndent() < 4
-				&& currentLine.setupIndent(this.startMatcher).matches() );
+				&& (matcher= currentLine.setupIndent(this.startMatcher)).matches()
+				&& (currentBlockItem == null || canInterrupt(matcher)) );
 	}
 	
-	public boolean canInterruptParagraph() {
-		final Matcher matcher= this.startMatcher;
+	private boolean canInterrupt(final Matcher matcher) {
 		return (matcher.start(7) == -1);
 	}
 	

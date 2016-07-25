@@ -30,10 +30,8 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.FilterLineSequence;
 import de.walware.docmlet.wikitext.internal.commonmark.core.Line;
 import de.walware.docmlet.wikitext.internal.commonmark.core.LineSequence;
 import de.walware.docmlet.wikitext.internal.commonmark.core.ProcessingContext;
-import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlock;
 import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlockItem;
 import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceBlockBuilder;
-import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceBlockParticipate;
 
 
 public class ListBlock extends BlockWithNestedBlocks {
@@ -60,7 +58,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 	
 	
-	static final class ListBlockItem extends SourceBlockItem<ListBlock> {
+	private static final class ListBlockItem extends SourceBlockItem<ListBlock> {
 		
 		private char bulletType;
 		
@@ -68,6 +66,86 @@ public class ListBlock extends BlockWithNestedBlocks {
 		
 		public ListBlockItem(final ListBlock type, final SourceBlockBuilder builder) {
 			super(type, builder);
+		}
+		
+	}
+	
+	private static class ListLines extends FilterLineSequence {
+		
+		
+		private final SourceBlockBuilder builder;
+		
+		private final ListItemBlock listItemBlock;
+		
+		
+		public ListLines(final LineSequence delegate, final SourceBlockBuilder builder,
+				final ListItemBlock blockItem) {
+			super(delegate);
+			
+			this.builder= builder;
+			this.listItemBlock= blockItem;
+		}
+		
+		public ListLines(final ListLines from) {
+			super(from.getDelegate().lookAhead());
+			
+			this.builder= from.builder;
+			this.listItemBlock= from.listItemBlock;
+		}
+		
+		
+		@Override
+		public LineSequence lookAhead() {
+			return new ListLines(this);
+		}
+		
+		@Override
+		protected Line filter(final Line line) {
+			if (!line.isBlank()) {
+				if (line.getIndent() >= this.listItemBlock.itemIdent
+						|| this.listItemBlock.canStart(line) ) {
+					return line;
+				}
+				if (isLazyContinuation(line)) {
+					return line.lazy();
+				}
+			}
+			else {
+				if (lookAheadSafeLine(getDelegate().lookAhead(line.getLineNumber())) != Integer.MIN_VALUE) {
+					return line;
+				}
+			}
+			return null;
+		}
+		
+		private boolean isLazyContinuation(final Line line) {
+			final SourceBlockItem<?> currentItem= this.builder.getCurrentItem();
+			if (currentItem.getParent() != this.listItemBlock.listBlockItem
+					&& currentItem.isParagraph()) {
+				if (!(this.listItemBlock.canStart(line)
+						|| ((ParagraphBlock) currentItem.getType()).isAnotherBlockStart(
+								getDelegate().lookAhead(line.getLineNumber()), this.builder.getSourceBlocks(), currentItem ))) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private int lookAheadSafeLine(final LineSequence lineSequence) {
+			while (true) {
+				final Line line= lineSequence.getCurrentLine();
+				if (line != null) {
+					if (line.isBlank()) {
+						lineSequence.advance();
+						continue;
+					}
+					if (line.getIndent() >= this.listItemBlock.itemIdent
+							|| this.listItemBlock.canStart(line) ) {
+						return line.getLineNumber();
+					}
+				}
+				return Integer.MIN_VALUE;
+			}
 		}
 		
 	}
@@ -87,7 +165,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 		
 		
 		@Override
-		public boolean canStart(final LineSequence lineSequence) {
+		public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 			return canStart(lineSequence.getCurrentLine());
 		}
 		
@@ -113,7 +191,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 			this.itemIdent= computeItemLineIndent(startLine, listBlock.matcher);
 			final ListItemLines itemLineSequence= new ListItemLines(lineSequence, builder, blockItem,
 					startLine.getLineNumber(), this.itemIdent );
-			builder.createNestedItems(itemLineSequence, null, itemLineSequence);
+			builder.createNestedItems(itemLineSequence, null);
 		}
 		
 		@Override
@@ -125,7 +203,6 @@ public class ListBlock extends BlockWithNestedBlocks {
 		public void emit(final ProcessingContext context, final SourceBlockItem<?> blockItem,
 				final ListBlock.ListMode listMode,
 				final CommonmarkLocator locator, final DocumentBuilder builder) {
-			
 			locator.setBlockBegin(blockItem);
 			builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
 			
@@ -147,8 +224,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 		
 	}
 	
-	private static class ListItemLines extends FilterLineSequence 
-			implements SourceBlockParticipate {
+	private static class ListItemLines extends FilterLineSequence {
 		
 		private final SourceBlockBuilder builder;
 		private final SourceBlockItem<ListItemBlock> blockItem;
@@ -179,25 +255,8 @@ public class ListBlock extends BlockWithNestedBlocks {
 		
 		
 		@Override
-		public boolean approveBlockSelect(final SourceBlock selected, final LineSequence lineSequence) {
-			final List<SourceBlockItem<?>> nestedItems= this.blockItem.getNested();
-			if (!nestedItems.isEmpty()
-					&& selected instanceof EmptyBlock
-					&& !isSaveListContinuation(getDelegate().getNextLine()) ) {
-				return false;
-			}
-			return true;
-		}
-		
-		@Override
 		public ListItemLines lookAhead() {
 			return new ListItemLines(this);
-		}
-		
-		private boolean isSaveListContinuation(final Line line) {
-			return (line != null && !line.isBlank()
-					&& (line.getIndent() >= this.indent
-							|| this.blockItem.getType().canStart(line) ));
 		}
 		
 		
@@ -205,40 +264,20 @@ public class ListBlock extends BlockWithNestedBlocks {
 		protected Line filter(final Line line) {
 			final List<SourceBlockItem<?>> nestedItems= this.blockItem.getNested();
 			if (nestedItems.size() == 1
-					&& nestedItems.get(0).getType() instanceof EmptyBlock
+					&& nestedItems.get(0).isEmpty()
 					&& line.getLineNumber() > this.markerLineNumber + 1) {
 				return null;
+			}
+			// validity already checked in ListLines
+			if (line.isLazy()) {
+				return line;
 			}
 			if (line.getLineNumber() == this.markerLineNumber
 					|| line.isBlank()
 					|| line.getIndent() >= this.indent ) {
 				return line.segmentByIndent(this.indent);
 			}
-			if (isLazyContinuation(line)) {
-				return line.lazy();
-			}
 			return null;
-		}
-		
-		private boolean isLazyContinuation(final Line line) {
-			final SourceBlockItem<?> currentItem= this.builder.getCurrentItem();
-			if (currentItem.isParagraph()) {
-				if (!(this.blockItem.getType().canStart(line)
-						|| ((ParagraphBlock) currentItem.getType()).isAnotherBlockStart(
-								createLookAhead(line), this.builder.getSourceBlocks() ))) {
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		private LineSequence createLookAhead(final Line line) {
-			final LineSequence lookAhead= getDelegate().lookAhead();
-			while (lookAhead.getCurrentLine() != null
-					&& lookAhead.getCurrentLine().getLineNumber() < line.getLineNumber()) {
-				lookAhead.advance();
-			}
-			return lookAhead;
 		}
 		
 	}
@@ -250,11 +289,19 @@ public class ListBlock extends BlockWithNestedBlocks {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence,
+			final SourceBlockItem<?> currentBlockItem) {
 		final Line currentLine= lineSequence.getCurrentLine();
+		final Matcher matcher;
 		return (currentLine != null
 				&& !currentLine.isBlank() && currentLine.getIndent() < 4
-				&& currentLine.setupIndent(this.matcher).matches() );
+				&& (matcher= currentLine.setupIndent(this.matcher)).matches()
+				&& (currentBlockItem == null || canInterrupt(currentLine, matcher)) );
+	}
+	
+	private boolean canInterrupt(final Line startLine, final Matcher matcher) {
+		return (listStart(startLine, matcher) == null
+				&& matcher.start(4) != -1 );
 	}
 	
 	@Override
@@ -269,7 +316,8 @@ public class ListBlock extends BlockWithNestedBlocks {
 		
 		final ListItemBlock itemBlock= new ListItemBlock(listBlockItem);
 		
-		builder.createNestedItems(lineSequence, ImCollections.newList(itemBlock), null);
+		builder.createNestedItems(new ListLines(lineSequence, builder, itemBlock),
+				ImCollections.newList(itemBlock) );
 	}
 	
 	@Override
@@ -287,8 +335,8 @@ public class ListBlock extends BlockWithNestedBlocks {
 		locator.setBlockBegin(blockItem);
 		builder.beginBlock(toBlockType(listBlockItem.bulletType), listAttributes);
 		
-		for (final SourceBlockItem<?> itemBlockItem : listBlockItem.getNested()) {
-			((ListItemBlock) itemBlockItem.getType()).emit(context, itemBlockItem, listMode,
+		for (final SourceBlockItem<?> nestedBlockItem : listBlockItem.getNested()) {
+			((ListItemBlock) nestedBlockItem.getType()).emit(context, nestedBlockItem, listMode,
 					locator, builder );
 		}
 		
@@ -318,19 +366,19 @@ public class ListBlock extends BlockWithNestedBlocks {
 			return ListMode.TIGHT;
 		}
 		{	final SourceBlockItem<?> block= contentBlockItems.get(0);
-			if (block.getType() instanceof EmptyBlock && block.getLines().size() > 1) {
+			if (block.isEmpty() && block.getLines().size() > 1) {
 				return ListMode.LOOSE;
 			}
 		}
 		for (int idx= 1; idx < contentBlockItems.size() - 1; idx++) {
 			final SourceBlockItem<?> block= contentBlockItems.get(idx);
-			if (block.getType() instanceof EmptyBlock) {
+			if (block.isEmpty()) {
 				return ListMode.LOOSE;
 			}
 		}
 		if (contentBlockItems.size() > 1) {
 			final SourceBlockItem<?> block= contentBlockItems.get(contentBlockItems.size() - 1);
-			if (block.getType() instanceof EmptyBlock) {
+			if (block.isEmpty()) {
 				return ListMode.TIGHT_WITH_TRAILING_EMPTY_LINE;
 			}
 		}

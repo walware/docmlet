@@ -102,22 +102,13 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		private boolean isLazyContinuation(final Line line) {
 			final SourceBlockItem<?> currentItem= this.builder.getCurrentItem();
 			if (currentItem.isParagraph()) {
-				final LineSequence lookAhead= createLookAhead(line);
+				final LineSequence lookAhead= getDelegate().lookAhead(line.getLineNumber());
 				if (!((ParagraphBlock) currentItem.getType()).isAnotherBlockStart(
-						lookAhead, this.builder.getSourceBlocks())) {
+						lookAhead, this.builder.getSourceBlocks(), currentItem)) {
 					return true;
 				}
 			}
 			return false;
-		}
-		
-		private LineSequence createLookAhead(final Line line) {
-			final LineSequence lookAhead= getDelegate().lookAhead();
-			while (lookAhead.getCurrentLine() != null
-					&& lookAhead.getCurrentLine().getLineNumber() < line.getLineNumber()) {
-				lookAhead.advance();
-			}
-			return lookAhead;
 		}
 		
 	}
@@ -133,7 +124,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line currentLine= lineSequence.getCurrentLine();
 		return (currentLine != null
 				&& !currentLine.isBlank() && currentLine.getIndent() < 4
@@ -146,7 +137,7 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		
 		final QuotedBlockLines quotedBlock= new QuotedBlockLines(lineSequence, builder, blockItem,
 				getProcessMatcher() );
-		builder.createNestedItems(quotedBlock, null, null);
+		builder.createNestedItems(quotedBlock, null);
 	}
 	
 	@Override

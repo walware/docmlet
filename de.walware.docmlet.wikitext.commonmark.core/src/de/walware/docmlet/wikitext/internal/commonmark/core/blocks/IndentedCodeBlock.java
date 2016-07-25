@@ -30,11 +30,16 @@ import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks.SourceB
 public class IndentedCodeBlock extends SourceBlock {
 	
 	
+	public IndentedCodeBlock() {
+	}
+	
+	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line line= lineSequence.getCurrentLine();
 		return (line != null
-				&& !line.isBlank() && line.getIndent() >= 4 );
+				&& !line.isBlank() && line.getIndent() >= 4
+				&& currentBlockItem == null );
 	}
 	
 	@Override
@@ -46,7 +51,7 @@ public class IndentedCodeBlock extends SourceBlock {
 			final Line line= lineSequence.getCurrentLine();
 			if (line != null) {
 				if (line.isBlank()) {
-					final int end= lookAheadValidIndent(lineSequence.lookAhead());
+					final int end= lookAheadSafeLine(lineSequence.lookAhead());
 					if (end != Integer.MIN_VALUE) {
 						advanceLinesUpto(lineSequence, end);
 						continue;
@@ -63,7 +68,7 @@ public class IndentedCodeBlock extends SourceBlock {
 		}
 	}
 	
-	private int lookAheadValidIndent(final LineSequence lineSequence) {
+	private int lookAheadSafeLine(final LineSequence lineSequence) {
 		while (true) {
 			final Line line= lineSequence.getCurrentLine();
 			if (line != null) {

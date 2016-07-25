@@ -72,6 +72,10 @@ public class SourceBlockItem<TBlock extends SourceBlock> {
 		return false;
 	}
 	
+	public boolean isEmpty() {
+		return false;
+	}
+	
 	
 	@Override
 	public String toString() {

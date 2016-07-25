@@ -53,12 +53,12 @@ public class CommonmarkAsserts {
 	
 	public static void assertCanStart(SourceBlock block, String input) {
 		LineSequence lineSequence= LineSequence.create(input);
-		assertTrue(block.canStart(lineSequence));
+		assertTrue(block.canStart(lineSequence, null));
 	}
 	
 	public static void assertCannotStart(SourceBlock block, String input) {
 		LineSequence lineSequence= LineSequence.create(input);
-		assertFalse(block.canStart(lineSequence));
+		assertFalse(block.canStart(lineSequence, null));
 	}
 	
 	public static void assertContent(String expectedHtml, String input) {

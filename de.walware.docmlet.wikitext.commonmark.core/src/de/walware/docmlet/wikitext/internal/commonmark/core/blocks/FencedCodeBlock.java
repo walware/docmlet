@@ -75,7 +75,7 @@ public class FencedCodeBlock extends SourceBlock {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		final Line currentLine= lineSequence.getCurrentLine();
 		return (currentLine != null
 				&& !currentLine.isBlank() && currentLine.getIndent() < 4

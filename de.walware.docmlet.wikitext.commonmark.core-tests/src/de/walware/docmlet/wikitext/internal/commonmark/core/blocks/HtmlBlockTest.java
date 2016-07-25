@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import de.walware.docmlet.wikitext.internal.commonmark.core.Line;
 import de.walware.docmlet.wikitext.internal.commonmark.core.LineSequence;
+import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlockItem;
+import de.walware.docmlet.wikitext.internal.commonmark.core.SourceBlocks;
 
 
 public class HtmlBlockTest {
@@ -66,35 +68,36 @@ public class HtmlBlockTest {
 	
 	@Test
 	public void canStart() {
-		assertFalse(block.canStart(LineSequence.create("")));
-		assertTrue(block.canStart(LineSequence.create("<div>")));
-		assertTrue(block.canStart(LineSequence.create("<table>")));
-		assertTrue(block.canStart(LineSequence.create("<p>")));
-		assertTrue(block.canStart(LineSequence.create("<one>")));
-		assertFalse(block.canStart(LineSequence.create("<one invalid=>")));
-		assertFalse(block.canStart(LineSequence.create("<one> with text")));
-		assertTrue(block.canStart(LineSequence.create("   <p>")));
-		assertFalse(block.canStart(LineSequence.create("    <p>")));
-		assertFalse(block.canStart(LineSequence.create("\t<p>")));
-		assertTrue(block.canStart(LineSequence.create("<p")));
-		assertTrue(block.canStart(LineSequence.create("<p >")));
-		assertTrue(block.canStart(LineSequence.create("<p />")));
-		assertTrue(block.canStart(LineSequence.create("<p/>")));
-		assertTrue(block.canStart(LineSequence.create("<p\n  a=\"b\"\n>")));
+		assertFalse(block.canStart(LineSequence.create(""), null));
+		assertTrue(block.canStart(LineSequence.create("<div>"), null));
+		assertTrue(block.canStart(LineSequence.create("<table>"), null));
+		assertTrue(block.canStart(LineSequence.create("<p>"), null));
+		assertTrue(block.canStart(LineSequence.create("<one>"), null));
+		assertFalse(block.canStart(LineSequence.create("<one invalid=>"), null));
+		assertFalse(block.canStart(LineSequence.create("<one> with text"), null));
+		assertTrue(block.canStart(LineSequence.create("   <p>"), null));
+		assertFalse(block.canStart(LineSequence.create("    <p>"), null));
+		assertFalse(block.canStart(LineSequence.create("\t<p>"), null));
+		assertTrue(block.canStart(LineSequence.create("<p"), null));
+		assertTrue(block.canStart(LineSequence.create("<p >"), null));
+		assertTrue(block.canStart(LineSequence.create("<p />"), null));
+		assertTrue(block.canStart(LineSequence.create("<p/>"), null));
+		assertTrue(block.canStart(LineSequence.create("<p\n  a=\"b\"\n>"), null));
 	}
 	
 	@Test
 	public void canStartDoesNotAdvanceLineSequencePosition() {
 		LineSequence lineSequence = LineSequence.create("<p\n  a=\"b\"\n>");
 		Line firstLine = lineSequence.getCurrentLine();
-		assertTrue(block.canStart(lineSequence));
+		assertTrue(block.canStart(lineSequence, null));
 		assertSame(firstLine, lineSequence.getCurrentLine());
 	}
 	
 	private void assertCanStart(boolean expected, int type, String string) {
-		assertEquals(expected, block.canStart(LineSequence.create(string)));
+		assertEquals(expected, block.canStart(LineSequence.create(string), null));
 		if (expected && type > 0) {
-			assertEquals(type != 7, block.canInterruptParagraph());
+			final SourceBlockItem<?> paragraph= new SourceBlocks(new ParagraphBlock()).createItems(LineSequence.create("abc")).get(0);
+			assertEquals(type != 7, block.canStart(LineSequence.create(string), paragraph));
 		}
 	}
 	

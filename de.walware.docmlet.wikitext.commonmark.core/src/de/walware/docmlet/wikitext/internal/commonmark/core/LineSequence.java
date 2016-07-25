@@ -25,6 +25,27 @@ public abstract class LineSequence {
 	
 	public abstract LineSequence lookAhead();
 	
+	public LineSequence lookAhead(final int lineNumber) {
+		final LineSequence lookAhead= lookAhead();
+		Line line= lookAhead.getCurrentLine();
+		if (line != null) {
+			if (line.getLineNumber() > lineNumber) {
+				throw new IllegalArgumentException("lineNumber= " + lineNumber);
+			}
+			do {
+				if (line.getLineNumber() >= lineNumber) {
+					break;
+				}
+				else {
+					lookAhead.advance();
+					line= lookAhead.getCurrentLine();
+				}
+			}
+			while (line != null);
+		}
+		return lookAhead;
+	}
+	
 	
 	public abstract Line getCurrentLine();
 	

@@ -45,7 +45,7 @@ public class ThematicBreakBlock extends SourceBlock {
 	
 	
 	@Override
-	public boolean canStart(final LineSequence lineSequence) {
+	public boolean canStart(final LineSequence lineSequence, final SourceBlockItem<?> currentBlockItem) {
 		return canStart(lineSequence.getCurrentLine());
 	}
 	

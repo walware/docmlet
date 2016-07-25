@@ -106,7 +106,10 @@ class PotentialStyleDelimiter extends InlineWithText {
 			final Inline inline= inlines.get(index);
 			if (inline instanceof PotentialStyleDelimiter) {
 				final PotentialStyleDelimiter previousDelimiter= (PotentialStyleDelimiter) inline;
-				if (previousDelimiter.canOpen && previousDelimiter.info == this.info) {
+				if (previousDelimiter.info == this.info
+						&& previousDelimiter.canOpen
+						&& ((!this.canOpen && !previousDelimiter.canClose)
+								|| (previousDelimiter.getLength() + getLength()) % 3 != 0) ) {
 					return index;
 				}
 			}

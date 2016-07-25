@@ -24,22 +24,6 @@ import de.walware.jcommons.collections.ImList;
 public class SourceBlocks {
 	
 	
-	public static interface SourceBlockParticipate { 
-		
-		
-		boolean approveBlockSelect(SourceBlock candidate, LineSequence lineSequence);
-		
-	}
-	
-	private static final SourceBlockParticipate TRUE_PARTICIPATE= new SourceBlockParticipate() {
-		
-		@Override
-		public boolean approveBlockSelect(final SourceBlock candidate, final LineSequence lineSequence) {
-			return true;
-		}
-		
-	};
-	
 	private static interface ItemRunnable {
 		
 		void run(SourceBlockItem<?> blockItem);
@@ -69,15 +53,14 @@ public class SourceBlocks {
 		}
 		
 		public void createNestedItems(final LineSequence lineSequence,
-				final ImList<? extends SourceBlock> supportedBlocks, final SourceBlockParticipate participate) {
+				final ImList<? extends SourceBlock> supportedBlocks) {
 			processItems(lineSequence, this,
 					(supportedBlocks != null) ? supportedBlocks : getSourceBlocks().supportedBlocks, 
 					new ItemRunnable() {
 						@Override
 						public void run(final SourceBlockItem<?> blockItem) {
 						}
-					},
-					(participate != null) ? participate : TRUE_PARTICIPATE );
+					} );
 		}
 		
 	}
@@ -100,6 +83,11 @@ public class SourceBlocks {
 		@Override
 		public LineSequence lookAhead() {
 			return this.delegate.lookAhead();
+		}
+		
+		@Override
+		public LineSequence lookAhead(final int lineNumber) {
+			return this.delegate.lookAhead(lineNumber);
 		}
 		
 		@Override
@@ -162,7 +150,7 @@ public class SourceBlocks {
 					public void run(final SourceBlockItem<?> blockItem) {
 						items.add(blockItem);
 					}
-				}, TRUE_PARTICIPATE );
+				} );
 		
 		return items;
 	}
@@ -182,19 +170,18 @@ public class SourceBlocks {
 					public void run(final SourceBlockItem<?> blockItem) {
 						blockItem.getType().emit(context, blockItem, locator, builder);
 					}
-				}, TRUE_PARTICIPATE );
+				} );
 	}
 	
 	private void processItems(final LineSequence lineSequence, final SourceBlockBuilder builder,
 			final ImList<? extends SourceBlock> supportedBlocks,
-			final ItemRunnable runnable, final SourceBlockParticipate participate) {
+			final ItemRunnable runnable) {
 		final CollectLineSequence collectLineSequence= new CollectLineSequence(lineSequence);
 		
 		final SourceBlockItem<?> parentItem= builder.getCurrentItem();
 		while (collectLineSequence.getCurrentLine() != null) {
-			final SourceBlock block= selectBlock(collectLineSequence, supportedBlocks);
-			if (block != null
-					&& participate.approveBlockSelect(block, collectLineSequence)) {
+			final SourceBlock block= selectBlock(collectLineSequence, supportedBlocks, null);
+			if (block != null) {
 				collectLineSequence.initLines();
 				block.createItem(builder, collectLineSequence);
 				final SourceBlockItem<?> blockItem= builder.getCurrentItem();
@@ -229,14 +216,20 @@ public class SourceBlocks {
 	}
 	
 	
+	public SourceBlock selectBlock(final LineSequence lineSequence,
+			final SourceBlockItem<?> currentBlockItem) {
+		return selectBlock(lineSequence, this.supportedBlocks, currentBlockItem);
+	}
+	
 	public SourceBlock selectBlock(final LineSequence lineSequence) {
-		return selectBlock(lineSequence, this.supportedBlocks);
+		return selectBlock(lineSequence, this.supportedBlocks, null);
 	}
 	
 	public SourceBlock selectBlock(final LineSequence lineSequence,
-			final ImList<? extends SourceBlock> supportedBlocks) {
+			final ImList<? extends SourceBlock> supportedBlocks,
+			final SourceBlockItem<?> currentBlockItem) {
 		for (final SourceBlock candidate : supportedBlocks) {
-			if (candidate.canStart(lineSequence)) {
+			if (candidate.canStart(lineSequence, currentBlockItem)) {
 				return candidate;
 			}
 		}
