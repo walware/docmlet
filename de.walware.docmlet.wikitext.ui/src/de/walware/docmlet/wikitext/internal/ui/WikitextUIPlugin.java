@@ -18,12 +18,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
 
 import de.walware.ecommons.ICommonStatusConstants;
@@ -66,7 +71,7 @@ public class WikitextUIPlugin extends AbstractUIPlugin {
 	
 	private ContentAssistComputerRegistry wikidocEditorContentAssistRegistry;
 	
-	private IPropertyChangeListener mylynPrefListener;
+	private IPropertyChangeListener fontPrefListener;
 	
 	
 	public WikitextUIPlugin() {
@@ -92,12 +97,12 @@ public class WikitextUIPlugin extends AbstractUIPlugin {
 				this.editorPreferenceStore= null;
 			}
 			
-			if (this.mylynPrefListener != null) {
-				final IPreferenceStore mylynPrefs= WikiTextUiPlugin.getDefault().getPreferenceStore();
-				if (mylynPrefs != null) {
-					mylynPrefs.removePropertyChangeListener(this.mylynPrefListener);
+			if (this.fontPrefListener != null) {
+				final FontRegistry fontRegistry= JFaceResources.getFontRegistry();
+				if (fontRegistry != null) {
+					fontRegistry.removeListener(this.fontPrefListener);
 				}
-				this.mylynPrefListener= null;
+				this.fontPrefListener= null;
 			}
 			
 			for (final IDisposable listener : this.disposables) {
@@ -135,19 +140,66 @@ public class WikitextUIPlugin extends AbstractUIPlugin {
 	public synchronized IPreferenceStore getPreferenceStore() {
 		final IPreferenceStore preferenceStore= super.getPreferenceStore();
 		
-		if (this.mylynPrefListener == null && this.started) {
-			this.mylynPrefListener= new IPropertyChangeListener() {
+		if (this.fontPrefListener == null && this.started) {
+			this.fontPrefListener= new IPropertyChangeListener() {
+				
+				private boolean isZoom() {
+					final StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
+					final int end= Math.min(stackTrace.length, 20);
+					for (int i= 3; i < end; i++) {
+						final String className= stackTrace[i].getClassName();
+						if (className.endsWith("org.eclipse.ui.texteditor.AbstractTextZoomHandler")) {
+							return true;
+						}
+					}
+					return false;
+				}
+				
+				private void updateFont(final String symbolicName, final int diff) {
+					final IThemeManager themeManager= PlatformUI.getWorkbench().getThemeManager();
+					final FontRegistry fontRegistry= themeManager.getCurrentTheme().getFontRegistry();
+					
+					final FontData[] currentFontData= fontRegistry.getFontData(symbolicName);
+					if (currentFontData == null) {
+						return;
+					}
+					final int height= currentFontData[0].getHeight() + diff;
+					if (height <= 0) {
+						return;
+					}
+					final FontData[] newFontData= FontDescriptor.createFrom(currentFontData).setHeight(height).getFontData();
+					fontRegistry.put(symbolicName, newFontData);
+				}
+				
 				@Override
 				public void propertyChange(final PropertyChangeEvent event) {
-					if (event.getProperty().equals(WikiTextUiResources.PREFERENCE_TEXT_FONT)
-							|| event.getProperty().equals(WikiTextUiResources.PREFERENCE_MONOSPACE_FONT) ) {
+					boolean update= false;
+					if (event.getProperty().equals(WikiTextUiResources.PREFERENCE_TEXT_FONT)) {
+						if (isZoom()) {
+							final FontData[] oldValue= (FontData[]) event.getOldValue();
+							final FontData[] newValue= (FontData[]) event.getNewValue();
+							if (oldValue != null && newValue != null) {
+								final int diff= newValue[0].getHeight() - oldValue[0].getHeight();
+								if (diff != 0) {
+									updateFont(WikiTextUiResources.PREFERENCE_MONOSPACE_FONT, diff);
+								}
+							}
+						}
+						
+						update= true;
+					}
+					else if (event.getProperty().equals(WikiTextUiResources.PREFERENCE_MONOSPACE_FONT)) {
+						update= true;
+					}
+					
+					if (update) {
 						final Job job= PreferencesUtil.getSettingsChangeNotifier().getNotifyJob("mylyn", //$NON-NLS-1$
 								new String[] { WikitextEditingSettings.TEXTSTYLE_CONFIG_QUALIFIER } );
 						job.schedule(250);
 					}
 				}
 			};
-			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this.mylynPrefListener);
+			JFaceResources.getFontRegistry().addListener(this.fontPrefListener);
 		}
 		
 		return preferenceStore;
