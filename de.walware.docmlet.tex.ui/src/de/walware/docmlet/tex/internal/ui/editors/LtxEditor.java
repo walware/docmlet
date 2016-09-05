@@ -11,6 +11,7 @@
 
 package de.walware.docmlet.tex.internal.ui.editors;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -107,8 +108,8 @@ public class LtxEditor extends SourceEditor1 implements ILtxEditor {
 	
 	
 	@Override
-	protected void initializeKeyBindingScopes() {
-		setContexts(CONTEXT_IDS);
+	protected Collection<String> getContextIds() {
+		return CONTEXT_IDS;
 	}
 	
 	@Override
