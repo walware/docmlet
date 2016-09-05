@@ -371,9 +371,13 @@ public class MarkupLanguageManager1 extends MarkupLanguageManager
 			throw new NullPointerException("file"); //$NON-NLS-1$
 		}
 		try {
-			Property property= (Property) file.getSessionProperty(PROPERTY_NAME);
-			
+			final boolean exists= file.exists();
+			Property property= null;
 			String configString= null;
+			if (exists) {
+				property= (Property) file.getSessionProperty(PROPERTY_NAME);
+			}
+			
 			if (property == null || (languageName != null && property.languageName != languageName)) {
 				final ProjectEntry projectEntry= getProjectEntry(file.getProject());
 				final IEclipsePreferences prefNode= projectEntry.getPrefNode();
@@ -383,7 +387,7 @@ public class MarkupLanguageManager1 extends MarkupLanguageManager
 				if (property == null) {
 					final String fileLanguageName= getLanguageName(file, (languageName == null));
 					
-					if (fileLanguageName != null) {
+					if (exists && fileLanguageName != null) {
 						property= new Property(fileLanguageName, (configString != null) ?
 								getLanguage(fileLanguageName, configString) : null );
 						synchronized (projectEntry) {
