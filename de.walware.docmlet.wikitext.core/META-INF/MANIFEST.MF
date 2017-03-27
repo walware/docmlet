@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: de.walware.docmlet.wikitext.core;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.1.1.qualifier
 Bundle-Vendor: WalWare.de
 Bundle-Name: DocMLET Wikitext - Core
 Bundle-Activator: de.walware.docmlet.wikitext.internal.core.WikitextCorePlugin

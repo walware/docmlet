@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: de.walware.docmlet.wikitext.commonmark.core;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.1.1.qualifier
 Bundle-Vendor: WalWare.de
 Bundle-Name: DocMLET Wikitext - CommonMark - Core
 Bundle-ActivationPolicy: lazy
