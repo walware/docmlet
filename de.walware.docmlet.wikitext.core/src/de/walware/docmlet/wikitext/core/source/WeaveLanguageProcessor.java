@@ -757,9 +757,7 @@ public class WeaveLanguageProcessor extends DocumentBuilder {
 			this.ignoreCounter--;
 			return;
 		}
-		// Workaround if language (Markdown) doesn't set end correctly
-		this.explLocator.setTo(getSegmentEndOffset());
-		final int endOffset= this.explLocator.getLineEndOffset() - this.explLocator.shift;
+		final int endOffset= this.locator.getLineDocumentOffset();
 		
 		if (DEBUGGING) {
 			if (endOffset > this.maxOffset) {

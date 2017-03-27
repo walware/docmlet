@@ -98,10 +98,12 @@ public class AtxHeaderBlock extends SourceBlock {
 			
 			inlineParser.emit(context, textSegment, locator, builder);
 			
+			locator.setBlockEnd(blockItem);
 			builder.endHeading();
 		} else {
 			locator.setBlockBegin(blockItem);
 			builder.beginHeading(headingLevel, new HeadingAttributes());
+			locator.setBlockEnd(blockItem);
 			builder.endHeading();
 		}
 	}

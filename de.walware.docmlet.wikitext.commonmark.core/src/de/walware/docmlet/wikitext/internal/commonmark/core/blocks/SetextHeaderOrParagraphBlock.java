@@ -141,11 +141,12 @@ public class SetextHeaderOrParagraphBlock extends ParagraphBlock {
 		final String headingText= inlineParser.toStringContent(context, textSegment);
 		attributes.setId(context.generateHeadingId(blockItem.headingLevel, headingText));
 		
-		locator.setLine(lines.get(0));
+		locator.setBlockBegin(blockItem);
 		builder.beginHeading(blockItem.headingLevel, attributes);
 		
 		inlineParser.emit(context, textSegment, locator, builder);
 		
+		locator.setBlockEnd(blockItem);
 		builder.endHeading();
 	}
 	
